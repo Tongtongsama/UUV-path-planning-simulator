@@ -8,10 +8,15 @@ Coordinate Frame: ENU (East-North-Up)
     roll:  rotation about x-axis (rad)
     pitch: rotation about y-axis (rad)
     yaw:   rotation about z-axis (rad, positive: right-hand rule about z-up)
+
+Design Principle:
+    Pose always contains all 6 components.
+    Which subset is active (e.g., horizontal plane [x, y, yaw],
+    vertical plane [x, z, pitch]) is determined by the Physics Engine
+    configuration, not by the data model.
 """
 
 from dataclasses import dataclass
-from typing import Tuple
 import numpy as np
 
 
@@ -20,17 +25,16 @@ class Pose:
     """
     Represents the position and orientation of the UUV in ENU frame.
 
-    For 3-DOF operation:
-        - z, roll, pitch are maintained but set to 0.0
-        - Only x, y, yaw are actively used in dynamics
-        - Data structure remains compatible with future 6-DOF extension
+    All 6 components are always present. In any given simulation,
+    the Physics Engine uses only the relevant subset based on its
+    degrees-of-freedom configuration.
 
     Attributes:
         x:     East position (m)
         y:     North position (m)
-        z:     Up position (m), 0.0 in 3-DOF mode
-        roll:  Euler angle about x-axis (rad), 0.0 in 3-DOF mode
-        pitch: Euler angle about y-axis (rad), 0.0 in 3-DOF mode
+        z:     Up position (m)
+        roll:  Euler angle about x-axis (rad)
+        pitch: Euler angle about y-axis (rad)
         yaw:   Euler angle about z-axis (rad)
     """
 
@@ -47,41 +51,22 @@ class Pose:
 
     @property
     def xy(self) -> np.ndarray:
-        """
-        2D position in the horizontal plane.
-
-        Returns:
-            numpy array [x, y].
-
-        Usage:
-            - Planner: 2D heuristic distance computations
-            - Obstacle: 2D collision checks
-        """
+        """2D horizontal position [x, y] (m)."""
         return np.array([self.x, self.y])
 
     @property
     def heading(self) -> float:
-        """
-        Semantic alias for yaw in the context of 3-DOF horizontal motion.
-
-        In ENU frame:
-            heading = 0      → pointing East
-            heading = pi/2   → pointing North
-            heading = pi     → pointing West
-            heading = -pi/2  → pointing South
-
-        Returns:
-            yaw angle in radians.
-
-        Usage:
-            - Planner: waypoint heading
-            - Controller: heading error computation
-        """
+        """Semantic alias for yaw in horizontal motion context (rad)."""
         return self.yaw
 
     # =========================================================================
     # Factory Methods
     # =========================================================================
+
+    @classmethod
+    def zero(cls) -> "Pose":
+        """Construct a Pose at the origin with zero orientation."""
+        return cls()
 
     @classmethod
     def from_list(cls, data: list) -> "Pose":
@@ -100,15 +85,6 @@ class Pose:
             float(array[0]), float(array[1]), float(array[2]),
             float(array[3]), float(array[4]), float(array[5]),
         )
-
-    @classmethod
-    def from_position_and_yaw(cls, x: float, y: float, z: float, yaw: float) -> "Pose":
-        """Construct a 3-DOF compatible Pose with only position and yaw.
-
-        This is the primary factory for 3-DOF operation.
-        roll and pitch are set to 0.0.
-        """
-        return cls(x=x, y=y, z=z, roll=0.0, pitch=0.0, yaw=yaw)
 
     # =========================================================================
     # Conversion Methods
@@ -136,20 +112,9 @@ class Pose:
 
     def distance_to(self, other: "Pose") -> float:
         """
-        Compute the Euclidean distance to another Pose.
+        Euclidean distance to another Pose (3D).
 
-        Uses the full 3D position (x, y, z).
-        In 3-DOF mode with z=0, this reduces to the 2D distance sqrt((Δx)² + (Δy)²).
-
-        Args:
-            other: Another Pose instance.
-
-        Returns:
-            Euclidean distance in meters.
-
-        Usage:
-            - Planner: heuristic cost between waypoints
-            - Obstacle: distance from UUV to obstacle center
+        In horizontal-only operation with z=0, this reduces to 2D distance.
         """
         if not isinstance(other, Pose):
             raise TypeError(f"Expected Pose, got {type(other).__name__}")
@@ -159,49 +124,19 @@ class Pose:
         return float(np.sqrt(dx * dx + dy * dy + dz * dz))
 
     def norm_position(self) -> float:
-        """
-        Compute the Euclidean norm of the position vector.
-
-        Returns:
-            ||[x, y, z]|| = sqrt(x² + y² + z²)
-
-        Usage:
-            - Physics: computing distance from origin
-            - Controller: computing position error magnitude
-        """
+        """Euclidean norm of the 3D position vector sqrt(x² + y² + z²)."""
         return float(np.sqrt(self.x * self.x + self.y * self.y + self.z * self.z))
 
     def norm_xy(self) -> float:
-        """
-        Compute the 2D Euclidean norm of the horizontal position.
-
-        Returns:
-            ||[x, y]|| = sqrt(x² + y²)
-
-        Usage:
-            - Planner: 2D path length computations in 3-DOF mode
-        """
+        """Euclidean norm of horizontal position sqrt(x² + y²)."""
         return float(np.sqrt(self.x * self.x + self.y * self.y))
 
     def is_close(self, other: "Pose", pos_tol: float = 1e-6, ang_tol: float = 1e-6) -> bool:
         """
         Check if two Poses are approximately equal.
 
-        Compares both position and orientation element-wise.
-        Position components are compared with pos_tol,
-        orientation components are compared with ang_tol.
-
-        Args:
-            other:   Another Pose instance.
-            pos_tol: Absolute tolerance for position (m). Default: 1e-6.
-            ang_tol: Absolute tolerance for orientation (rad). Default: 1e-6.
-
-        Returns:
-            True if all components are within tolerance.
-
-        Usage:
-            - Tests: assert pose1.is_close(pose2)
-            - Physics: checking if UUV has reached a waypoint
+        Position components compared with pos_tol (m).
+        Orientation components compared with ang_tol (rad).
         """
         if not isinstance(other, Pose):
             raise TypeError(f"Expected Pose, got {type(other).__name__}")
