@@ -4,7 +4,7 @@ Control input representation for the UUV Simulator.
 Represents the generalized forces and moments applied to the UUV by actuators
 (thrusters, rudders, fins, etc.) expressed in the body frame.
 
-Coordinate Frame: Body Frame
+Frame Convention: SNAME body-fixed frame
     tau_x: Force along body x-axis (N, surge direction)
     tau_y: Force along body y-axis (N, sway direction)
     tau_z: Force along body z-axis (N, heave direction)
@@ -13,10 +13,10 @@ Coordinate Frame: Body Frame
     tau_n: Moment about body z-axis (N·m, yaw direction)
 
 Design Principle:
-    ControlInput always contains all 6 components.
-    Which subset is active is determined by the Physics Engine configuration
-    (e.g., fully actuated horizontal plane [X, Y, N],
-    underactuated vertical plane [X, Z, M], etc.).
+    ControlInput always contains all 6 components — it is a complete
+    generalized-force container. Which components are active / directly
+    actuated is determined by the Physics Engine and vehicle configuration,
+    not by the data model itself.
 
 Reference: Fossen, "Handbook of Marine Craft Hydrodynamics and Motion Control"
            τ = [X, Y, Z, K, M, N]^T in SNAME notation
@@ -34,8 +34,10 @@ class ControlInput:
     This is the output of the Controller module and the input to the
     Physics Engine (dynamics).
 
-    All 6 components are always present. Active subset determined by
-    Physics Engine configuration.
+    All 6 components are always present. The vehicle's actuator configuration
+    (e.g., fully actuated horizontal plane, underactuated vertical plane, etc.)
+    determines which components receive non-zero values — this decision lives
+    in the Physics Engine and vehicle configuration, not in ControlInput.
 
     Attributes:
         tau_x: Force along body x-axis (N), surge

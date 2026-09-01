@@ -63,6 +63,7 @@ class Pose:
     # Factory Methods
     # =========================================================================
 
+        return cls(x=x, y=y, z=z, roll=0.0, pitch=0.0, yaw=yaw)
     @classmethod
     def zero(cls) -> "Pose":
         """Construct a Pose at the origin with zero orientation."""
@@ -85,7 +86,26 @@ class Pose:
             float(array[0]), float(array[1]), float(array[2]),
             float(array[3]), float(array[4]), float(array[5]),
         )
-
+    @classmethod
+    def from_position_and_yaw(cls, x: float = 0.0, y: float = 0.0, 
+                               z: float = 0.0, yaw: float = 0.0) -> "Pose":
+        """
+        Construct a Pose from position and yaw only.
+        Roll and pitch are set to 0.
+        
+        This is a convenience method for horizontal plane operations
+        where only position and heading are relevant.
+        
+        Args:
+            x: East position (m)
+            y: North position (m)  
+            z: Up position (m)
+            yaw: Heading angle about z-axis (rad)
+            
+        Returns:
+            Pose with specified position and yaw, roll=0, pitch=0
+        """
+        return cls(x=x, y=y, z=z, roll=0.0, pitch=0.0, yaw=yaw)
     # =========================================================================
     # Conversion Methods
     # =========================================================================

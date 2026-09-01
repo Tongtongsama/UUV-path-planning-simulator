@@ -95,6 +95,24 @@ class Twist:
             float(array[3]), float(array[4]), float(array[5]),
         )
 
+    @classmethod
+    def from_3dof(cls, u: float = 0.0, v: float = 0.0, r: float = 0.0) -> "Twist":
+        """
+        Construct a Twist from 3-DOF horizontal velocities only.
+        w, p, q are set to 0.
+        
+        This is a convenience method for horizontal plane operations
+        where only surge, sway, and yaw rate are relevant.
+        
+        Args:
+            u: Surge velocity (m/s), forward positive
+            v: Sway velocity (m/s), right positive
+            r: Yaw rate (rad/s)
+            
+        Returns:
+            Twist with specified u, v, r, and w=p=q=0
+        """
+        return cls(u=u, v=v, w=0.0, p=0.0, q=0.0, r=r)
     # =========================================================================
     # Conversion Methods
     # =========================================================================

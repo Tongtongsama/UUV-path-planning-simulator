@@ -14,9 +14,8 @@ import numpy as np
 import sys
 from pathlib import Path
 
-# Add project root to path so we can import uuv_simulator
-# Adjust this if your project structure differs
-PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
+# Resolve tests/core/test_pose.py -> repository root.
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from core.pose import Pose
