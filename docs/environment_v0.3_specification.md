@@ -130,3 +130,67 @@ boundary queries, no/constant current, the five `WorldModel` queries, YAML
 reconstruction, unit tests, and an Environment smoke demo all pass while the
 Core suite remains green and no upper-layer dependency is introduced.
 
+## 8. Future extension roadmap (not part of v0.3)
+
+The following capabilities are recorded as optional future work. They are not
+requirements for Environment v0.3 and must not be presented as implemented
+features until their own contracts and tests are complete.
+
+### 8.1 Periodic analytical current
+
+A future `SinusoidalCurrent` should implement the existing `CurrentField`
+interface. Its model should distinguish two independent effects:
+
+- temporal periodicity, suitable for simplified tidal cycles;
+- spatial periodicity, suitable for idealized wave-like or repeating flow.
+
+The configuration must state mean velocity, amplitude, temporal period or
+angular frequency, spatial wavelength or wave number, phase, axes, and units.
+Degenerate values and non-finite parameters must be rejected. Tests should
+cover temporal-only, spatial-only, combined, phase-shifted, and zero-amplitude
+cases. This remains a deterministic analytical field rather than turbulence or
+CFD.
+
+Other optional analytical backends include a Lamb-Oseen vortex and a
+wave-spectrum-based disturbance field. Each belongs behind `CurrentField` and
+must document whether its output represents current velocity, orbital wave
+velocity, or a force/disturbance input; those concepts must not be conflated.
+
+### 8.2 Real ocean-data adapters
+
+HYCOM and Copernicus Marine products may later provide measured or assimilated
+ocean-current fields. They should be added as data adapters, not embedded into
+`WorldModel` or Core. Before implementation, freeze:
+
+- selected product, variables, spatial/vertical resolution, and time range;
+- geographic CRS versus the simulator's local ENU frame and origin;
+- depth-positive versus ENU z-up conventions;
+- spatial, depth, and temporal interpolation policies;
+- out-of-domain and missing-data behaviour;
+- velocity units and component orientation;
+- download/cache policy, dataset version, checksums, and provenance.
+
+Experiments should resolve remote data into versioned local artifacts so a
+dissertation result can be reproduced offline. Network access must not become
+a hidden requirement of the simulation loop.
+
+### 8.3 Three-dimensional geometry and 6-DOF preparation
+
+The current `[x,z]` contract is deliberately two-dimensional. A future 3-D
+upgrade requires coordinated changes rather than silently passing three values
+through the current API:
+
+1. define an explicit ENU `[x,y,z]` planning/world coordinate type;
+2. select a replaceable 3-D geometry/collision backend;
+3. redesign obstacle and boundary representations for volumes and meshes;
+4. define vehicle collision geometry beyond a 2-D circular radius;
+5. extend current queries from `[v_x,v_z]` to `[v_x,v_y,v_z]`;
+6. align environmental fields with the Physics 6-DOF state and SNAME/ENU
+   transformation contracts;
+7. version scenario schemas and provide migration from `planning_plane: xz`.
+
+Planner-facing domain queries should remain conceptually stable where possible,
+but 2-D and 3-D types must be explicit so mixed-frame or mixed-dimensional
+inputs fail early. Three-dimensional mesh collision, seabed terrain, and
+Gazebo/SDF adapters remain separate backends consuming the same versioned
+scenario source.

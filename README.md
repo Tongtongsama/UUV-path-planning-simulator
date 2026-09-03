@@ -9,10 +9,9 @@ dynamics, configurable underwater environments, path planning, obstacle
 avoidance, trajectory generation, and trajectory tracking** within a
 common software architecture.
 
-> **Current status:** Core Data Model v0.2 is implemented and
-> unit-tested. The immediate next task is a Core integration smoke
-> validation; the next formal subsystem is Environment / World Model
-> v0.3.
+> **Current status:** Core Data Model v0.2 and the lightweight
+> Environment / World Model v0.3 are implemented and validated. The next
+> formal subsystem is Physics Engine v0.4.
 
 ## Project Objectives
 
@@ -65,7 +64,7 @@ and external infrastructure**.
   Core unit tests         Independent Core        Complete
                           contract verification   
 
-  Core integration smoke  Cross-object            Next validation step
+  Core integration smoke  Cross-object            Complete
   scenario                simulation-style        
                           validation              
   -----------------------------------------------------------------------
@@ -73,6 +72,25 @@ and external infrastructure**.
 The Core interface is intentionally minimal. Interpolation, path
 smoothing, resampling, actuator allocation, and simulation scheduling
 are deferred to the modules that own those policies.
+
+### v0.3 --- Environment / World Model
+
+Environment v0.3 provides a lightweight planning world rather than a complete
+ocean simulation. Its current implemented scope is:
+
+-   an explicit Core ENU `(Pose.x, Pose.z)` to planning `[x,z]` mapping;
+-   Shapely-backed circle, rectangle, and polygon static obstacles;
+-   polygonal/rectangular operating boundaries and vehicle-clearance checks;
+-   `NoCurrent` and two-dimensional `ConstantCurrent` fields;
+-   stable `WorldModel` containment, collision, clearance, nearby-obstacle,
+    and current queries;
+-   validated Python/YAML scenarios as the single planning-world source;
+-   unit tests and a deterministic Environment smoke scenario.
+
+Shapely remains behind Environment domain interfaces, so Planner code does not
+depend directly on the geometry backend. See
+[`docs/environment_v0.3_specification.md`](docs/environment_v0.3_specification.md)
+for the frozen query and coordinate semantics.
 
 ## Core Data Model
 
@@ -150,6 +168,8 @@ the Environment and Physics interfaces are stable.
 ``` text
 uuv_simulator/
 ├── config/
+│   └── scenarios/
+│       └── simple_static_world.yaml
 ├── controller/
 ├── core/
 │   ├── __init__.py
@@ -161,9 +181,17 @@ uuv_simulator/
 │   └── trajectory.py
 ├── docs/
 ├── environment/
+│   ├── coordinates.py
+│   ├── obstacle.py
+│   ├── boundary.py
+│   ├── current.py
+│   ├── world.py
+│   └── scenario.py
 ├── physics/
 ├── planner/
 ├── simulation/
+│   ├── core_integration_demo.py
+│   └── environment_smoke_demo.py
 ├── tests/
 │   └── core/
 │       ├── test_pose.py
@@ -182,10 +210,10 @@ will be implemented incrementally.
 
 ## Testing
 
-Run the complete Core test suite from the repository root:
+Run the complete test suite from the repository root:
 
 ``` bash
-python -m pytest tests/core/ -v
+python -m pytest tests/ -v
 ```
 
 The verification strategy is progressive:
@@ -198,10 +226,9 @@ The verification strategy is progressive:
 4.  **ROS 2 / Gazebo validation** --- future external integration and
     progressively higher-fidelity evaluation.
 
-The immediate next validation task is a deterministic Core integration
-scenario using mock/stub Planner-, Controller-, and Physics-like
-operations. It validates Core interfaces rather than hydrodynamic or
-control performance.
+The repository includes deterministic Core and Environment integration smoke
+scenarios. They validate interfaces and data flow rather than hydrodynamic,
+planning, or control performance.
 
 ## Development Roadmap
 
@@ -210,11 +237,9 @@ v0.1  Project Skeleton
   |
 v0.2  Core Data Model                 COMPLETE
   |
-  +-- Core integration smoke validation
+v0.3  Environment / World Model      COMPLETE
   |
-v0.3  Environment / World Model      NEXT
-  |
-v0.4  Physics Engine
+v0.4  Physics Engine                 NEXT
   |
 v0.5  Visualization
   |
@@ -229,19 +254,37 @@ v0.9  Gazebo Integration
 v1.0  Dissertation Release
 ```
 
-### Next Formal Milestone: Environment / World Model v0.3
+### Next Formal Milestone: Physics Engine v0.4
 
-Initial scope:
+Environment v0.3 now exposes the stable environmental queries that Physics and
+Planner can consume. Physics v0.4 should begin with a 3-DOF model and integrator
+interface while preserving the existing ENU/SNAME frame boundary.
 
--   world/environment boundaries;
--   geometric obstacle representations and basic queries;
--   a minimal ocean-current interface, beginning with a constant-current
-    model;
--   an Environment/World container;
--   unit tests and an environment-level integration scenario.
+The full Simulation Manager remains deferred until Physics exposes a stable
+step interface.
 
-The full Simulation Manager is intentionally deferred until Environment
-and Physics expose stable interfaces.
+### Deferred Environment extensions
+
+The following are intentional future options, **not currently implemented**:
+
+-   `SinusoidalCurrent`, with separately configurable temporal periodicity
+    (for tidal behaviour) and spatial periodicity (for wave-like or repeating
+    flow structure), phase, amplitude, mean flow, and documented units;
+-   analytical flow models such as a Lamb-Oseen vortex and, where justified by
+    experiments, wave-spectrum-derived disturbance fields;
+-   adapters for real ocean-current products such as HYCOM or Copernicus
+    Marine data, including coordinate/time/depth conversion, interpolation,
+    caching, dataset provenance, and reproducible offline experiment inputs;
+-   replacement of the current vertical 2-D geometry backend with 3-D obstacle
+    and boundary collision queries;
+-   three-dimensional current vectors and environmental physics fields;
+-   coordinated Core/Environment/Physics state and frame upgrades required for
+    future 6-DOF simulation.
+
+These features should be added behind the existing domain boundaries when an
+experiment requires them. Dataset adapters and analytical current fields
+should implement `CurrentField`; a 3-D migration should introduce an explicit
+new coordinate contract rather than silently changing the meaning of `[x,z]`.
 
 ## Planned Research Capabilities
 
