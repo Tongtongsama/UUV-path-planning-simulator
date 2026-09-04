@@ -1,0 +1,23 @@
+name: uuv_3dof_synthetic_v1
+description: Synthetic test-only vertical-plane reference model; not a real vehicle.
+mass_rb:
+  - [20.0, 0.0, 0.0]
+  - [0.0, 20.0, 0.0]
+  - [0.0, 0.0, 8.0]
+mass_added:
+  - [5.0, 0.0, 0.0]
+  - [0.0, 8.0, 0.0]
+  - [0.0, 0.0, 2.0]
+damping_linear:
+  - [4.0, 0.0, 0.0]
+  - [0.0, 6.0, 0.0]
+  - [0.0, 0.0, 3.0]
+damping_quadratic:
+  - [1.0, 0.0, 0.0]
+  - [0.0, 1.5, 0.0]
+  - [0.0, 0.0, 0.5]
+input_matrix:
+  - [1.0, 0.0, 0.0]
+  - [0.0, 0.0, 0.0]
+  - [0.0, 0.0, 1.0]
+restoring_pitch_coefficient: 6.0

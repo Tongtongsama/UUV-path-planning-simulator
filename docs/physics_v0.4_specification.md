@@ -1,13 +1,13 @@
 # Physics v0.4 Specification
 
-**Status:** Draft normative specification  
+**Status:** Active normative specification  
 **Applies to:** Physics v0.4 Python 3-DOF reference backend  
 **Authority:** Physics implementation and tests must conform to this document.
 
 This document defines the project's internal Physics contract. External source
 selection, licenses, copied or adapted code, parameter provenance, and rejected
 candidates belong in `open_source_reuse.md`. Verification results and plots
-belong in a future `physics_v0.4_validation.md`.
+belong in `physics_v0.4_validation.md`.
 
 Normative terms **MUST**, **MUST NOT**, **SHOULD**, and **MAY** indicate required,
 prohibited, recommended, and optional behaviour respectively.
@@ -96,7 +96,26 @@ y_b: starboard
 z_b: down
 ```
 
-### 3.3 Pitch convention
+### 3.3 Reduced-model physical assumptions
+
+The v0.4 reduced model uses the following physical idealizations:
+
+- the body-frame origin is located at the vehicle centre of gravity (CG);
+- the body x-z plane is a symmetry plane;
+- products of inertia and off-diagonal added-mass terms are neglected;
+- the vehicle is neutrally buoyant in translation, so the reduced restoring
+  vector contains no constant surge or heave force;
+- the centre of buoyancy lies vertically above the centre of gravity;
+- the resulting pitch-restoring moment is represented by the reduced
+  coefficient `restoring_pitch_coefficient` and the term
+  `k_theta * sin(pitch)`.
+
+These are explicit reference-model assumptions, not claims that every real UUV
+has diagonal hydrodynamic matrices or exact neutral buoyancy. Moving the body
+origin, introducing translational buoyancy imbalance, or using CG/CB geometry
+directly requires a new parameter contract and a new dynamics derivation.
+
+### 3.4 Pitch convention
 
 For the v0.4 vertical-plane model:
 
@@ -107,7 +126,7 @@ For the v0.4 vertical-plane model:
 This definition is normative for Physics even if a generic Euler-angle
 library uses a differently labelled rotation convention.
 
-### 3.4 Reduced state and Core mapping
+### 3.5 Reduced state and Core mapping
 
 The reduced configuration, velocity, and internal state are:
 
@@ -137,7 +156,7 @@ any inactive component exceeds `1e-12`; the backend MUST NOT silently discard
 non-zero inactive motion. Reconstructed states MUST set every inactive
 component to exactly `0.0`.
 
-### 3.5 Kinematic mapping
+### 3.6 Kinematic mapping
 
 The reduced body-to-world velocity mapping is:
 
@@ -167,6 +186,10 @@ Therefore:
 \[
 \dot{\theta}=q.
 \]
+
+The minus sign on the body-heave term in `z_dot` is normative. Any earlier
+project formula using the opposite sign is superseded because Core world `z`
+is up-positive while SNAME body `w` is down-positive.
 
 The upper-left matrix is not an ordinary planar rotation: it combines attitude
 rotation with the body-z-down to world-z-up sign change. Implementations SHOULD
@@ -259,12 +282,57 @@ class ContinuousDynamics3DOF(Protocol):
         ...
 ```
 
+Integrators consume the same derivative value type through a state-only
+callable closed over control/current for one backend step:
+
+```python
+class DerivativeFunction3DOF(Protocol):
+    def __call__(self, reduced_state: np.ndarray) -> StateDerivative3DOF:
+        ...
+
+
+class Integrator(Protocol):
+    def step(
+        self,
+        derivative: DerivativeFunction3DOF,
+        state: np.ndarray,
+        dt: float,
+    ) -> np.ndarray:
+        ...
+```
+
+`ContinuousDynamics3DOF.derivatives()` and `DerivativeFunction3DOF` MUST
+return `StateDerivative3DOF`, never a bare array. Integrators convert it with
+`to_numpy()` and return a validated reduced state of shape `(6,)`.
+
+The derivative result is formally defined as:
+
+```python
+@dataclass(frozen=True)
+class StateDerivative3DOF:
+    eta_dot: np.ndarray  # (3,), [x_dot, z_dot, pitch_dot]
+    nu_dot: np.ndarray   # (3,), [u_dot, w_dot, q_dot]
+
+    def to_numpy(self) -> np.ndarray:
+        """Return [x_dot, z_dot, pitch_dot, u_dot, w_dot, q_dot]."""
+        ...
+```
+
+`StateDerivative3DOF` MUST defensively convert and copy both inputs, validate
+shape `(3,)` and finite real values, store read-only `float64` arrays, and
+return a new read-only or independent `float64` array from `to_numpy()`.
+
 `reduced_state` has shape `(6,)` in order `[x,z,pitch,u,w,q]`.
 `reduced_control` has shape `(3,)` in order `[tau_x,tau_z,tau_m]`.
-All inputs and outputs MUST use `float64`, have exact documented shapes, and
-contain only finite values. Wrong types raise `TypeError`; wrong shapes,
-non-finite values, invalid state components, and invalid `dt` raise
-`ValueError`.
+
+Public numerical inputs MAY be integer- or floating-point arrays/sequences, but
+MUST be convertible to finite real `float64` values. Implementations MUST
+reject complex, object, string, and boolean arrays rather than silently cast
+them. Inputs are defensively converted and copied to `float64` before use. All
+internal and returned numerical arrays MUST use `float64` and the exact
+documented shape. Wrong semantic types raise `TypeError`; wrong shapes,
+non-finite values, prohibited dtypes, invalid state components, and invalid
+`dt` raise `ValueError`.
 
 `dt` MUST be finite and strictly greater than zero. `step()` MUST return a new
 `VehicleState` and MUST NOT mutate any input object or array.
@@ -290,8 +358,16 @@ state and sets inactive fields to zero. It does not accept a template because
 retaining inactive template fields could hide invalid state.
 
 `extract_reduced_control` returns `[tau_x,tau_z,tau_m]`. It MUST reject
-non-zero `tau_y`, `tau_k`, and `tau_n` rather than silently ignore them. Whether
-`tau_z` affects the dynamics is decided by the parameterized input matrix.
+non-zero `tau_y`, `tau_k`, and `tau_n` rather than silently ignore them.
+
+`ControlInput` represents generalized force already applied to the vehicle; it
+is not a thruster command. The parameter `input_matrix` defines the admissible
+actuation subspace for a model configuration. Before integration, `step()`
+MUST reject any non-zero reduced-control component disabled by
+`input_matrix`. In particular, the underactuated baseline MUST reject non-zero
+`tau_z` with an explicit `ValueError`; it MUST NOT multiply it by zero and
+continue silently. A future actuator-allocation layer MAY define an explicit
+projection policy, but v0.4 does not.
 
 ## 7. Canonical parameter model
 
@@ -314,19 +390,56 @@ vehicle values. The first configuration MUST be named
 
 Required validation:
 
-- every matrix has shape `(3,3)`, dtype `float64`, and finite values;
-- `mass_rb` is symmetric positive definite;
-- `mass_added` is symmetric positive semidefinite under the project's
+- constructor inputs follow the safe real-to-`float64` conversion policy in
+  Section 5; every stored matrix has shape `(3,3)`, dtype `float64`, and finite
+  values;
+- `mass_rb` is diagonal and positive definite;
+- the surge and heave diagonal entries of `mass_rb` are equal to the same
+  physical vehicle mass;
+- `mass_added` is diagonal and positive semidefinite under the project's
   positive canonical added-mass convention;
 - `M = mass_rb + mass_added` is symmetric positive definite;
 - linear and quadratic damping are diagonal with non-negative coefficients;
-- `input_matrix` is finite but MAY be rank-deficient;
+- `input_matrix` is a diagonal selector whose entries are exactly `0.0` or
+  `1.0`; it MAY be rank-deficient;
 - `restoring_pitch_coefficient` is finite and non-negative;
 - constructor inputs are defensively copied and stored read-only.
+
+Off-diagonal rigid-body inertia, added mass, damping, and actuation coupling are
+outside v0.4. Supporting them requires an expanded derivation and parameter
+contract rather than merely relaxing validation.
 
 Project damping coefficients are stored as positive dissipative quantities.
 Literature derivatives such as negative `X_u` MUST be converted explicitly and
 recorded in the reuse/provenance document.
+
+Canonical added-mass entries are physical positive inertia contributions. For
+the diagonal v0.4 model:
+
+\[
+M_A=\operatorname{diag}(A_u,A_w,A_q),\qquad A_u,A_w,A_q\geq0.
+\]
+
+When importing traditional hydrodynamic derivatives, the conversion is
+`A_u = -X_udot`, `A_w = -Z_wdot`, and `A_q = -M_qdot`. Negative literature or
+legacy-plugin derivative values MUST NOT be stored directly in `mass_added`.
+
+Parameter and signal units are:
+
+| Quantity | Unit |
+|---|---|
+| surge/heave rigid-body or added mass | kg |
+| pitch rigid-body or added inertia | kg m^2 |
+| surge/heave linear damping | N s/m |
+| pitch linear damping | N m s/rad |
+| surge/heave quadratic damping | N s^2/m^2 |
+| pitch quadratic damping | N m s^2/rad^2 |
+| restoring pitch coefficient | N m |
+| `tau_x`, `tau_z` | N |
+| `tau_m` | N m |
+| position | m |
+| pitch | rad |
+| simulation time | s |
 
 The baseline dissertation configuration is underactuated:
 
@@ -345,9 +458,21 @@ A separate fully actuated synthetic configuration MAY be used to isolate and
 test the heave equation, but MUST NOT be described as the dissertation
 baseline.
 
+`UUV3DOFParameters` MUST provide an admissibility check equivalent to
+`is_control_admissible(reduced_control, tolerance=1e-12)`. For the selector
+matrix used in v0.4, a control is admissible only when every disabled component
+is zero within tolerance. This check occurs before applying `B_tau`.
+
 ## 8. Dynamics contract
 
-The target structural form is:
+For a world-fixed uniform current, define the body-current derivative:
+
+\[
+\dot{\nu}_c=[-q w_c,\;q u_c,\;0]^T.
+\]
+
+This follows from `v_c_dot_body = -S(omega) v_c_body`. The target absolute-
+velocity structural form is:
 
 \[
 M\dot{\nu}=
@@ -356,7 +481,8 @@ B_\tau\tau
 -C_A(\nu_r)\nu_r
 -D_L\nu_r
 -D_Q(|\nu_r|\odot\nu_r)
--g(\eta_r),
+-g(\eta_r)
++M_A\dot{\nu}_c,
 \]
 
 with:
@@ -371,27 +497,45 @@ The implementation MUST solve this equation with `numpy.linalg.solve`.
 Positive `k_theta` and the leading minus sign provide a restoring pitch moment
 toward `pitch = 0`.
 
-### 8.1 Coriolis derivation gate
+### 8.1 Approved Coriolis reduction
 
-The structural separation between rigid-body and added-mass Coriolis terms is
-frozen. Their exact reduced 3-DOF matrix entries and signs are **not yet
-approved**. Before `uuv_3dof.py` is implemented, the project MUST:
+The derivation gate is approved in
+[`physics_3dof_derivation.md`](physics_3dof_derivation.md). With
+`M_RB = diag(m,m,I_y)`, `M_A = diag(A_u,A_w,A_q)`, absolute
+`nu = [u,w,q]`, and relative `nu_r = [u_r,w_r,q]`, v0.4 MUST use:
 
-1. derive `C_RB` and `C_A` from a documented 3-DOF reduction;
-2. identify whether each term uses absolute or relative velocity;
-3. compare the result with a pinned authoritative/open-source reference;
-4. verify the expected skew-symmetry or energy identity;
-5. record the derivation and tests in this section or a linked derivation note.
+\[
+C_{RB}(\nu)=
+\begin{bmatrix}
+0&m q&0\\
+-m q&0&0\\
+0&0&0
+\end{bmatrix},
+\]
 
-No implementation may invent cross-coupling terms directly from scalar
-intuition. If the first executable slice intentionally sets Coriolis to zero,
-that simplification MUST be named, tested, and limited to a dedicated
-sanity-check parameter/model configuration.
+\[
+C_A(\nu_r)=
+\begin{bmatrix}
+0&0&A_w w_r\\
+0&0&-A_u u_r\\
+-A_w w_r&A_u u_r&0
+\end{bmatrix}.
+\]
+
+Both matrices are skew-symmetric, so `x.T @ C(x) @ x == 0` up to floating-
+point roundoff. Rigid-body Coriolis acts on absolute velocity; added-mass
+Coriolis acts on relative velocity. The `M_A * nu_c_dot` term above is
+mandatory when a non-zero world-fixed current is expressed in the rotating
+body frame.
 
 ## 9. Integrator contract
 
 Integrators operate on a pure derivative callable and a finite float64 state
 vector. They do not import Core, Environment, or vehicle parameters.
+
+Both fixed-step implementations MUST satisfy the `Integrator` Protocol in
+Section 5 and accept only derivative callables returning
+`StateDerivative3DOF`.
 
 ### EulerIntegrator
 
@@ -412,14 +556,18 @@ vector. They do not import Core, Environment, or vehicle parameters.
 - not an implementation of `PhysicsBackend`;
 - not called by the normal fixed-step simulation loop.
 
-Every backend step advances simulation time exactly as:
+Every backend step computes simulation time using:
 
 \[
 t_{k+1}=t_k+dt.
 \]
 
-The returned timestamp MUST be finite. RK4 intermediate stages do not create
-Core `VehicleState` objects; conversion occurs only at the public boundary.
+The backend MUST calculate the returned timestamp using exactly the expression
+`state.timestamp + dt`; it MUST NOT derive it from an internal step counter or
+an RK stage. Tests compare the result to the same expression, not to an ideal
+decimal literal. The returned timestamp MUST be finite. RK4 intermediate stages
+do not create Core `VehicleState` objects; conversion occurs only at the public
+boundary.
 
 ## 10. Errors, determinism, and numerical policy
 
@@ -449,8 +597,7 @@ physics/
 └── uuv_3dof.py
 
 config/vehicles/
-├── uuv_3dof_synthetic_v1.yaml
-└── parameter_sources.md
+└── uuv_3dof_synthetic_v1.yaml
 
 tests/physics/
 ├── test_frames.py
@@ -475,30 +622,36 @@ placeholders or functionality outside the scope in Section 1.
 
 Physics v0.4 is complete only when all applicable items are satisfied:
 
-- [ ] The four hand-computed frame-audit cases pass.
-- [ ] World-current to body-current conversion passes zero- and non-zero-pitch
+- [x] The four hand-computed frame-audit cases pass.
+- [x] World-current to body-current conversion passes zero- and non-zero-pitch
       cases.
-- [ ] Core/reduced-state/control mappings enforce shapes, ordering, inactive
+- [x] Core/reduced-state/control mappings enforce shapes, ordering, inactive
       DOFs, and finite values.
-- [ ] Parameter shape, symmetry, definiteness, diagonal damping, copying, and
+- [x] Public numerical inputs accept safe real-to-`float64` conversion and
+      reject complex, object, string, boolean, wrong-shape, and non-finite data.
+- [x] `StateDerivative3DOF` shape, ordering, copying, finite-value, dtype, and
       immutability tests pass.
-- [ ] The approved Coriolis derivation gate in Section 8.1 is complete.
-- [ ] Damping is demonstrably energy dissipative.
-- [ ] Zero-input equilibrium behaves consistently with the restoring model.
-- [ ] A simplified first-order damped surge case matches its analytical
+- [x] Parameter shape, diagonal structure, definiteness, units, copying, and
+      immutability tests pass.
+- [x] Underactuated parameters reject non-zero `tau_z`; fully actuated test
+      parameters accept it.
+- [x] The approved Coriolis derivation gate in Section 8.1 is complete.
+- [x] Damping is demonstrably energy dissipative.
+- [x] Zero-input equilibrium behaves consistently with the restoring model.
+- [x] A simplified first-order damped surge case matches its analytical
       solution within a documented tolerance.
-- [ ] Euler and RK4 errors decrease as `dt` decreases.
-- [ ] RK4 exhibits an appropriate convergence trend against SciPy `solve_ivp`.
-- [ ] Zero current and an explicit `[0,0]` current produce equivalent results.
-- [ ] `step()` creates a new immutable `VehicleState` and advances timestamp by
+- [x] Euler and RK4 errors decrease as `dt` decreases.
+- [x] RK4 exhibits an appropriate convergence trend against SciPy `solve_ivp`.
+- [x] Zero current and an explicit `[0,0]` current produce equivalent results.
+- [x] `step()` creates a new immutable `VehicleState` and advances timestamp by
       exactly `dt`.
-- [ ] A Physics smoke scenario covers acceleration, damping decay, pitch input,
+- [x] A Physics smoke scenario covers acceleration, damping decay, pitch input,
       current/no-current comparison, `Trajectory` output, and Environment
       boundary checks.
-- [ ] Core and Environment regression suites remain green.
-- [ ] No ROS 2, Gazebo, Planner, Controller, or Environment dependency exists
+- [x] Core and Environment regression suites remain green.
+- [x] No ROS 2, Gazebo, Planner, Controller, or Environment dependency exists
       inside the Physics package.
-- [ ] Open-source code/parameters actually used are pinned and recorded in
+- [x] Open-source code/parameters actually used are pinned and recorded in
       `open_source_reuse.md` before release.
 
 ## 13. Open-source and evidence boundary
@@ -506,7 +659,7 @@ Physics v0.4 is complete only when all applicable items are satisfied:
 Physics v0.4 follows the Fossen marine-craft modelling framework. This statement
 does not by itself mean code or parameters were copied from a third party.
 
-The future `open_source_reuse.md` is authoritative for:
+`open_source_reuse.md` is authoritative for:
 
 - source name, repository/document, version or commit, and license;
 - classification as dependency, adapted implementation, reference,
@@ -516,7 +669,7 @@ The future `open_source_reuse.md` is authoritative for:
 - adopted parameters, units, sign conversions, and confidence;
 - validation performed and final decision status.
 
-The future `physics_v0.4_validation.md` will report numerical cases, tolerances,
+`physics_v0.4_validation.md` reports numerical cases, tolerances,
 plots, reference outputs, convergence evidence, and deviations. Neither of
 those documents may redefine the interfaces or mathematical conventions in
 this specification.
