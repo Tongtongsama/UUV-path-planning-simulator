@@ -87,3 +87,11 @@ class WorldModel:
         """Return planning-plane current velocity ``[v_x, v_z]``."""
         return self.current.velocity_at(position, time)
 
+    def is_segment_valid(self, start: PlanningPosition, end: PlanningPosition,
+                         clearance: float = 0.0) -> bool:
+        """Check continuous boundary containment and static obstacle clearance."""
+        clearance = _non_negative(clearance, "clearance")
+        return self.boundary.contains_segment(start, end, clearance) and not any(
+            obstacle.segment_collides(start, end, clearance)
+            for obstacle in self.obstacles
+        )

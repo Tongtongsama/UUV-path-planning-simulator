@@ -9,10 +9,10 @@ dynamics, configurable underwater environments, path planning, obstacle
 avoidance, trajectory generation, and trajectory tracking** within a
 common software architecture.
 
-> **Current status:** Core Data Model v0.2, Environment / World Model v0.3,
-> and the synthetic 3-DOF Python Physics reference backend v0.4 are
-> implemented and validated. Physics v0.4 completion refers to its specified
-> software and numerical contracts, not real-vehicle parameter validation.
+> **Current status:** Core v0.2, Environment v0.3, synthetic 3-DOF Physics
+> v0.4, the underactuated Control baseline v0.5, and Planner v0.6a are implemented and
+> validated within their documented scopes. These milestones establish
+> software and numerical contracts, not real-vehicle validation.
 
 ## Project Objectives
 
@@ -122,6 +122,26 @@ Normative and evidential documents:
 -   [`physics_v0.4_validation.md`](docs/physics_v0.4_validation.md)
 -   [`open_source_reuse.md`](docs/open_source_reuse.md)
 
+### v0.5 --- Controller
+
+Control v0.5 provides a deterministic, PID-capable cascaded baseline for the
+vertical-plane model:
+
+-   a stable `Controller3DOF.step(current, reference, dt)` protocol;
+-   validated immutable gains and explicit resettable controller memory;
+-   world-position to body-surge and depth-to-pitch outer loops;
+-   surge force and pitch moment feedback with conditional anti-windup;
+-   exact-zero inactive forces and moments compatible with the Physics
+    selector `diag(1,0,1)`;
+-   a Simulation-owned YAML configuration loader;
+-   unit, Controller/Physics integration, deterministic current-disturbance,
+    and closed-loop tracking tests;
+-   a reproducible 60-second no-current/constant-current tracking demo.
+
+The baseline emits generalized forces, not thruster or fin commands. See
+[`control_v0.5_specification.md`](docs/control_v0.5_specification.md) and
+[`control_v0.5_validation.md`](docs/control_v0.5_validation.md).
+
 ## Core Data Model
 
 ``` text
@@ -198,11 +218,17 @@ the Environment and Physics interfaces are stable.
 ``` text
 uuv_simulator/
 ├── config/
+│   ├── controllers/
+│   │   └── cascaded_pid_3dof_baseline.yaml
 │   ├── scenarios/
 │   │   └── simple_static_world.yaml
 │   └── vehicles/
 │       └── uuv_3dof_synthetic_v1.yaml
 ├── controller/
+│   ├── backend.py
+│   ├── angles.py
+│   ├── parameters.py
+│   └── cascaded_pid_3dof.py
 ├── core/
 │   ├── __init__.py
 │   ├── pose.py
@@ -231,11 +257,14 @@ uuv_simulator/
 │   ├── core_integration_demo.py
 │   ├── environment_smoke_demo.py
 │   ├── physics_smoke_demo.py
+│   ├── control_tracking_demo.py
+│   ├── controller_config.py
 │   └── vehicle_config.py
 ├── tests/
 │   ├── core/
 │   ├── environment/
 │   ├── physics/
+│   ├── controller/
 │   └── integration/
 ├── validation/
 │   ├── compare_fossen_model.py
@@ -284,10 +313,9 @@ The verification strategy is progressive:
 4.  **ROS 2 / Gazebo validation** --- future external integration and
     progressively higher-fidelity evaluation.
 
-The repository includes deterministic Core, Environment, and Physics smoke
-scenarios. The Physics scenario covers free response, constant thrust, pitch
-input, current/no-current behaviour, Trajectory output, and Environment
-boundary queries.
+The repository includes deterministic Core, Environment, Physics, and Control
+scenarios. The Control demo closes the loop through the real Controller and
+Physics backends in no-current and constant-current cases.
 
 ## Development Roadmap
 
@@ -300,15 +328,21 @@ v0.3  Environment / World Model      COMPLETE
   |
 v0.4  Physics Engine                 COMPLETE (synthetic 3-DOF reference scope)
   |
-v0.5  Visualization
+v0.5  Controller                     COMPLETE (synthetic 3-DOF baseline scope)
   |
-v0.6  Planner
+v0.6a Planner contracts and validation COMPLETE
   |
-v0.7  Controller
+v0.6b A* baseline
   |
-v0.8  ROS 2 Integration
+v0.6c Constraint/current-aware planning improvements
   |
-v0.9  Gazebo Integration
+v0.6d RRT/RRT* comparison
+  |
+v0.7  Trajectory generation
+  |
+v0.8  Navigation integration
+  |
+Later Visualization, benchmarks, ROS 2 / Gazebo integration
   |
 v1.0  Dissertation Release
 ```
@@ -359,6 +393,33 @@ will require:
 This is a coordinated Core/Environment/Physics/Simulation migration, not a
 change that should be made by simply allowing larger arrays in the current
 3-DOF classes.
+
+### Completed Milestone: Control v0.5
+
+Control v0.5 implements the approved underactuated surge/pitch cascaded PID
+baseline. It consumes current and reference `VehicleState` objects and emits a
+bounded, Physics-admissible `ControlInput`. Trajectory sampling remains a
+Simulation responsibility, while actuator allocation and thruster/fin
+dynamics remain deferred.
+
+### Completed Milestone: Planner v0.6a
+
+Planner v0.6a provides validated PlanningConstraints, PlanningRequest,
+PlanningResult/PlanningStatus, GlobalPlanner, PlanningSpace and a WorldModel
+adapter. Shared validation checks complete segments, footprint clearance,
+optional request endpoints and path length in the ENU x-z vertical plane.
+Its output is the existing geometric Core Path. A straight-line planner exists
+only in tests to verify the integration boundary.
+
+See [Planner v0.6a specification](docs/planner_v0.6a_specification.md).
+Run `pytest tests/planner -q` for its contract and integration checks.
+
+The next milestone is v0.6b standard A*. Subsequent milestones are v0.6c
+constraint/current-aware improvements, v0.6d RRT/RRT*, Trajectory v0.7
+(simplification, smoothing and time parameterization), and Navigation v0.8
+(Planner–Trajectory–Controller–Physics integration). Search and trajectory
+generation are not part of the completed v0.6a scope. Visualization, algorithm
+benchmarks and ROS/Gazebo integration remain future work.
 
 ### Deferred Environment extensions
 

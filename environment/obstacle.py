@@ -8,7 +8,7 @@ from types import MappingProxyType
 from typing import Any
 
 import numpy as np
-from shapely.geometry import Point, Polygon, box
+from shapely.geometry import LineString, Point, Polygon, box
 from shapely.geometry.base import BaseGeometry
 
 from environment.coordinates import PlanningPosition, as_xz
@@ -140,3 +140,9 @@ class Obstacle:
         """Return non-negative distance from a point to the obstacle surface."""
         return float(self._geometry.distance(_point(position)))
 
+    def segment_collides(self, start: PlanningPosition, end: PlanningPosition,
+                         radius: float = 0.0) -> bool:
+        """Check the complete centre segment; obstacle contact is collision."""
+        radius = _non_negative(radius, "radius")
+        line = LineString([as_xz(start), as_xz(end)])
+        return bool(self._geometry.distance(line) <= radius)

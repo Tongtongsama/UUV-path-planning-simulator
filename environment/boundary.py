@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 
-from shapely.geometry import Point, Polygon, box
+from shapely.geometry import LineString, Point, Polygon, box
 from shapely.geometry.base import BaseGeometry
 
 from environment.coordinates import PlanningPosition, as_xz
@@ -76,3 +76,11 @@ class Boundary:
         """Return minimum unsigned distance from a point to the boundary edge."""
         return float(self._geometry.boundary.distance(_point(position)))
 
+    def contains_segment(self, start: PlanningPosition, end: PlanningPosition,
+                         clearance: float = 0.0) -> bool:
+        """Cover a complete swept disk segment; boundary contact is valid."""
+        clearance = _non_negative(clearance, "clearance")
+        a, b = as_xz(start), as_xz(end)
+        geometry = _point(start) if (a == b).all() else LineString([a, b])
+        return bool(self._geometry.covers(geometry)
+                    and self._geometry.boundary.distance(geometry) >= clearance)
