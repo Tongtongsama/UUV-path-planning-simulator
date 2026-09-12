@@ -36,13 +36,14 @@ class Trajectory:
     Attributes:
         states: Tuple of VehicleState instances. Must be non-empty,
                 all VehicleState instances, with strictly increasing
-                finite timestamps.
+                finite timestamps. Input iterables are snapshotted to a tuple.
     """
 
     states: tuple[VehicleState, ...]
 
-    def __post_init__(self):
-        """Validate non-empty, types, finite timestamps, and strict monotonicity."""
+    def __post_init__(self) -> None:
+        """Snapshot input, then validate types and strictly increasing times."""
+        object.__setattr__(self, "states", tuple(self.states))
         if len(self.states) == 0:
             raise ValueError("Trajectory must contain at least one VehicleState")
 

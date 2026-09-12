@@ -30,3 +30,6 @@ log/
 
 # Testing
 .pytest_cache/
+
+# Local simulation outputs, plots, logs and per-run source snapshots
+/artifacts/

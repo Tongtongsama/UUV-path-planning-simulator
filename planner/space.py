@@ -26,12 +26,26 @@ class PlanningSpace(Protocol):
         ...
 
 
+@runtime_checkable
+class BoundedPlanningSpace(PlanningSpace, Protocol):
+    """Optional finite search bounds for grid and future sampling planners."""
+    @property
+    def bounds(self) -> tuple[float, float, float, float]:
+        """Return (x_min, z_min, x_max, z_max) in world metres."""
+        ...
+
+
 class EnvironmentPlanningSpace:
     """Adapt public WorldModel queries without exposing backend geometry."""
     def __init__(self, environment: WorldModel) -> None:
         if not isinstance(environment, WorldModel):
             raise TypeError("environment must be WorldModel")
         self._environment = environment
+
+    @property
+    def bounds(self) -> tuple[float, float, float, float]:
+        """Public operating-boundary bounding box; not a free-space guarantee."""
+        return self._environment.boundary.bounds
 
     def contains(self, pose: Pose) -> bool:
         """Check centre containment in the planning boundary."""

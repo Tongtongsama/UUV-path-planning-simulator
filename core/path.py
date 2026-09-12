@@ -27,13 +27,14 @@ class Path:
 
     Attributes:
         poses: Tuple of Pose instances defining the path.
-               Must be non-empty.
+               Must be non-empty. Input iterables are snapshotted to a tuple.
     """
 
     poses: tuple[Pose, ...]
 
-    def __post_init__(self):
-        """Validate non-empty and all elements are Pose instances."""
+    def __post_init__(self) -> None:
+        """Snapshot the input before validating non-empty Pose membership."""
+        object.__setattr__(self, "poses", tuple(self.poses))
         if len(self.poses) == 0:
             raise ValueError("Path must contain at least one Pose")
         if not all(isinstance(pose, Pose) for pose in self.poses):

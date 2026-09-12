@@ -10,7 +10,7 @@ avoidance, trajectory generation, and trajectory tracking** within a
 common software architecture.
 
 > **Current status:** Core v0.2, Environment v0.3, synthetic 3-DOF Physics
-> v0.4, the underactuated Control baseline v0.5, and Planner v0.6a are implemented and
+> v0.4, the underactuated Control baseline v0.5, and Planner through v0.6b are implemented and
 > validated within their documented scopes. These milestones establish
 > software and numerical contracts, not real-vehicle validation.
 
@@ -332,17 +332,17 @@ v0.5  Controller                     COMPLETE (synthetic 3-DOF baseline scope)
   |
 v0.6a Planner contracts and validation COMPLETE
   |
-v0.6b A* baseline
+v0.6b A* baseline                     COMPLETE
   |
-v0.6c Constraint/current-aware planning improvements
+M1    A* acceptance and static figures IMPLEMENTED / evidence generated
   |
-v0.6d RRT/RRT* comparison
+v0.7  Trajectory generation           IMPLEMENTED (piecewise-linear baseline)
   |
-v0.7  Trajectory generation
+v0.8  Navigation integration          NEXT
   |
-v0.8  Navigation integration
+Next  Benchmark, then evidence-driven planning improvements and ROS 2
   |
-Later Visualization, benchmarks, ROS 2 / Gazebo integration
+Gated RRT/RRT*, MPC, 6-DOF and Gazebo extensions
   |
 v1.0  Dissertation Release
 ```
@@ -414,12 +414,75 @@ only in tests to verify the integration boundary.
 See [Planner v0.6a specification](docs/planner_v0.6a_specification.md).
 Run `pytest tests/planner -q` for its contract and integration checks.
 
-The next milestone is v0.6b standard A*. Subsequent milestones are v0.6c
-constraint/current-aware improvements, v0.6d RRT/RRT*, Trajectory v0.7
-(simplification, smoothing and time parameterization), and Navigation v0.8
-(Planner–Trajectory–Controller–Physics integration). Search and trajectory
-generation are not part of the completed v0.6a scope. Visualization, algorithm
-benchmarks and ROS/Gazebo integration remain future work.
+### Completed Milestone: Planner v0.6b
+
+The A* baseline adds a bounded ENU x-z occupancy lattice, world/index
+conversion, deterministic 4/8-connected search, open/closed sets, predecessor
+reconstruction and endpoint connectors. Search accepts valid lattice nodes
+inside goal_tolerance, returns `[start]` if already arrived, and uses distance
+to the goal region for its heuristic and path-length pruning. Exact-goal
+connectors remain available for off-grid goals. Every edge and returned Path
+undergoes continuous collision validation. Occupancy applies vehicle radius
+and safety margin; diagonal corner cutting is rejected. Failure results
+distinguish invalid endpoints, no route in the configured graph and exhausted
+resource budgets.
+
+See [Planner v0.6b specification](docs/planner_v0.6b_specification.md).
+Run `python -m simulation.planner_smoke_demo` for detour and unreachable cases.
+This version adds no dependencies. Verified on 2026-09-09: 522 tests passed,
+1 optional SciPy validation test skipped.
+
+The delivery sequence now prioritizes M1 A* acceptance and static figures,
+Trajectory v0.7, Navigation v0.8 and baseline benchmark evidence. Planning
+improvements follow the benchmark; RRT/RRT* remains a conditional extension.
+
+### M1 acceptance runner and static figures
+
+Install the optional plotting dependencies and create a new run directory:
+
+```bash
+python -m pip install -r requirements-visualization.txt
+python -m validation.planner_acceptance --output artifacts/planner/m1_run_001
+```
+
+The runner reads `config/scenarios/planner_acceptance_v1.json`, runs detour,
+narrow-passage and unreachable cases twice, revalidates complete paths and
+runs the full test suite. It saves PNG/SVG figures, JSON results/configuration,
+test output, source snapshots and SHA-256 manifests. Existing run directories
+are never overwritten. `--skip-tests` is a preview, not acceptance evidence.
+
+The 2026-09-12 run reports **548 passed, 1 skipped** (optional SciPy), and all
+three expected outcomes. All three PNGs were visually inspected. See
+[M1 acceptance guide](docs/planner_m1_acceptance.md) for artifacts, limitations
+and reproduction. Actual pytest was 9.1.1 whereas the development requirement
+is currently <9; a declared-dependency/fresh-environment run remains outstanding.
+This does not certify a completed Navigation system or a release-ready checkout.
+
+### Trajectory v0.7 baseline
+
+`trajectory.generate_trajectory` validates an accepted Path, removes consecutive
+duplicate positions, performs collision-safe line-of-sight shortcutting,
+resamples by bounded distance spacing and assigns constant-speed timestamps.
+Every geometry stage is revalidated. The result includes intermediate paths
+and the existing Core Trajectory. `sample_reference` provides the explicit
+piecewise-linear reference policy for Simulation, including terminal holding.
+
+This baseline has discontinuous pitch at corners and no acceleration or
+finite-turn-rate guarantee. It does not establish underactuated dynamic
+feasibility. Such failures must be measured in Navigation v0.8 before deciding
+which smoothing or speed-policy extension to adopt.
+
+Both v1 and user-added v2 planning scenarios are covered. Verified on 2026-09-12:
+562 tests passed, one optional SciPy test skipped. Six successful scenarios
+produce validated timed references; the unreachable scenario produces none.
+
+```bash
+python -m simulation.trajectory_demo --output artifacts/trajectory/v07_run_001
+```
+
+See [Trajectory specification](docs/trajectory_v0.7_specification.md).
+The demo writes raw/shortcut/sample comparisons, pitch/speed curves and JSON
+states. Install requirements-visualization.txt for plotting.
 
 ### Deferred Environment extensions
 

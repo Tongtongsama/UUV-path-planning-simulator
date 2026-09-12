@@ -37,6 +37,11 @@ if both are infeasible; otherwise it returns None. It does not claim a route
 exists. Result construction cannot establish map-dependent validity; planners
 must validate their candidate path before reporting SUCCESS.
 
+Both validation entry points check space against the runtime-checkable
+PlanningSpace protocol and raise TypeError for a missing interface. Structural
+implementations need not inherit the protocol. This runtime check verifies
+member presence, not method signatures or return-value semantics.
+
 ## Collision semantics
 
 The footprint is an orientation-independent disk of required_clearance.
@@ -59,6 +64,11 @@ validate_path(path, space, constraints, *, request=None) returns a frozen
 PathValidationResult with the first invalid waypoint or segment index and
 a diagnostic message. Segment i joins waypoints i and i+1.
 
+valid must be a bool. Indices must be nonnegative integers excluding bool,
+or None. Successful validation cannot carry invalid indices, and waypoint
+and segment indices cannot both be set. message must be str or None.
+Failures without an index are allowed, for example a path-length violation.
+
 Validation checks nonempty paths, valid waypoints, every complete segment,
 optional endpoint matching, then maximum length. Core normally rejects empty
 paths during construction. Invalid plane/nonfinite waypoints produce an
@@ -78,7 +88,7 @@ of a blocked line, INVALID_START and INVALID_GOAL. It is not a search baseline
 and is not exported from the production package.
 
 Run `pytest tests/planner -q` and `pytest tests -q` from the repository root.
-Verified on 2026-09-07: 47 Planner tests passed; full suite 465 passed,
+Verified on 2026-09-09: 74 Planner tests passed; full suite 492 passed,
 1 skipped (optional SciPy validation dependency unavailable).
 Public contracts are covered by invalid numeric data, frozen constraints,
 result invariants, continuous collision, footprint contact, concave boundary,
@@ -88,3 +98,8 @@ The agreed next sequence is v0.6b standard A*, v0.6c constraint/current-aware
 improvements, v0.6d RRT/RRT*, Trajectory v0.7, then Navigation v0.8.
 Algorithm-specific settings belong to their future configurations, not
 PlanningConstraints. Empty algorithm packages are deferred until needed.
+
+Future grid bounds/conversions, sampling boundaries and current queries should
+use separate capability protocols such as GridPlanningSpace,
+SampleablePlanningSpace and CurrentAwarePlanningSpace. These are deferred
+design directions; the base PlanningSpace remains unchanged in v0.6a.

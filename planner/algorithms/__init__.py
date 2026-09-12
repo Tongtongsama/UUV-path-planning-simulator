@@ -1,0 +1,1 @@
+"""Concrete geometric search algorithms."""

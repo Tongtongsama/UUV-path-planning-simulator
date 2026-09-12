@@ -1,12 +1,19 @@
 """Shared request and full-path geometric validation."""
 from dataclasses import dataclass
 from math import hypot
+from numbers import Integral
 from core import Path
 from ._checks import check_pose
 from .constraints import PlanningConstraints
 from .request import PlanningRequest
 from .result import PlanningStatus
 from .space import PlanningSpace
+
+
+def check_space(space: PlanningSpace) -> None:
+    """Require the runtime PlanningSpace protocol before making queries."""
+    if not isinstance(space, PlanningSpace):
+        raise TypeError("space must satisfy PlanningSpace")
 
 
 @dataclass(frozen=True)
@@ -17,9 +24,29 @@ class PathValidationResult:
     invalid_segment_index: int | None = None
     message: str | None = None
 
+    def __post_init__(self) -> None:
+        if not isinstance(self.valid, bool):
+            raise TypeError("valid must be bool")
+        for name in ("invalid_waypoint_index", "invalid_segment_index"):
+            index = getattr(self, name)
+            if index is not None:
+                if isinstance(index, bool) or not isinstance(index, Integral):
+                    raise TypeError(f"{name} must be an integer or None")
+                if index < 0:
+                    raise ValueError(f"{name} must be nonnegative")
+        has_waypoint = self.invalid_waypoint_index is not None
+        has_segment = self.invalid_segment_index is not None
+        if self.valid and (has_waypoint or has_segment):
+            raise ValueError("valid results must not contain invalid indices")
+        if has_waypoint and has_segment:
+            raise ValueError("waypoint and segment indices are mutually exclusive")
+        if self.message is not None and not isinstance(self.message, str):
+            raise TypeError("message must be a string or None")
+
 
 def validate_request(request: PlanningRequest, space: PlanningSpace) -> PlanningStatus | None:
     """Return INVALID_START/GOAL for environmental infeasibility, else None."""
+    check_space(space)
     if not isinstance(request, PlanningRequest):
         raise TypeError("request must be PlanningRequest")
     radius = request.constraints.required_clearance
@@ -37,6 +64,7 @@ def validate_path(path: Path, space: PlanningSpace, constraints: PlanningConstra
     Start position tolerance is 1e-9 m; goal uses goal_tolerance. Orientation
     feasibility and velocity constraints are outside this geometric contract.
     """
+    check_space(space)
     if not isinstance(path, Path) or not isinstance(constraints, PlanningConstraints):
         raise TypeError("expected Core Path and PlanningConstraints")
     if request is not None:
