@@ -22,6 +22,7 @@ class CascadedPID3DOFParameters:
     maximum_tau_m: float
     surge_integral_limit: float
     pitch_integral_limit: float
+    restoring_pitch_coefficient: float = 0.0
 
     def __post_init__(self) -> None:
         for item in fields(self):

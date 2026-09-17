@@ -1,11 +1,34 @@
 # Trajectory v0.7 baseline
 
-Status: implemented piecewise-linear reference baseline. This milestone does
+Status: M2 completed and verified within baseline scope. This milestone does
 not certify vehicle-dynamic feasibility or completion of Navigation v0.8.
 
 Verification on 2026-09-12: 14 new tests; full suite 562 passed, 1 skipped
 (optional SciPy unavailable). Six successful v1/v2 scenario figures inspected
 in artifacts/trajectory/v07_20260912; the seventh scenario is unreachable.
+
+M2 evidence verification on 2026-09-12 supersedes the earlier unarchived suite
+claim: the dedicated original test file reports 14 passed, and the full suite
+reports 566 passed, 1 skipped after adding four acceptance-checker regressions.
+The archived files are in artifacts/trajectory/m2_acceptance_20260912:
+config.json, results.json, summary.txt, pytest_trajectory.log, pytest_full.log,
+test_trajectory_generation.py and manifest.json. The manifest was verified.
+All six generated cases pass every machine-readable invariant; the unreachable
+case has no trajectory. Historical Planner logs do not constitute M2 evidence.
+
+Reproduce in a new directory:
+
+```bash
+python -m validation.trajectory_acceptance --output artifacts/trajectory/m2_run_002
+```
+
+The runner archives actual interpreter/package versions, Git state and source
+hashes and exits nonzero on scenario/check/test failure. It does not copy a
+full source tree. Source hashes identify the tested files but do not replace
+a committed checkout. No repeated source snapshots are needed for this runner.
+Spacing and timing use explicit 1e-10 tolerances (recorded in config.json).
+Singleton spacing/time monotonicity checks are vacuous by definition; its
+duration is zero and its terminal Twist must still be entirely zero.
 
 ## Input and ownership
 
@@ -49,9 +72,15 @@ z_dot = u*sin(pitch)
 delta_t = segment_length/nominal_speed
 ```
 
-Inactive pose/twist fields are zero. Speed is the nominal over-ground reference;
-Core Twist.u is absolute body velocity, not water-relative velocity. Current
-compensation belongs to tracking rather than changing this reference contract.
+Inactive pose/twist fields are zero. Reference u is desired body-frame surge
+speed. No current compensation is performed by the trajectory generator.
+Here body-frame specifies the coordinate basis, not velocity relative to water:
+Physics v0.4 stores absolute translational velocity in body coordinates and
+computes water-relative velocity separately as nu_relative = nu - current_body.
+With tangent pitch and w=0, nominal_speed also equals the reference position
+curve's speed through world coordinates. Actual ground speed and tracking error
+under current are evaluated by Controller/Navigation. No current is added to
+or subtracted from the generated reference.
 Pure upward/downward or negative-x geometric motion follows the same atan2
 rule. Feasibility of those attitudes for the controlled vehicle is not assumed.
 Input active velocities and endpoint pitch are not preserved as constraints.

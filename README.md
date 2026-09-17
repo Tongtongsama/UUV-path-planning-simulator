@@ -10,7 +10,8 @@ avoidance, trajectory generation, and trajectory tracking** within a
 common software architecture.
 
 > **Current status:** Core v0.2, Environment v0.3, synthetic 3-DOF Physics
-> v0.4, the underactuated Control baseline v0.5, and Planner through v0.6b are implemented and
+> v0.4, the underactuated Control baseline v0.5, Planner through v0.6b,
+> Trajectory v0.7 and the Navigation v0.8 minimum closed loop are implemented and
 > validated within their documented scopes. These milestones establish
 > software and numerical contracts, not real-vehicle validation.
 
@@ -279,6 +280,53 @@ will be implemented incrementally.
 
 ## Testing
 
+### Optional Control v0.5.1 candidate
+
+Restoring-moment feedforward is now implemented with default coefficient zero,
+combined-request clipping and limits-aware conditional integration. Navigation
+supplies its caps before the controller updates integrals. Old YAML and the old
+step/reset API remain supported; the coefficient-6 candidate is explicitly
+selected from `config/controllers/cascaded_pid_3dof_restoring_candidate.yaml`,
+not installed as the global default.
+
+Formal acceptance: **622 passed**, 17 repeated real-module cases. Horizontal,
+ascending and descending candidate runs pass at 0.2 and 0.5 m/s. Limited ±20%
+coefficient mismatch cases pass but do not establish general robustness.
+See [Control v0.5.1 acceptance](docs/control_v0.5.1_validation.md) and
+[low-speed terminal residual classification](docs/terminal_residual_classification_v051.md).
+Low-speed detour still times out with near-static cross-track residual; no new
+terminal strategy, corner slowdown or smoothing has been enabled.
+
+```powershell
+.\.venv\Scripts\python.exe -m validation.control_v051_acceptance --output artifacts/controller/v051_run_002
+```
+
+### Test environment
+
+Use a project-local virtual environment so global pytest installations do not
+override the declared `pytest>=7.0,<9.0` development range. On Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-validation.txt -r requirements-visualization.txt
+.\.venv\Scripts\python.exe -m pip check
+.\.venv\Scripts\python.exe -m pytest tests/ -q -rs
+```
+
+The combined install includes development tests, optional SciPy reference tests
+and plotting tests. For only the normal development dependencies, install
+`requirements-dev.txt` instead. `.venv/` is already Git-ignored. Select
+`.venv\Scripts\python.exe` as the IDE interpreter. The explicit executable
+does not require activating PowerShell scripts or changing execution policy.
+Use it for validation/simulation runners too; bare `python` or `pytest` in an
+unactivated terminal may still invoke a different global installation.
+
+Verified on 2026-09-13 in the isolated Python 3.10.9 environment: pytest 8.4.2,
+`pip check` clean, **589 passed with no skips**, including SciPy 1.15.3 reference
+validation. See [dependency verification](docs/dependency_environment_validation.md).
+
+The generic commands below assume the intended virtual environment is active.
+
 Install normal runtime dependencies:
 
 ``` bash
@@ -336,9 +384,9 @@ v0.6b A* baseline                     COMPLETE
   |
 M1    A* acceptance and static figures IMPLEMENTED / evidence generated
   |
-v0.7  Trajectory generation           IMPLEMENTED (piecewise-linear baseline)
+v0.7  Trajectory generation           COMPLETE (M2 baseline verified)
   |
-v0.8  Navigation integration          NEXT
+v0.8  Navigation integration          BASELINE VERIFIED; hard-case failures recorded
   |
 Next  Benchmark, then evidence-driven planning improvements and ROS 2
   |
@@ -454,9 +502,10 @@ are never overwritten. `--skip-tests` is a preview, not acceptance evidence.
 The 2026-09-12 run reports **548 passed, 1 skipped** (optional SciPy), and all
 three expected outcomes. All three PNGs were visually inspected. See
 [M1 acceptance guide](docs/planner_m1_acceptance.md) for artifacts, limitations
-and reproduction. Actual pytest was 9.1.1 whereas the development requirement
-is currently <9; a declared-dependency/fresh-environment run remains outstanding.
-This does not certify a completed Navigation system or a release-ready checkout.
+and reproduction. That historical run used pytest 9.1.1, outside the declared
+<9 range. A later isolated pytest 8.4.2 full-suite verification now passes;
+see [dependency verification](docs/dependency_environment_validation.md).
+That M1 evidence alone does not certify Navigation or a release-ready checkout.
 
 ### Trajectory v0.7 baseline
 
@@ -473,8 +522,15 @@ feasibility. Such failures must be measured in Navigation v0.8 before deciding
 which smoothing or speed-policy extension to adopt.
 
 Both v1 and user-added v2 planning scenarios are covered. Verified on 2026-09-12:
-562 tests passed, one optional SciPy test skipped. Six successful scenarios
+the dedicated trajectory log records 14 passed; M2's full log records
+566 passed, one optional SciPy test skipped. Six successful scenarios
 produce validated timed references; the unreachable scenario produces none.
+
+M2 evidence is archived in `artifacts/trajectory/m2_acceptance_20260912`, with
+config, per-case invariant checks, summary, separate pytest logs, dedicated
+test source and a verified manifest. Generate a new evidence package using
+`python -m validation.trajectory_acceptance --output artifacts/trajectory/m2_run_002`.
+This runner records source hashes without copying another full source tree.
 
 ```bash
 python -m simulation.trajectory_demo --output artifacts/trajectory/v07_run_001
@@ -483,6 +539,64 @@ python -m simulation.trajectory_demo --output artifacts/trajectory/v07_run_001
 See [Trajectory specification](docs/trajectory_v0.7_specification.md).
 The demo writes raw/shortcut/sample comparisons, pitch/speed curves and JSON
 states. Install requirements-visualization.txt for plotting.
+
+### Navigation v0.8 / M3 closed-loop baseline
+
+`Navigator` composes A*, trajectory generation/sampling, the existing PID and
+Python 3-DOF Physics. It uses a fixed clock, records commanded/applied controls,
+checks actual motion segments against obstacles and boundaries, and requires
+position, speed and pitch-rate qualification for a settling interval.
+
+```bash
+python -m validation.navigation_acceptance --output artifacts/navigation/m3_run_001 --animate
+```
+
+Install `requirements-visualization.txt` for this runner. Optional `--stage`
+values are `minimum`, `static`, `current` and `all` (default). Each case is run
+twice; histories, parameters, metrics, PNG/SVG, pytest log and SHA-256 manifest
+are saved without copying another source tree. `artifacts/` remains Git-ignored.
+
+Re-audited on 2026-09-13: **588 passed, 1 skipped** (optional SciPy missing).
+The 16 experiments produced **7 SUCCESS, 2 TIMEOUT, 6 COLLISION and 1
+OUT_OF_BOUNDS**. Horizontal and static narrow-passage baselines passed, including
+axial constant-current comparisons. Diagonal settling, detours and vertical
+current still expose limitations. Evidence acceptance is not mission success.
+That recorded M3 runner used global pytest 9.1.1. A subsequent isolated
+pytest 8.4.2 full-suite run passes all 589 tests, including SciPy validation.
+The old M3 artifact package is retained unchanged; this dependency check does
+not replace or rerun its 16 scenario experiments.
+
+See [Navigation contract](docs/navigation_v0.8_specification.md) and
+[M3 audit and results](docs/navigation_v0.8_validation.md). The next research
+step is diagnosing diagonal terminal holding and detour tracking failures,
+not treating all obstacle scenarios as solved.
+
+The [tracking diagnosis](docs/navigation_tracking_diagnosis.md) now records
+30 repeated diagnostic cases, including the 24-case isolated corner sweep.
+It identifies non-goal terminal equilibria, limited pitch integral authority
+against restoring moment, and detour collision before the first reference
+corner. Slower corner runs reduce measured moving-phase deviation but do not
+establish reliable completion. No PID tuning or corner-speed policy has been
+applied. Reproduce with the project virtual environment:
+
+```powershell
+.\.venv\Scripts\python.exe -m validation.tracking_diagnostics --output artifacts/navigation/tracking_diagnosis_run_002
+```
+
+Follow-up [restoring/terminal ablations](docs/terminal_restoring_experiments.md)
+compare 16 navigation cases and 18 attitude-hold cases. Exact synthetic restoring
+feedforward enables the two diagonal missions with unchanged tolerances, but
+detour still collides. The tested terminal-guidance candidate degrades the
+horizontal case and is rejected. These behaviors remain opt-in validation
+experiments; production controller/trajectory defaults are unchanged.
+
+The [optional feedforward and anti-windup design](docs/control_feedforward_antiwindup_design.md)
+now specifies combined pre-limit requests and shared effective actuator caps,
+with a validation-only executable prototype. The
+[detour execution-margin study](docs/detour_execution_margin_study.md) separates
+initial alignment, uniform speed and planning-only extra margin while keeping
+actual-motion clearance fixed at 0.3 m. Several variants avoid collision but
+still time out or leave the boundary; none is promoted to a successful default.
 
 ### Deferred Environment extensions
 
@@ -527,7 +641,8 @@ research algorithms.
 ``` text
 simulation
     |
-    +--> planner / controller / visualization
+    +--> navigation --> planner / trajectory / controller / physics / environment
+    +--> visualization
     +--> physics
     +--> environment
     +--> core
@@ -545,10 +660,27 @@ simulation
     `ControlInput`.
 -   `simulation` orchestrates modules rather than implementing their
     algorithms.
+-   `navigation` owns mission scheduling, actual-motion safety, termination
+    and recording; lower-level modules do not import it.
 -   ROS 2 and Gazebo are integration infrastructure rather than the
     location of core research logic.
 
 ## Technology Stack
+
+### Optional terminal capture (verified candidate)
+
+Navigation now supports an opt-in `TerminalCapturePolicy` with an explicit controller
+guidance interface, bounded braking/correction and unchanged safety/arrival checks.
+The full suite passes 637 tests; 13 paired fixtures (26 enabled/disabled cases) have
+reproducible acceptance evidence. Low-speed detours succeed with capture, but retain
+only approximately 27 mm / 8 mm obstacle margin. Some previously successful tasks
+take longer, so terminal hold remains the default.
+See [contract, results and reproduction command](docs/terminal_capture_policy.md).
+
+An additional opt-in controlled-startup candidate physically establishes initial
+heading while pausing only the path clock. Separate experiments compare local
+corner speed scheduling, without smoothing or PID tuning. These are not new defaults;
+see [startup and corner-timing evidence](docs/controlled_startup_and_corner_timing.md).
 
 Current development:
 

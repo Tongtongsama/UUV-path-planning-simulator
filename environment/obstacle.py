@@ -146,3 +146,9 @@ class Obstacle:
         radius = _non_negative(radius, "radius")
         line = LineString([as_xz(start), as_xz(end)])
         return bool(self._geometry.distance(line) <= radius)
+
+    def segment_clearance(self, start: PlanningPosition, end: PlanningPosition) -> float:
+        """Minimum centre-to-obstacle distance along a complete line segment."""
+        a, b = as_xz(start), as_xz(end)
+        geometry = _point(start) if (a == b).all() else LineString([a, b])
+        return float(self._geometry.distance(geometry))

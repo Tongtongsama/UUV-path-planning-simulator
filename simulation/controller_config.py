@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from dataclasses import MISSING
 
 import yaml
 
@@ -24,9 +25,11 @@ def load_baseline_controller_parameters(
         document = yaml.safe_load(stream)
     if not isinstance(document, dict):
         raise ValueError("controller configuration must be a mapping")
-    if document.get("name") != "cascaded_pid_3dof_baseline":
+    if document.get("name") not in ("cascaded_pid_3dof_baseline","cascaded_pid_3dof_restoring_candidate"):
         raise ValueError("unexpected controller configuration name")
     parameter_names = CascadedPID3DOFParameters.__dataclass_fields__
     return CascadedPID3DOFParameters(
-        **{name: document[name] for name in parameter_names}
+        **{name: document[name] if name in document else field.default
+           for name,field in parameter_names.items()
+           if name in document or field.default is not MISSING}
     )

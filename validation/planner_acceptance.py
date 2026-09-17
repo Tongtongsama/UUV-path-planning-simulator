@@ -69,7 +69,7 @@ def run_acceptance(output: FilePath, config_path: FilePath = DEFAULT_CONFIG,
     if not names or len(names) != len(set(names)) or any(not n or any(c not in "abcdefghijklmnopqrstuvwxyz_0123456789" for c in n) for n in names):
         raise ValueError("case names must be unique safe identifiers")
     output = output.resolve()
-    for folder in ("core","environment","planner","controller","physics","trajectory","simulation","validation","visualization","tests","config"):
+    for folder in ("core","environment","planner","controller","physics","trajectory","navigation","simulation","validation","visualization","tests","config"):
         if output.is_relative_to(ROOT/folder):
             raise ValueError("output must be outside source directories; use artifacts/planner/<run>")
     output.mkdir(parents=True,exist_ok=False)
@@ -77,7 +77,7 @@ def run_acceptance(output: FilePath, config_path: FilePath = DEFAULT_CONFIG,
     (output/"config.json").write_text(json.dumps(config,indent=2),encoding="utf-8")
     # Preserve actual source, including uncommitted/untracked implementation.
     source_files = []
-    for folder in ("core","environment","planner","controller","physics","trajectory","simulation","validation","visualization","tests"):
+    for folder in ("core","environment","planner","controller","physics","trajectory","navigation","simulation","validation","visualization","tests"):
         source_files.extend((ROOT/folder).rglob("*.py"))
     source_files.extend(ROOT.glob("requirements*.txt"))
     source_files.extend([ROOT/"pytest.ini"])

@@ -87,6 +87,11 @@ class WorldModel:
         """Return planning-plane current velocity ``[v_x, v_z]``."""
         return self.current.velocity_at(position, time)
 
+    def segment_clearance(self, start: PlanningPosition, end: PlanningPosition) -> float:
+        """Minimum obstacle distance over the centre segment, infinity if empty."""
+        a,b = as_xz(start),as_xz(end)
+        return min((o.segment_clearance(a,b) for o in self.obstacles), default=float("inf"))
+
     def is_segment_valid(self, start: PlanningPosition, end: PlanningPosition,
                          clearance: float = 0.0) -> bool:
         """Check continuous boundary containment and static obstacle clearance."""
