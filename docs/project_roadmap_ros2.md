@@ -39,8 +39,14 @@ timed 9/16 成功，角速度诊断超限为 4/16 与 3/16；仍不能宣称鲁�
 已将 evaluated baseline 提交为 `66a973c`（未推送），并完成
 [两个独立 terminal replay](terminal_handoff_replay_diagnosis.md)：
 确认末段制动空间不足的 probe 结果及固定水平捕获在垂向流下的 BRAKE 条件冲突。
-下一研究顺序为 terminal 可达性合同 → 独立转弯执行包络测量 → 可选 execution-aware
-Planner v0.6c → 固定 LOS 的 P0/P1 对照 → 后续 current-aware planning。
+已形成 [Terminal Approach / Handoff 合同](terminal_approach_handoff_contract.md) 和
+[Current-aware Terminal Feasibility 合同](current_terminal_feasibility_contract.md)，
+均为设计文件，尚未实现生产修复。
+下一研究顺序为 [Step 2 孤立转弯及停止实验设计](stopping_turning_envelope_experiment_design.md)
+→ 冻结可执行矩阵 → 测量并冻结包络数据 → 可选 execution-aware Planner v0.6c
+→ 固定 LOS 的 P0/P1 对照 → 单独实现 terminal policy 改进
+→ current-aware planning → 稳定基线后的 ROS 2 adapter。
+0.35 rad/s 继续作为诊断线，不自动成为 Planner 的硬拒绝条件。
 不覆盖 geometric A*，不在同一轮混入平滑、变前视、减速和 PID 调参。
 来源优先级：MSS 算法、UUV Simulator 接口、PVS 控制/reference-model 补充；
 Nav2 与 MOOS-IvP 留到后续设计对照。原冻结版本与所有实验数据保持独立。

@@ -713,6 +713,12 @@ Post-freeze startup work now distinguishes aligned-motion bypass, supported star
 heading, and actual-attitude guards. See the [startup rejection analysis and verified
 resolution](docs/startup_rejection_resolution.md); the frozen statistics remain unchanged.
 
+Next research step (design only, no production policy change):
+[terminal approach/handoff contract](docs/terminal_approach_handoff_contract.md),
+[current-aware terminal feasibility contract](docs/current_terminal_feasibility_contract.md),
+and [stopping/turning envelope experiment design](docs/stopping_turning_envelope_experiment_design.md).
+The evaluated LOS 10/16 result remains unchanged; 0.35 rad/s remains a diagnostic line.
+
 Current development:
 
 -   Python 3.10+
