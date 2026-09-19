@@ -413,6 +413,9 @@ closed-loop fixtures verified. Timed tracking remains the default.
 The [matched sixteen-case comparison](docs/guidance_matched_16_results.md) is now recorded:
 LOS 10/16 successes versus matched timed 9/16, with rate-envelope flags 4/16 versus 3/16.
 These are diagnostic fixed-suite results, not a claim of robust safety or general superiority.
+The evaluated baseline is committed as `66a973c`; subsequent
+[terminal saved-state replays](docs/terminal_handoff_replay_diagnosis.md) isolate
+handoff braking space and fixed-heading current-capture reachability without changing production policies.
 
 ### Completed Milestone: Physics Engine v0.4
 

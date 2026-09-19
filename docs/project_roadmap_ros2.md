@@ -36,5 +36,11 @@ Guidance v1.0 Phase A 已完成纯几何投影、显式进度状态、固定前�
 [固定 16 场景 matched 比较](guidance_matched_16_results.md) 已完成：LOS 10/16、
 timed 9/16 成功，角速度诊断超限为 4/16 与 3/16；仍不能宣称鲁棒安全。
 本轮只分类失败，没有立即修改 guidance、planner 或 controller。
+已将 evaluated baseline 提交为 `66a973c`（未推送），并完成
+[两个独立 terminal replay](terminal_handoff_replay_diagnosis.md)：
+确认末段制动空间不足的 probe 结果及固定水平捕获在垂向流下的 BRAKE 条件冲突。
+下一研究顺序为 terminal 可达性合同 → 独立转弯执行包络测量 → 可选 execution-aware
+Planner v0.6c → 固定 LOS 的 P0/P1 对照 → 后续 current-aware planning。
+不覆盖 geometric A*，不在同一轮混入平滑、变前视、减速和 PID 调参。
 来源优先级：MSS 算法、UUV Simulator 接口、PVS 控制/reference-model 补充；
 Nav2 与 MOOS-IvP 留到后续设计对照。原冻结版本与所有实验数据保持独立。

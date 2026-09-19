@@ -1,0 +1,9 @@
+{
+  "scope": "Validation-only; unchanged production capture, PID, limits and goal conditions",
+  "stabilization_budget": 5.0,
+  "stabilization_maximum_displacement": 0.5,
+  "stabilization_pitch_target": "actual pitch at saved entry, held constant",
+  "stabilization_rate_envelope": "never exceed absolute rate at saved entry",
+  "stabilization_ready": "existing capture brake_speed and brake_pitch_rate thresholds",
+  "capture_budget": "unchanged original 60 seconds, bounded by original remaining mission horizon"
+}
