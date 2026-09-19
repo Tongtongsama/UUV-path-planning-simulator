@@ -4,6 +4,29 @@
 **Initial audit date:** 2026-09-03  
 **Scope:** UUV Simulator, with emphasis on Physics v0.4
 
+## Guidance audit extension — 2026-09-18
+
+For the new guidance milestone, MSS is the principal LOS/local-projection reference.
+The complete [eight-file audit](guidance_source_audit.md) records exact inspected
+functions, commit-pinned evidence links, license files, observed limitations and
+adopted/deferred ideas. MSS pin: `98970f71a21cfe81e7e29abdcc1bb6741789cddc` (MIT).
+UUV Simulator pin: `bfb40cb153684a0703173117b6bbf4258e8e71c5` (Apache-2.0), interface
+reference only. No code copied/adapted, no parameters adopted, no upstream execution
+or runtime dependency introduced. Last verified: 2026-09-18.
+
+PVS guidance candidate pin `695c673ea6aed3d3e3e09889a02241dc54043abd` is proposed but
+not inspected in this eight-file audit. It does not replace the earlier Physics pin
+or establish PVS as the primary LOS source. Dissertation citation keys/BibTeX entries
+for this new audit remain pending; no nonexistent bibliography path is claimed.
+
+Project equations/interfaces belong to [the guidance specification](guidance_progress_los_specification.md).
+Phase A now has an independently written ENU geometry/LOS implementation in
+`guidance/`, with local verification recorded in
+[Phase A validation](guidance_phase_a_validation.md). This does not change the
+reference-only reuse category or claim numerical equivalence to upstream MATLAB.
+The [updated roadmap](project_roadmap_ros2.md) places ROS 2 laboratory robot experiments
+immediately after the stable simulation comparison milestone.
+
 ## 1. Purpose
 
 This register records which external software, equations, implementations,

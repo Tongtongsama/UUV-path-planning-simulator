@@ -7,6 +7,7 @@ from environment import WorldModel, NoCurrent, ConstantCurrent
 from planner import PlanningConstraints, PlanningRequest, PlanningResult
 from trajectory.generator import finite
 from controller import ControllerDiagnostics3DOF,BodyGuidance3DOF
+from guidance import GuidanceCommand
 
 
 class NavigationStatus(Enum):
@@ -84,6 +85,10 @@ class NavigationStep:
     effective_guidance: BodyGuidance3DOF | None = None
     startup_phase: str = 'DISABLED'
     reference_time: float | None = None
+    guidance_phase: str = 'TIMED_REFERENCE'
+    guidance_command: GuidanceCommand | None = None
+    path_progress_s: float | None = None
+    path_segment_index: int | None = None
 
 
 @dataclass(frozen=True)

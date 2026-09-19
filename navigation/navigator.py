@@ -9,6 +9,8 @@ from controller import LimitAwareController3DOF, ControlLimits3DOF, ControllerDi
 from controller import GuidanceController3DOF
 from .terminal_capture import TerminalCapturePolicy
 from .startup import ControlledStartupPolicy
+from .los_adapter import LOSNavigationAdapter,spatial_metrics
+from controller import BodyGuidance3DOF
 from physics.backend import PhysicsBackend, extract_reduced_state
 from planner import GlobalPlanner, PlanningRequest, PlanningResult, EnvironmentPlanningSpace, validate_path
 from trajectory import TrajectoryConfig, TrajectoryGenerationResult, generate_trajectory, sample_reference
@@ -27,7 +29,8 @@ class Navigator:
                  trajectory_config: TrajectoryConfig = TrajectoryConfig(),
                  generator: Callable[...,TrajectoryGenerationResult] = generate_trajectory,
                  capture_policy: TerminalCapturePolicy | None = None,
-                 startup_policy: ControlledStartupPolicy | None = None) -> None:
+                 startup_policy: ControlledStartupPolicy | None = None,
+                 guidance_adapter: LOSNavigationAdapter | None = None) -> None:
         if not isinstance(config,NavigationConfig) or not isinstance(trajectory_config,TrajectoryConfig):
             raise TypeError("invalid navigation or trajectory configuration")
         for obj, methods in ((planner,("plan",)),(controller,("step","reset")),(physics,("step",))):
@@ -45,6 +48,13 @@ class Navigator:
             if not isinstance(startup_policy,ControlledStartupPolicy):raise TypeError('invalid startup policy')
             if not isinstance(controller,GuidanceController3DOF):raise TypeError('startup requires explicit body-guidance capability')
         self.startup_policy=startup_policy
+        if guidance_adapter is not None:
+            if not isinstance(guidance_adapter,LOSNavigationAdapter):raise TypeError('invalid guidance adapter')
+            if not isinstance(controller,GuidanceController3DOF):raise TypeError('LOS requires body-guidance capability')
+            if capture_policy is None:raise ValueError('LOS requires an explicit terminal capture policy')
+            if guidance_adapter.los_config.terminal_entry_distance<config.goal_position_tolerance:
+                raise ValueError('terminal entry distance must cover mission position tolerance')
+        self.guidance_adapter=guidance_adapter
 
     def run(self, request: NavigationRequest) -> NavigationResult:
         """Plan once, generate once, then execute until safety/goal/horizon termination."""
@@ -54,6 +64,8 @@ class Navigator:
         if self.capture_policy is not None:self.capture_policy.reset()
         if self.startup_policy is not None:self.startup_policy.reset()
         startup_delay=0.
+        adapter=self.guidance_adapter
+        progress=None; previous_los_pitch=None; capture_latched=False
         if request.planning_constraints.goal_tolerance>c.goal_position_tolerance:
             raise ValueError("planning tolerance must not exceed navigation position tolerance")
         world=request.environment
@@ -102,6 +114,12 @@ class Navigator:
                     moving_position_rmse=sqrt(sum(e*e for e in moving)/len(moving)) if moving else None)
             if self.startup_policy is not None:
                 metric.update(startup_duration=startup_delay,startup_released=self.startup_policy.released)
+            if adapter is not None:
+                # Archived timed references are not the spatial guidance target.
+                for key in ('reference_duration','position_rmse','maximum_position_error',
+                            'pitch_rmse','maximum_pitch_error','moving_position_rmse','settling_time_after_reference'):
+                    metric[key]=None
+                if progress is not None:metric.update(spatial_metrics(steps,states,progress,c.dt))
             for axis in ("tau_x","tau_m"):
                 values=[getattr(s.applied,axis) for s in steps]
                 metric["maximum_"+axis]=max(map(abs,values),default=0.)
@@ -134,6 +152,11 @@ class Navigator:
                 extract_reduced_state(state)
             check=validate_path(Path.from_list([s.pose for s in trajectory]),space,request.planning_constraints,request=planning_request)
             if not check.valid: raise ValueError(check.message)
+            if adapter is not None:
+                check=validate_path(generated.shortcut_path,space,request.planning_constraints,request=planning_request)
+                if not check.valid:raise ValueError(check.message)
+                progress=adapter.initialize(generated.shortcut_path,states[0])
+                capture_latched=not progress.geometry.lengths
             ref_clearance=min((world.segment_clearance(a.pose,b.pose) for a,b in zip(trajectory,trajectory.states[1:])),
                               default=world.clearance(trajectory[0].pose))
             refs.append(sample_reference(trajectory,states[0].timestamp))
@@ -148,17 +171,43 @@ class Navigator:
             try:
                 decision=None
                 startup_decision=None
-                if self.startup_policy is not None and not arrived(state):
+                los_command=None
+                guidance_phase='TIMED_REFERENCE'
+                if self.startup_policy is not None and not arrived(state) and not (adapter is not None and capture_latched):
                     startup_decision=self.startup_policy.update(state,trajectory[0].pose.pitch,c.dt)
                     if startup_decision.failure:return finish(S.STARTUP_FAILED,startup_decision.failure)
                     if startup_decision.target is not None:decision=startup_decision
                 startup_active=startup_decision is not None and startup_decision.target is not None
-                if self.capture_policy is not None and not startup_active:
+                if adapter is not None:
+                    if startup_active:
+                        guidance_phase='STARTUP'
+                    elif capture_latched:
+                        guidance_phase='TERMINAL_CAPTURE'
+                        terminal=adapter.terminal_reference(progress,state.timestamp,state.pose.pitch)
+                        decision=self.capture_policy.update_active(state,terminal,request.goal,c.dt,
+                            arrived(state),space,required)
+                        if decision.failure:return finish(S.CAPTURE_FAILED,decision.failure)
+                        if decision.target is None:
+                            # Already qualified: preserve settling with explicit zero-surge guidance.
+                            decision=replace(decision,target=BodyGuidance3DOF(0.,terminal.pose.pitch,0.))
+                    else:
+                        guidance_phase='PATH_FOLLOWING'
+                        los_command=adapter.update(state,progress,previous_los_pitch)
+                        progress=los_command.projection.next_state
+                        previous_los_pitch=los_command.pitch_ref
+                        # Readiness latches handoff for the NEXT physical step. No progress
+                        # update occurs on any startup or terminal-capture transition.
+                        capture_latched=los_command.terminal_ready
+                elif self.capture_policy is not None and not startup_active:
                     decision=self.capture_policy.update(state,reference,request.goal,c.dt,trajectory.end_time+startup_delay,
                         arrived(state),space,required)
                     if decision.failure:return finish(S.CAPTURE_FAILED,decision.failure)
                 limits_aware=isinstance(self.controller,LimitAwareController3DOF)
-                if decision is not None and decision.target is not None:
+                if los_command is not None:
+                    limits_aware=True
+                    command=self.controller.step_guidance(state,adapter.to_body(los_command),c.dt,
+                        ControlLimits3DOF(c.maximum_tau_x,c.maximum_tau_m))
+                elif decision is not None and decision.target is not None:
                     limits_aware=True
                     command=self.controller.step_guidance(state,decision.target,c.dt,
                         ControlLimits3DOF(c.maximum_tau_x,c.maximum_tau_m))
@@ -207,9 +256,13 @@ class Navigator:
                 abs(applied.tau_x)>=(diagnostics.effective_limits.maximum_tau_x if diagnostics else c.maximum_tau_x)-1e-12
                 or abs(applied.tau_m)>=(diagnostics.effective_limits.maximum_tau_m if diagnostics else c.maximum_tau_m)-1e-12,
                 limits_aware,diagnostics,
-                decision.phase if decision is not None and not startup_active else 'DISABLED',decision.target if decision is not None else None,
+                decision.phase if decision is not None and not startup_active else 'DISABLED',
+                adapter.to_body(los_command) if los_command is not None else decision.target if decision is not None else None,
                 startup_decision.phase if startup_decision is not None else 'DISABLED',
-                state.timestamp-startup_delay if self.startup_policy is not None else None))
+                state.timestamp-startup_delay if self.startup_policy is not None and adapter is None else None,
+                guidance_phase,los_command,
+                progress.committed_s if progress is not None else None,
+                progress.segment_index if progress is not None else None))
             if startup_active:startup_delay+=c.dt
             states.append(nxt)
             refs.append(replace(sample_reference(trajectory,nxt.timestamp-startup_delay),timestamp=nxt.timestamp))

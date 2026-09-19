@@ -67,6 +67,19 @@ class TerminalCapturePolicy:
         if dt<=0:raise ValueError('dt must be positive')
         if not isinstance(qualified,bool):raise TypeError('qualified must be bool')
         if state.timestamp<reference_end:return CaptureDecision('TIMED_REFERENCE',None)
+        return self.update_active(state,reference,goal,dt,qualified,space,clearance)
+
+    def update_active(self,state: VehicleState,reference: VehicleState,goal: Pose,dt: float,
+                      qualified: bool,space: PlanningSpace,clearance: float) -> CaptureDecision:
+        """Explicit phase-owner handoff; no synthetic reference-end timestamp.
+
+        Uses exactly the same braking, guards, attempt budget and inner targets
+        as timed capture. Initially qualified arrivals retain original settling.
+        """
+        c=self.config
+        dt=finite(dt,'dt')
+        if dt<=0:raise ValueError('dt must be positive')
+        if not isinstance(qualified,bool):raise TypeError('qualified must be bool')
         if self.started is None:
             if qualified:return CaptureDecision('ORIGINAL_SETTLE',None)
             self.started=state.timestamp;self.phase='BRAKE'

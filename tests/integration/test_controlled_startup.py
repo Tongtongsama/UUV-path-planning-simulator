@@ -22,9 +22,11 @@ def test_startup_brakes_before_slew_and_is_rate_limited():
 
 def test_startup_requires_continuous_settle_and_reset():
     policy=ControlledStartupPolicy()
-    for i in range(10):
-        assert policy.update(VehicleState(Pose(),Twist.zero(),i*.05),0,.05).target is not None
-    assert policy.update(VehicleState(Pose(),Twist.zero(),.5),0,.05).target is None
+    # A non-trivial heading change must qualify continuously after alignment.
+    for i in range(11):
+        pitch=-.2 if i==0 else -.5
+        assert policy.update(VehicleState(Pose(pitch=pitch),Twist.zero(),i*.05),-.5,.05).target is not None
+    assert policy.update(VehicleState(Pose(pitch=-.5),Twist.zero(),.55),-.5,.05).target is None
     assert policy.released
     policy.reset()
     assert not policy.released and policy.origin is None
@@ -36,6 +38,27 @@ def test_startup_fails_explicitly(kind):
     p.update(VehicleState(Pose(),Twist.zero()),-.5,.05)
     s=VehicleState(Pose(x=.2 if kind=='drift' else 0),Twist.zero(),.1 if kind=='budget' else .05)
     assert p.update(s,2 if kind=='heading' else -.5,.05).failure
+
+
+@pytest.mark.parametrize('surge',[0.,.5,.8,1.])
+def test_already_aligned_forward_motion_releases_without_artificial_stop(surge):
+    p=ControlledStartupPolicy()
+    decision=p.update(VehicleState(Pose(pitch=-.2),Twist(u=surge),0),-.2,.05)
+    assert decision.phase=='RELEASED_ALIGNED' and decision.target is None and p.released
+
+
+def test_aligned_release_is_bounded_and_rejects_unbounded_speed_by_braking():
+    p=ControlledStartupPolicy()
+    decision=p.update(VehicleState(Pose(),Twist(u=1.01)),0,.05)
+    assert decision.phase=='BRAKE' and decision.target.u<0 and not p.released
+
+
+@pytest.mark.parametrize('degrees,accepted',[(66.8014,True),(70.,True),(81.8699,False)])
+def test_near_vertical_heading_envelope_is_explicit(degrees,accepted):
+    from math import radians
+    p=ControlledStartupPolicy()
+    decision=p.update(VehicleState(Pose(),Twist.zero()),-radians(degrees),.05)
+    assert (decision.failure is None) is accepted
 
 
 def test_corner_timing_changes_position_clock_and_u_together():
@@ -65,12 +88,16 @@ def test_real_startup_pauses_clock_without_teleport_or_resetting_time(goal_z,spe
     assert all(r['checks'].values())
     assert r['status']=='SUCCESS'
     startup=[s for s in h['controls'] if s['startup_phase'] in ('ALIGN','BRAKE')]
-    assert startup and all(abs(s['reference_time'])<1e-10 for s in startup)
+    if goal_z==0:
+        assert not startup and h['controls'][0]['startup_phase']=='RELEASED_ALIGNED'
+    else:
+        assert startup and all(abs(s['reference_time'])<1e-10 for s in startup)
     assert h['states'][0]['pose']['pitch']==0
-    assert r['metrics']['startup_duration']>0
+    assert (r['metrics']['startup_duration']==0) is (goal_z==0)
     assert all(b['timestamp']-a['timestamp']==pytest.approx(.05) for a,b in zip(h['states'],h['states'][1:]))
-    release=next(i for i,s in enumerate(h['controls']) if s['startup_phase']=='RELEASED')
-    assert h['controls'][release]['controller_diagnostics']['integral_before']==h['controls'][release-1]['controller_diagnostics']['integral_after']
+    if goal_z!=0:
+        release=next(i for i,s in enumerate(h['controls']) if s['startup_phase']=='RELEASED')
+        assert h['controls'][release]['controller_diagnostics']['integral_before']==h['controls'][release-1]['controller_diagnostics']['integral_after']
 
 
 def test_startup_actual_segment_collision_is_not_bypassed():

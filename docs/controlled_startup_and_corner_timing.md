@@ -1,5 +1,8 @@
 # 受控启动验证与角点局部减速
 
+> Historical candidate note: 本文记录冻结前的 ±60° 启动候选。冻结后的拒绝原因分解与
+> 当前 ±70° 合同见 [启动拒绝原因与修正](startup_rejection_resolution.md)。
+
 日期：2026-09-17。可选启动候选已实现；局部减速仍是 validation 中的实验生成器。
 默认配置、PID gains、Physics、执行限制、目标容差均未改变；没有加入路径平滑。
 
@@ -112,3 +115,6 @@ BRAKE → ALIGN → RELEASED：
 最终全仓 **652 passed（18.56 s）**，其中启动/时间参数化专项 13 项。
 两组 artifact manifest 均零不匹配；启动证据之后只扩展了该专项测试文件，生产代码
 哈希未改变；角点证据记录的源码哈希与当前一致。输出图已目视检查。
+
+后续已完成[冻结候选的完整 16 场景回归与失败分类](frozen_candidates_16_regression.md)：
+9 成功，剩余碰撞、越界、启动拒绝和捕获失败分别记录，不据 detour 成功推广全部场景。

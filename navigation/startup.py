@@ -9,7 +9,10 @@ from .terminal_capture import CaptureDecision
 @dataclass(frozen=True)
 class StartupConfig:
     budget: float = 20.0
-    maximum_pitch: float = pi/3
+    maximum_pitch: float = 70*pi/180
+    maximum_actual_pitch: float = 75*pi/180
+    maximum_actual_pitch_rate: float = .35
+    maximum_aligned_release_surge: float = 1.0
     reference_rate: float = .15
     pitch_tolerance: float = .03
     speed_tolerance: float = .03
@@ -23,8 +26,10 @@ class StartupConfig:
             if value <= 0:
                 raise ValueError(f'{key} must be positive')
             object.__setattr__(self, key, value)
-        if self.maximum_pitch >= pi/2:
-            raise ValueError('startup pitch must be below pi/2')
+        if not self.maximum_pitch < self.maximum_actual_pitch < pi/2:
+            raise ValueError('require startup reference pitch < actual guard < pi/2')
+        if self.reference_rate >= self.maximum_actual_pitch_rate:
+            raise ValueError('reference rate must be below actual rate guard')
 
 
 class ControlledStartupPolicy:
@@ -55,16 +60,26 @@ class ControlledStartupPolicy:
             raise ValueError('dt must be positive')
         if self.released:
             return CaptureDecision('RELEASED', None)
-        if self.origin is None:
+        initial_call=self.origin is None
+        if initial_call:
             self.origin, self.pitch = state, state.pose.pitch
         elapsed = state.timestamp-self.origin.timestamp
-        if abs(heading)>c.maximum_pitch or abs(state.pose.pitch)>70*pi/180 or abs(state.twist.q)>.35:
-            return CaptureDecision('FAILED', None, 'startup attitude/rate guard')
+        if abs(heading)>c.maximum_pitch:
+            return CaptureDecision('FAILED', None, 'startup heading outside configured envelope')
+        if abs(state.pose.pitch)>c.maximum_actual_pitch or abs(state.twist.q)>c.maximum_actual_pitch_rate:
+            return CaptureDecision('FAILED', None, 'startup actual attitude/rate guard')
+        heading_error=abs(wrap_to_pi(heading-state.pose.pitch))
+        aligned_motion=(heading_error<=c.pitch_tolerance and abs(state.twist.q)<=c.rate_tolerance
+            and abs(state.twist.w)<=c.speed_tolerance
+            and -c.speed_tolerance<=state.twist.u<=c.maximum_aligned_release_surge)
+        if initial_call and aligned_motion:
+            self.released=True
+            return CaptureDecision('RELEASED_ALIGNED',None)
         if hypot(state.pose.x-self.origin.pose.x, state.pose.z-self.origin.pose.z)>c.maximum_drift:
             return CaptureDecision('FAILED', None, 'startup drift budget exhausted')
         quiet = hypot(state.twist.u, state.twist.w)<=c.speed_tolerance and abs(state.twist.q)<=c.rate_tolerance
         self.braked = self.braked or quiet
-        qualified = quiet and abs(wrap_to_pi(heading-state.pose.pitch))<=c.pitch_tolerance
+        qualified = quiet and heading_error<=c.pitch_tolerance
         self.held = self.held+dt if qualified and self.previous_qualified else 0.
         self.previous_qualified = qualified
         if self.held+1e-12>=c.settle_time:

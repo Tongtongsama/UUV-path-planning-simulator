@@ -3,7 +3,9 @@ from .models import NavigationConfig, NavigationRequest, NavigationResult, Navig
 from .navigator import Navigator
 from .terminal_capture import TerminalCapturePolicy,TerminalCaptureConfig,CaptureDecision
 from .startup import ControlledStartupPolicy,StartupConfig
+from .los_adapter import LOSNavigationAdapter
 
 __all__ = ["NavigationConfig","NavigationRequest","NavigationResult","NavigationStatus","NavigationStep","Navigator"]
 __all__ += ['TerminalCapturePolicy','TerminalCaptureConfig','CaptureDecision']
 __all__ += ['ControlledStartupPolicy','StartupConfig']
+__all__ += ['LOSNavigationAdapter']

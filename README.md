@@ -388,12 +388,31 @@ v0.7  Trajectory generation           COMPLETE (M2 baseline verified)
   |
 v0.8  Navigation integration          BASELINE VERIFIED; hard-case failures recorded
   |
-Next  Benchmark, then evidence-driven planning improvements and ROS 2
+Next  Stable/comparable 3-DOF baseline: MSS-informed progress LOS and benchmark
   |
-Gated RRT/RRT*, MPC, 6-DOF and Gazebo extensions
+First extension  Platform-independent ROS 2 navigation and laboratory robot experiments
+  |
+Later  6-DOF UUV, dynamic obstacles, advanced guidance/control and external simulators
   |
 v1.0  Dissertation Release
 ```
+
+The adopted [near-term roadmap](docs/project_roadmap_ros2.md) prioritizes the 3-DOF
+simulation comparison, followed by ROS 2 interfaces and laboratory robot experiments.
+The [eight-file source audit](docs/guidance_source_audit.md) and
+[progress LOS specification](docs/guidance_progress_los_specification.md) define the
+guidance implementation. MSS is the principal algorithm reference; UUV Simulator
+supplies interface ideas and Python Vehicle Simulator remains supplementary.
+
+Guidance v1.0 Phase A now implements pure finite-segment projection and fixed-lookahead
+LOS, with explicit monotonic progress state and constant speed. See the
+[Phase A validation record](docs/guidance_phase_a_validation.md).
+The optional [Phase B adapter](docs/guidance_phase_b_validation.md) now connects LOS
+to the unchanged body-guidance PID and explicit terminal capture, with six small
+closed-loop fixtures verified. Timed tracking remains the default.
+The [matched sixteen-case comparison](docs/guidance_matched_16_results.md) is now recorded:
+LOS 10/16 successes versus matched timed 9/16, with rate-envelope flags 4/16 versus 3/16.
+These are diagnostic fixed-suite results, not a claim of robust safety or general superiority.
 
 ### Completed Milestone: Physics Engine v0.4
 
@@ -681,6 +700,15 @@ An additional opt-in controlled-startup candidate physically establishes initial
 heading while pausing only the path clock. Separate experiments compare local
 corner speed scheduling, without smoothing or PID tuning. These are not new defaults;
 see [startup and corner-timing evidence](docs/controlled_startup_and_corner_timing.md).
+
+The current candidate is recorded as `navigation-v0.8-frozen-candidate-20260918`:
+9/16 fixed-suite successes, with failures retained and classified. See the
+[freeze record, statistics and visualization guide](docs/navigation_v08_frozen_20260918.md)
+before starting the separate LOS/progress-guidance research milestone.
+
+Post-freeze startup work now distinguishes aligned-motion bypass, supported startup
+heading, and actual-attitude guards. See the [startup rejection analysis and verified
+resolution](docs/startup_rejection_resolution.md); the frozen statistics remain unchanged.
 
 Current development:
 
