@@ -724,6 +724,10 @@ records isolated turning/stopping histories without entering terminal navigation
 See the [measurement contract and commands](docs/envelope_measurement_runner.md)
 and [measured results and censoring limits](docs/envelope_measurement_results.md).
 
+Step 2b now adds independently frozen [zero-current extended recovery evidence](docs/zero_current_recovery_v2_results.md):
+24/30 conditions recovered and remained in-band through the observation end;
+6 remained recovery-censored. This is not automatic Planner support or a navigation success rate.
+
 Current development:
 
 -   Python 3.10+

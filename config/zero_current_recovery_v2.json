@@ -1,0 +1,49 @@
+{
+  "version": "zero-current-recovery-v2",
+  "v1_index": "docs/envelope_dataset_v1.json",
+  "v1_stage": "artifacts/envelope_turning_v1",
+  "pilot": "turn_c0_v0.5_a90",
+  "dt": 0.05,
+  "repeats": 2,
+  "budget_seconds": 360,
+  "outgoing_length": 250,
+  "boundary": [
+    -300,
+    300,
+    -340,
+    260
+  ],
+  "endpoint_guard": 10,
+  "prefix": {
+    "atol": 1e-10,
+    "rtol": 1e-10,
+    "allowed_differences": [
+      "steps.*.projection.mu (outgoing only)",
+      "steps.*.projection.lambda_raw (outgoing only)",
+      "steps.*.boundary_margin (expanded fixture only)"
+    ],
+    "range": "all v1 states and controls by original index and timestamp, through original MEASUREMENT_COMPLETE event"
+  },
+  "analysis": {
+    "bin_seconds": 10,
+    "tail_seconds": 60,
+    "min_tail_seconds": 20,
+    "peak_separation": 0.5,
+    "prominence": {
+      "cross_track": 0.0001,
+      "pitch": 0.0001,
+      "q": 0.00001
+    },
+    "minimum_ratios": 3,
+    "ratio_tail": 5,
+    "decay_ratio": 0.95,
+    "growth_ratio": 1.05,
+    "band_miss_rms_fraction": 0.1,
+    "course_min_speed": 0.03,
+    "circling_progress": 0.5,
+    "reference_tail_seconds": 20,
+    "reference_angle": 0.02,
+    "reference_step": 0.005
+  },
+  "steady_exit": "qualified final in-band run must include entire final 60 seconds; observation only, not Planner certification"
+}

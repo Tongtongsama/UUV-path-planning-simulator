@@ -43,7 +43,9 @@ timed 9/16 成功，角速度诊断超限为 4/16 与 3/16；仍不能宣称鲁�
 [Current-aware Terminal Feasibility 合同](current_terminal_feasibility_contract.md)，
 均为设计文件，尚未实现生产修复。
 下一研究顺序为 [Step 2 孤立转弯及停止实验设计](stopping_turning_envelope_experiment_design.md)
-→ 冻结可执行矩阵 → 测量并冻结包络数据 → 可选 execution-aware Planner v0.6c
+→ 冻结可执行矩阵 → 测量并冻结包络数据
+→ [Step 2b：零流恢复 v2](zero_current_recovery_v2_design.md)
+→ zero-current、fixed-speed、LOS/Control-v0.5.1-specific Planner v0.6c 规范
 → 固定 LOS 的 P0/P1 对照 → 单独实现 terminal policy 改进
 → current-aware planning → 稳定基线后的 ROS 2 adapter。
 0.35 rad/s 继续作为诊断线，不自动成为 Planner 的硬拒绝条件。
@@ -53,6 +55,18 @@ timed 9/16 成功，角速度诊断超限为 4/16 与 3/16；仍不能宣称鲁�
 [数据冻结索引](envelope_dataset_v1.json)。774 项回归通过；尚未开始 Planner v0.6c。
 测量完成不等价可靠执行：转弯出段恢复 126/150 右删失，停止 40/106 右删失，
 不能直接将这些样本压缩成无条件安全膨胀系数。
+v1 正式验收为可信、可复现且带大量删失/域限制的能力测量数据集，
+不是可直接交给 Planner 的执行包络。先备份完整 artifacts，再设计并独立执行
+30 个零流条件的统一长窗口恢复 v2。
+current 数据不扩大窗口、不重标原结果；未来另立 current-conditioned 稳定带研究。
+Planner 查询拟采用 SUPPORTED / UNKNOWN / UNSAFE_OBSERVED，不能把删失当有限上界。
+完整 artifacts 已完成 [项目外本地备份与校验](artifact_backup_20260920.md)，
+保留 1,942 个普通文件及外部目录连接的元数据；尚无异地备份声明。
+Step 2b 已完成 [独立 v2 执行与结果](zero_current_recovery_v2_results.md)：
+30×2 加 pilot 两次，全部前缀与独立重复分析一致，789 项回归通过。
+24 条件恢复并保持到窗末，6 条件恢复右删失；±45°、0.5 m/s 存在再出带，
+首次恢复不得直接作为可靠恢复距离。见 [v2 冻结索引](zero_current_recovery_v2_dataset.json)。
+下一步仅设计受限支持域的 Planner v0.6c 规范；尚未实现 Planner，也未修改 v1 结果。
 不覆盖 geometric A*，不在同一轮混入平滑、变前视、减速和 PID 调参。
 来源优先级：MSS 算法、UUV Simulator 接口、PVS 控制/reference-model 补充；
 Nav2 与 MOOS-IvP 留到后续设计对照。原冻结版本与所有实验数据保持独立。

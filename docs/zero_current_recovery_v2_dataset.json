@@ -1,0 +1,18 @@
+{
+  "dataset": "zero-current-recovery-v2",
+  "frozen_date": "2026-09-20",
+  "configuration": "config/zero_current_recovery_v2.json",
+  "source_map_sha256": "93c27a5481df8584866520c48f7b1fbfbf56b7f1c39efe38aa1de6e1687d03bc",
+  "source_map_digest_encoding": "SHA256(json.dumps(source_sha256, sort_keys=True).encode('utf-8'))",
+  "stages": [
+    {"directory": "artifacts/zero_current_recovery_v2_pilot_verified", "configurations": 1, "repeats": 2, "manifest_sha256": "b1af4e79e2980ae786de603a826081069d482cc0dfaedb44d37ae404afffa799"},
+    {"directory": "artifacts/zero_current_recovery_v2", "configurations": 30, "repeats": 2, "manifest_sha256": "2cf77261e7ce506f5120251f32207f6aef2b9aa5e95a76e53fb024570557a9f1"}
+  ],
+  "v1_manifest_sha256": "8f4cb72f2eb39960a9898a82c4b9cf68359b05f4efd1de573561cc57114fe6e6",
+  "tests": {"path": "artifacts/zero_current_recovery_v2_tests_final.xml", "passed": 789, "sha256": "fecf62186b4359f9fb283310e895dcc37fdde876d717dc88366b850329d83ad1"},
+  "verification": {"all_prefixes_passed": true, "maximum_prefix_absolute_difference": 3.4372504842394846e-13, "histories_and_independent_analyses_deterministic": true, "all_histories_7200_steps": true, "no_terminal_entry": true, "v1_unchanged": true},
+  "conditions": {"window_complete": 30, "recovery_observed": 24, "stable_through_window_end": 24, "recovery_right_censored": 6, "late_recovery_observed": 14, "reexit_observed": 2},
+  "excluded_preliminary_directory": "artifacts/zero_current_recovery_v2_pilot",
+  "scope": "Zero current, fixed LOS/PID/model and initial conditions; observed recovery is not automatic Planner SUPPORTED or a robust feasibility proof.",
+  "production_changes": false
+}
