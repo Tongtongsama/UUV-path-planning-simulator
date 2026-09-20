@@ -719,6 +719,11 @@ Next research step (design only, no production policy change):
 and [stopping/turning envelope experiment design](docs/stopping_turning_envelope_experiment_design.md).
 The evaluated LOS 10/16 result remains unchanged; 0.35 rad/s remains a diagnostic line.
 
+The deterministic envelope measurement runner now freezes its JSON/schema and
+records isolated turning/stopping histories without entering terminal navigation.
+See the [measurement contract and commands](docs/envelope_measurement_runner.md)
+and [measured results and censoring limits](docs/envelope_measurement_results.md).
+
 Current development:
 
 -   Python 3.10+

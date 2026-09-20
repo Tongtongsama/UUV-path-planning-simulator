@@ -1,0 +1,20 @@
+{
+  "version": "envelope-measurement-v1",
+  "dt": 0.05,
+  "repeats": 2,
+  "controller": "config/controllers/cascaded_pid_3dof_restoring_candidate.yaml",
+  "vehicle": "config/vehicles/uuv_3dof_synthetic_v1.yaml",
+  "limits": {"maximum_tau_x": 20.0, "maximum_tau_m": 8.0},
+  "projection": {"switch_radius": 0.2, "forward_window": 2.0, "progress_slack": 0.05, "max_switches_per_step": 3},
+  "lookahead": 0.5,
+  "terminal_entry_distance": 0.25,
+  "speeds": [0.2, 0.35, 0.5],
+  "angles_deg": [30, 45, 60, 90, 120],
+  "signs": [-1, 1],
+  "currents": [[0.0, 0.0], [0.1, 0.0], [-0.1, 0.0], [0.0, 0.05], [0.0, -0.05]],
+  "fixture": {"incoming_length": 10.0, "outgoing_length": 30.0, "measurement_outgoing": 8.0, "warmup_end_x": -2.0, "z_origin": -40.0, "boundary": [-60.0, 60.0, -100.0, 20.0], "required_clearance": 0.1},
+  "stable": {"cross_track": 0.1, "pitch": 0.08, "q": 0.03, "speed": 0.05, "hold_seconds": 1.0},
+  "turn_budget_seconds": 180.0,
+  "stop": {"warmup_seconds": 60.0, "budget_seconds": 30.0, "ground_speed": 0.03, "q": 0.03, "hold_seconds": 0.5, "reverse_target": 0.15, "pitch_offsets_deg": [-15.0, 0.0, 15.0], "q_offsets": [-0.2, 0.0, 0.2], "w_offsets": [-0.05, 0.0, 0.05], "perturbation_design": "one-factor-at-a-time", "saved_entry": "detour", "saved_evidence": "artifacts/guidance_matched_16_v1"},
+  "diagnostics": {"rate_line": 0.35, "curvature_min_speed": 0.03, "curvature_min_abs": 0.0001, "corridor_margins": [0.0, 0.025, 0.05, 0.1, 0.2, 0.4, 0.8, 1.6], "sweep_sample_spacing": 0.002, "refinement_angles_deg": [30, 90], "refinement_speeds": [0.2, 0.5]}
+}

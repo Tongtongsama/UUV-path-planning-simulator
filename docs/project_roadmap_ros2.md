@@ -47,6 +47,12 @@ timed 9/16 成功，角速度诊断超限为 4/16 与 3/16；仍不能宣称鲁�
 → 固定 LOS 的 P0/P1 对照 → 单独实现 terminal policy 改进
 → current-aware planning → 稳定基线后的 ROS 2 adapter。
 0.35 rad/s 继续作为诊断线，不自动成为 Planner 的硬拒绝条件。
+2026-09-20：已实现 [确定性 measurement runner](envelope_measurement_runner.md)，
+完成 pilot、150 配置转弯、106 配置停止和 dt/2 复核，均各重复两次。
+见 [结果与删失范围](envelope_measurement_results.md) 和
+[数据冻结索引](envelope_dataset_v1.json)。774 项回归通过；尚未开始 Planner v0.6c。
+测量完成不等价可靠执行：转弯出段恢复 126/150 右删失，停止 40/106 右删失，
+不能直接将这些样本压缩成无条件安全膨胀系数。
 不覆盖 geometric A*，不在同一轮混入平滑、变前视、减速和 PID 调参。
 来源优先级：MSS 算法、UUV Simulator 接口、PVS 控制/reference-model 补充；
 Nav2 与 MOOS-IvP 留到后续设计对照。原冻结版本与所有实验数据保持独立。

@@ -1,6 +1,8 @@
 # Step 2 — Stopping / Turning Envelope 实验设计
 
 日期：2026-09-19。状态：**实验设计，未运行、无新测量结果**。
+执行更新（2026-09-20）：下文保留设计阶段记录；可执行配置、测量及数据冻结已完成，
+见 [runner 合同](envelope_measurement_runner.md) 与 [结果报告](envelope_measurement_results.md)。
 前置：[Contract A](terminal_approach_handoff_contract.md)、
 [Contract B](current_terminal_feasibility_contract.md)。
 目标是测量固定 LOS / Control v0.5.1 / Physics 的执行能力，不调 PID、

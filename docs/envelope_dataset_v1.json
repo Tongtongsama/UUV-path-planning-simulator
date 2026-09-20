@@ -1,0 +1,22 @@
+{
+  "dataset": "stopping-turning-envelope-v1",
+  "frozen_date": "2026-09-20",
+  "scope": "Open-space empirical measurement; not navigation success or robust feasibility certification",
+  "configuration": "config/envelope_measurement_v1.json",
+  "schema": "config/envelope_measurement.schema.json",
+  "source_map_sha256": "6d34bfeb8eab3606cb88e938e7a30963b2ae29f10bcc5d01da771de2906f83df",
+  "source_map_digest_encoding": "SHA256(json.dumps(source_sha256, sort_keys=True).encode('utf-8'))",
+  "source_provenance": "Each stage source_snapshot.zip contains exact code, tests, configuration and saved detour inputs, verified against its source_sha256 map; hashes are authoritative even when Git metadata is unavailable in the sandbox.",
+  "stages": [
+    {"directory": "artifacts/envelope_pilot_v1_verified", "configurations": 30, "repeats": 2, "manifest_sha256": "4ed2452f33268b0c0bdd81e096910696926c60a3593ea35db52d371c7b9c5ba8"},
+    {"directory": "artifacts/envelope_turning_v1", "configurations": 150, "repeats": 2, "manifest_sha256": "8f4cb72f2eb39960a9898a82c4b9cf68359b05f4efd1de573561cc57114fe6e6"},
+    {"directory": "artifacts/envelope_stopping_v1", "configurations": 106, "repeats": 2, "manifest_sha256": "c8c617c97d8db842c14768b148bccc7719c6142679cb8e1d765fe86e57aecb42"},
+    {"directory": "artifacts/envelope_refinement_v1", "configurations": 8, "repeats": 2, "manifest_sha256": "5669f6fbb97d5a0ad538494004e8cc30169eb0c03ffcbc64d89e01369f237508"}
+  ],
+  "tests": {"path": "artifacts/envelope_measurement_tests_final.xml", "passed": 774, "sha256": "83e0f0b3676ec9e97ecd6a0fd5f85f195a76fa3c74bd89f40a940b05fa5c4626"},
+  "turning": {"measurement_complete": 150, "entry_qualified": 90, "exit_recovery_right_censored": 126, "rate_diagnostic_exceeded": 138},
+  "stopping": {"finite_hold_complete": 66, "right_censored": 40, "finite_hold_is_not_equilibrium_proof": true},
+  "excluded_preliminary_directories": ["artifacts/envelope_pilot_v1", "artifacts/envelope_pilot_v1_frozen"],
+  "original_los_navigation_success": "10/16, unchanged",
+  "production_policy_changed": false
+}
