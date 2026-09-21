@@ -78,6 +78,13 @@ P0 6/12、P1 7/12 成功，碰撞均为 2/12，无越界。只在 detour 改变�
 已完成，P1 7/12、P2 6/12 成功。P2 三例几何拒绝不能算避碰成功，u_trap 启动拒绝；
 detour 出现细密采样与现有投影 gate 的兼容性退化，暂不替换 P1，也不因此调 PID。
 后续分别处理采样/guidance 兼容性、TerminalApproachPolicy 与 ROS 2 adapter。
+P2 阴性证据已完成 [完整本地备份](artifact_backup_20260921.md)。P1 保持默认，PID 暂缓。
+P2b 拟在独立分支比较：采样密度扫描、安全/引导双表示、primitive 分组或连续弧长投影；
+保持同一解析圆弧及密集扫掠验证，不把每根安全弦段都视为需要 endpoint gate 的语义段。
+扫描须报告实际弦长/点数：R=1 m、弓高 0.001 m 已限制弦长约 0.089 m，
+仅将 max_chord 从 0.1 增大不会改变采样。尚未开始 P2b 编码或建立分支。
+ROS 2 adapter 为主线扩展；实现前确认实验室机器人、ROS 2 版本与执行器接口。
+TerminalApproachPolicy 独立推进，几何拒绝及 startup 冲突不由 P2b 自动解决。
 不覆盖 geometric A*，不在同一轮混入变前视、减速和 PID 调参。
 来源优先级：MSS 算法、UUV Simulator 接口、PVS 控制/reference-model 补充；
 Nav2 与 MOOS-IvP 留到后续设计对照。原冻结版本与所有实验数据保持独立。
