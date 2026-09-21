@@ -66,7 +66,14 @@ Step 2b 已完成 [独立 v2 执行与结果](zero_current_recovery_v2_results.m
 30×2 加 pilot 两次，全部前缀与独立重复分析一致，789 项回归通过。
 24 条件恢复并保持到窗末，6 条件恢复右删失；±45°、0.5 m/s 存在再出带，
 首次恢复不得直接作为可靠恢复距离。见 [v2 冻结索引](zero_current_recovery_v2_dataset.json)。
-下一步仅设计受限支持域的 Planner v0.6c 规范；尚未实现 Planner，也未修改 v1 结果。
+已编写 [Planner v0.6c 规范](planner_v0.6c_specification.md)：转向有限的候选路径改进，
+不继续扩大能力测量，不要求先构建通用安全包络。下一步实现并验证 P0/P1 零流
+0.2 m/s 独立对照，保持同一 LOS/PID，重点评估完整路径碰撞/越界及相邻转弯干扰。
+P1 与 [首轮有限对照](planner_paired_v1_results.md) 已完成：12 场景×两臂×两次，
+P0 6/12、P1 7/12 成功，碰撞均为 2/12，无越界。只在 detour 改变路径，
+其余 11 场景同路径；不得据此宣称通用避碰改善。原 v1/LOS 10/16 未修改。
+下一步按这个有限结果决定规划扩展；可并行规划独立 ROS 2 adapter 工作，
+不要求先解决 terminal、current 或全部复杂场景。当前未实现 ROS 2 adapter。
 不覆盖 geometric A*，不在同一轮混入平滑、变前视、减速和 PID 调参。
 来源优先级：MSS 算法、UUV Simulator 接口、PVS 控制/reference-model 补充；
 Nav2 与 MOOS-IvP 留到后续设计对照。原冻结版本与所有实验数据保持独立。

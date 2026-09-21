@@ -1,0 +1,23 @@
+{
+  "dataset": "p0_p1_zero_current_v1",
+  "status": "finite_comparison_completed_not_general_feasibility",
+  "scene_count": 12,
+  "arms": ["P0", "P1"],
+  "repeats_per_arm": 2,
+  "execution_count": 48,
+  "stepwise_deterministic": true,
+  "pytest_passed": 809,
+  "files": {
+    "config/planner_paired_v1.json": "339b89e39e37448378d313d4c70725ee85122963a3bdb303cfbb57938f0ece80",
+    "artifacts/planner_paired_v1/manifest.json": "6ef6cdca5a3ca8d4c0b0293e2db4fd534c1c76e891436351af5370b83d2d3599",
+    "artifacts/planner_paired_report_v1/manifest.json": "cc0a92a9d59160749529e9b79e22589c923539dd9949f2efaafd717b3a9ad6c8",
+    "artifacts/planner_paired_tests_final.xml": "c3633df59de59387e8b6c2846f478495471aaa5cbf1110819eb8aac14fa4f3c4"
+  },
+  "limitations": [
+    "Only detour selected path changed; collision count unchanged",
+    "All unmatched turn-entry evidence UNKNOWN",
+    "Historical LOS 10/16 not overwritten",
+    "Artifacts are local and ignored by Git; index does not replace histories",
+    "No offsite backup or remote push claimed"
+  ]
+}

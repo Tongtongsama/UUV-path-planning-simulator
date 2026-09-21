@@ -1,0 +1,15 @@
+{
+  "version": "p0_p1_zero_current_v1",
+  "nominal_speed": 0.2,
+  "repeats": 2,
+  "scenes": ["horizontal", "ascending", "descending", "initial_pitch", "initial_speed", "saturation", "narrow_passage", "detour", "double_baffle_detour", "edge_forced_detour", "u_trap_detour", "zigzag_maze_detour"],
+  "candidate": {"buffers": [0.0, 0.15, 0.3, 0.5, 0.75], "turn_weight": 1.0, "clearance_weight": 2.0, "spacing_weight": 2.0, "unknown_weight": 0.25, "preferred_spacing": 4.0, "preferred_clearance": 0.75, "sample_spacing": 0.1},
+  "objective": "minimum_total_cost_on_unique_completed_candidates",
+  "spacing_role": "final_ranking_only_no_search_optimality_claim",
+  "simplification": "duplicates_and_same_direction_collinear_only_revalidate",
+  "preturn_event": "first_command_whose_lookahead_arc_reaches_corner_snapshot_before_application",
+  "turn_command_threshold_rad": 0.001,
+  "terminal_region_distance": 1.0,
+  "domain_policy": "UNKNOWN_without_matched_measurement_entry_memory_and_corridor",
+  "safety_and_budget": "unchanged_navigation_v08_120_seconds_no_terminal_fixes"
+}
