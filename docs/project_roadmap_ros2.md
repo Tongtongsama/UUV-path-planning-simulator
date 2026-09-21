@@ -74,6 +74,10 @@ P0 6/12、P1 7/12 成功，碰撞均为 2/12，无越界。只在 detour 改变�
 其余 11 场景同路径；不得据此宣称通用避碰改善。原 v1/LOS 10/16 未修改。
 下一步按这个有限结果决定规划扩展；可并行规划独立 ROS 2 adapter 工作，
 不要求先解决 terminal、current 或全部复杂场景。当前未实现 ROS 2 adapter。
-不覆盖 geometric A*，不在同一轮混入平滑、变前视、减速和 PID 调参。
+2026-09-21：P0/P1 基线提交为 1a8a105；[独立 P2 圆弧对照](planner_curved_v1_results.md)
+已完成，P1 7/12、P2 6/12 成功。P2 三例几何拒绝不能算避碰成功，u_trap 启动拒绝；
+detour 出现细密采样与现有投影 gate 的兼容性退化，暂不替换 P1，也不因此调 PID。
+后续分别处理采样/guidance 兼容性、TerminalApproachPolicy 与 ROS 2 adapter。
+不覆盖 geometric A*，不在同一轮混入变前视、减速和 PID 调参。
 来源优先级：MSS 算法、UUV Simulator 接口、PVS 控制/reference-model 补充；
 Nav2 与 MOOS-IvP 留到后续设计对照。原冻结版本与所有实验数据保持独立。

@@ -1,0 +1,27 @@
+{
+  "dataset": "p1_p2_circular_fillet_v1",
+  "baseline_commit": "1a8a105",
+  "status": "completed_experimental_candidate_not_promoted",
+  "scenes": 12,
+  "arms": ["P1", "P2"],
+  "repeats": 2,
+  "trial_records": 48,
+  "navigator_calls": 42,
+  "geometry_rejections": 6,
+  "stepwise_repeats_equal": true,
+  "P1_archived_histories_equal": true,
+  "pytest_passed": 829,
+  "files": {
+    "config/planner_curved_v1.json": "125495e7e14a776c3f91edae409b300fcd436a7f5730d0139063d394d7396706",
+    "artifacts/planner_curved_v1/manifest.json": "dcf305a48b74a2804ca35d26295dcd246fedc98f7e631ac012cc3acad6d02948",
+    "artifacts/planner_curved_report_final/manifest.json": "bb03c684057db358cdd1d47a6272ae1b9fd73ab079d9496fc229bf656dd1fa11",
+    "artifacts/planner_curved_tests_final.xml": "5fe5037f72911c86c4aa2d9e3ed98abd882ad3f06d4a5e9d0c79515e466604fd"
+  },
+  "limitations": [
+    "Rejected paths have no P2 physical execution; not collision avoidance successes",
+    "Radius is geometric and not a measured vehicle capability",
+    "Dense chord representation interacts with unchanged progress gate",
+    "All turn-entry execution support remains UNKNOWN",
+    "Local ignored artifacts required; index is not a backup; no remote push claimed"
+  ]
+}
