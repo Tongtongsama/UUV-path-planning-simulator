@@ -9,6 +9,15 @@ dynamics, configurable underwater environments, path planning, obstacle
 avoidance, trajectory generation, and trajectory tracking** within a
 common software architecture.
 
+## 3-DoF research checkpoint 1 (2026-09-29)
+
+Start with the [delivery, demo and reproduction guide](docs/3dof_checkpoint_1.md).
+The fixed-path, zero-current P1 comparison improves from 7/12 to 10/12 successful
+missions with **opt-in TerminalApproach v1**, while retaining default behavior.
+Two collision cases remain; this is not robust-safety or real-robot validation.
+P2b remains a separate experiment and was **not** combined with this result.
+The original LOS 16-scene results are separate and unchanged.
+
 > **Current status:** Core v0.2, Environment v0.3, synthetic 3-DOF Physics
 > v0.4, the underactuated Control baseline v0.5, Planner through v0.6b,
 > Trajectory v0.7 and the Navigation v0.8 minimum closed loop are implemented and
