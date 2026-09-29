@@ -1,6 +1,19 @@
 # 近期路线：仿真导航基线 → ROS 2 实验室机器人
 
-日期：2026-09-18。用户提出的路线调整正式采用。
+更新：2026-09-29。下方历史记录保留，当前优先级以本段为准。
+
+当前先完成 3-DoF 仿真收尾与第一个提交点：P1 保持默认，固定路径进行
+TerminalApproachPolicy 的有限预测、实际资格交接及三场景单因素对照。
+三场景通过后才扩大到 P1 12 场景；不混入 PID 调参、碰撞路径改造或 current。
+本轮 [Terminal Approach 有限对照](terminal_approach_v1_results.md) 已完成：
+三场景及完整 12 场景两次重复一致，P1 7/12 → opt-in approach 10/12，847 项测试通过。
+两次原碰撞未改善，double_baffle 净余量仍约 7.2 mm；不宣称鲁棒安全。
+先收尾本次提交点，再独立进入 ROS 2 接口与回放，保留 P1 默认与原始 LOS 10/16。
+P2b 已在独立分支 `codex/p2b-path-representation`、提交 `c9d809e` 完成表示兼容性验证，
+仍为 opt-in，未合并到本 terminal 分支。detour 三密度实际状态历史相同，不等于
+primitive 已通过 12 场景；困难圆角几何拒绝仍未解决。
+ROS 2／实机随后作为第一拓展：Jazzy 已确认，机器人类型与命令接口仍待沟通。
+不要求解决所有复杂场景才启动 ROS 2，但当前不与 terminal 实验混做。
 
 1. **当前第一目标**：稳定、可比较的 3-DoF 仿真导航基线。完成 MSS 定向审计、
    finite-segment progress LOS 规范、几何/阶段测试和与 timed tracking 的公平实验。
@@ -21,7 +34,7 @@
 任务取消、超时、旧状态处理与停止命令由适配/任务层明确实现。原始日志和实验结果
 统一保存方法、平台、单位和时间来源，以便比较；不同平台动力学不宣称等效。
 
-机器人型号、运动约束、ROS 2 版本、驱动话题/动作、定位来源、控制频率和实验场地
+ROS 2 Jazzy 已确认；机器人型号、运动约束、驱动话题/动作、定位来源、控制频率和实验场地
 尚待实验室信息确认。以上未知项不阻塞当前仿真 guidance 工作，也不在此虚构接口名。
 取得平台资料后形成独立 adapter specification，再进行实体接入。
 
@@ -79,11 +92,11 @@ P0 6/12、P1 7/12 成功，碰撞均为 2/12，无越界。只在 detour 改变�
 detour 出现细密采样与现有投影 gate 的兼容性退化，暂不替换 P1，也不因此调 PID。
 后续分别处理采样/guidance 兼容性、TerminalApproachPolicy 与 ROS 2 adapter。
 P2 阴性证据已完成 [完整本地备份](artifact_backup_20260921.md)。P1 保持默认，PID 暂缓。
-P2b 拟在独立分支比较：采样密度扫描、安全/引导双表示、primitive 分组或连续弧长投影；
+历史计划（已于 c9d809e 完成独立验证）：P2b 比较采样密度扫描、安全/引导双表示、primitive 分组或连续弧长投影；
 保持同一解析圆弧及密集扫掠验证，不把每根安全弦段都视为需要 endpoint gate 的语义段。
 扫描须报告实际弦长/点数：R=1 m、弓高 0.001 m 已限制弦长约 0.089 m，
-仅将 max_chord 从 0.1 增大不会改变采样。尚未开始 P2b 编码或建立分支。
-ROS 2 adapter 为主线扩展；实现前确认实验室机器人、ROS 2 版本与执行器接口。
+仅将 max_chord 从 0.1 增大不会改变采样。P2b 已完成，不再扩大扫描。
+ROS 2 adapter 是仿真收尾后的第一扩展；实现前确认实验室机器人与执行器接口。
 TerminalApproachPolicy 独立推进，几何拒绝及 startup 冲突不由 P2b 自动解决。
 不覆盖 geometric A*，不在同一轮混入变前视、减速和 PID 调参。
 来源优先级：MSS 算法、UUV Simulator 接口、PVS 控制/reference-model 补充；

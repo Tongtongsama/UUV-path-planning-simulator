@@ -23,6 +23,7 @@ class NavigationStatus(Enum):
     ENVIRONMENT_FAILURE=auto()
     CAPTURE_FAILED=auto()
     STARTUP_FAILED=auto()
+    APPROACH_FAILED=auto()
 
 
 @dataclass(frozen=True)

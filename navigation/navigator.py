@@ -7,7 +7,8 @@ from core import ControlInput, Path, VehicleState
 from controller.backend import Controller3DOF
 from controller import LimitAwareController3DOF, ControlLimits3DOF, ControllerDiagnostics3DOF
 from controller import GuidanceController3DOF
-from .terminal_capture import TerminalCapturePolicy
+from .terminal_capture import TerminalCapturePolicy, CaptureDecision
+from .terminal_approach import TerminalApproachPolicy
 from .startup import ControlledStartupPolicy
 from .los_adapter import LOSNavigationAdapter,spatial_metrics
 from controller import BodyGuidance3DOF
@@ -30,7 +31,8 @@ class Navigator:
                  generator: Callable[...,TrajectoryGenerationResult] = generate_trajectory,
                  capture_policy: TerminalCapturePolicy | None = None,
                  startup_policy: ControlledStartupPolicy | None = None,
-                 guidance_adapter: LOSNavigationAdapter | None = None) -> None:
+                 guidance_adapter: LOSNavigationAdapter | None = None,
+                 approach_policy: TerminalApproachPolicy | None = None) -> None:
         if not isinstance(config,NavigationConfig) or not isinstance(trajectory_config,TrajectoryConfig):
             raise TypeError("invalid navigation or trajectory configuration")
         for obj, methods in ((planner,("plan",)),(controller,("step","reset")),(physics,("step",))):
@@ -55,6 +57,10 @@ class Navigator:
             if guidance_adapter.los_config.terminal_entry_distance<config.goal_position_tolerance:
                 raise ValueError('terminal entry distance must cover mission position tolerance')
         self.guidance_adapter=guidance_adapter
+        if approach_policy is not None:
+            if not isinstance(approach_policy,TerminalApproachPolicy):raise TypeError('invalid approach policy')
+            if guidance_adapter is None or capture_policy is None:raise ValueError('approach requires LOS and capture')
+        self.approach_policy=approach_policy
 
     def run(self, request: NavigationRequest) -> NavigationResult:
         """Plan once, generate once, then execute until safety/goal/horizon termination."""
@@ -63,6 +69,7 @@ class Navigator:
         c=self.config
         if self.capture_policy is not None:self.capture_policy.reset()
         if self.startup_policy is not None:self.startup_policy.reset()
+        if self.approach_policy is not None:self.approach_policy.reset()
         startup_delay=0.
         adapter=self.guidance_adapter
         progress=None; previous_los_pitch=None; capture_latched=False
@@ -114,6 +121,10 @@ class Navigator:
                     moving_position_rmse=sqrt(sum(e*e for e in moving)/len(moving)) if moving else None)
             if self.startup_policy is not None:
                 metric.update(startup_duration=startup_delay,startup_released=self.startup_policy.released)
+            if self.approach_policy is not None:
+                metric.update(approach_evaluations=self.approach_policy.evaluations,
+                    approach_prediction_steps=self.approach_policy.prediction_steps,
+                    approach_activated=self.approach_policy.active)
             if adapter is not None:
                 # Archived timed references are not the spatial guidance target.
                 for key in ('reference_duration','position_rmse','maximum_position_error',
@@ -178,9 +189,20 @@ class Navigator:
                     if startup_decision.failure:return finish(S.STARTUP_FAILED,startup_decision.failure)
                     if startup_decision.target is not None:decision=startup_decision
                 startup_active=startup_decision is not None and startup_decision.target is not None
+                approach_target=None
+                if self.approach_policy is not None and not startup_active and not capture_latched:
+                    approach_target,ready,failure=self.approach_policy.update(state,progress,previous_los_pitch,
+                        adapter,self.controller,self.physics,world,space,required,request.goal,
+                        self.capture_policy.config,ControlLimits3DOF(c.maximum_tau_x,c.maximum_tau_m),c.dt,
+                        c.max_duration-(state.timestamp-states[0].timestamp))
+                    if failure:return finish(S.APPROACH_FAILED,failure)
+                    if ready:capture_latched=True
                 if adapter is not None:
                     if startup_active:
                         guidance_phase='STARTUP'
+                    elif approach_target is not None:
+                        guidance_phase='TERMINAL_APPROACH'
+                        decision=CaptureDecision('APPROACH',approach_target)
                     elif capture_latched:
                         guidance_phase='TERMINAL_CAPTURE'
                         terminal=adapter.terminal_reference(progress,state.timestamp,state.pose.pitch)
@@ -197,7 +219,7 @@ class Navigator:
                         previous_los_pitch=los_command.pitch_ref
                         # Readiness latches handoff for the NEXT physical step. No progress
                         # update occurs on any startup or terminal-capture transition.
-                        capture_latched=los_command.terminal_ready
+                        capture_latched=los_command.terminal_ready if self.approach_policy is None else False
                 elif self.capture_policy is not None and not startup_active:
                     decision=self.capture_policy.update(state,reference,request.goal,c.dt,trajectory.end_time+startup_delay,
                         arrived(state),space,required)

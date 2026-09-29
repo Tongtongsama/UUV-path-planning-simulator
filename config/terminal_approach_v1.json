@@ -1,0 +1,25 @@
+{
+  "version": "terminal_approach_zero_current_v1",
+  "scenes": ["double_baffle_detour", "detour", "horizontal"],
+  "repeats": 2,
+  "policy": {
+    "evaluation_arc": 4.0,
+    "evaluation_interval": 2.0,
+    "max_evaluations": 16,
+    "horizon": 30.0,
+    "speeds": [0.15, 0.10, 0.05],
+    "brake_distances": [0.35, 0.20],
+    "entry_speed": 0.03,
+    "entry_rate": 0.03,
+    "entry_pitch_error": 0.15,
+    "hold_steps": 3,
+    "prediction_margin": 0.005,
+    "state_error_limit": 0.000001
+  },
+  "prediction_dt": "same_as_physics_no_coarsening",
+  "selection": "first_admissible_speed_major_order",
+  "unknown_behavior": "continue_original_following_until_evaluation_budget_or_zero_remaining_arc_then_fail",
+  "active_behavior": "execute_certified_feedback_schedule_no_return_to_path_following",
+  "handoff": "actual_original_geometric_readiness_and_stricter_speed_rate_pitch_guards_for_three_steps",
+  "scope": "zero_current_LOS_only_no_timed_adapter_or_robustness_claim"
+}

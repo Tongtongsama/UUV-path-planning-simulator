@@ -1,0 +1,15 @@
+{
+  "version": "terminal_approach_zero_current_v1",
+  "date": "2026-09-29",
+  "pilot_runs": 12,
+  "full_runs": 48,
+  "repeat_history_and_diagnostics_exact": true,
+  "disabled_p1_matches_archived_histories": true,
+  "tests_passed": 847,
+  "manifests": {
+    "artifacts/terminal_approach_v1/manifest.json": "86404f88fcdcc287e1a2edfc177ce307e8da97d3bc2c5a544048a8517672082a",
+    "artifacts/terminal_approach_full_v1/manifest.json": "b9e69fb5857cefda50d13c112089566dcc4ee2be013caf4e69602e5793e72133",
+    "artifacts/terminal_approach_final_tests.xml": "2bf90df78a46d46cc49ca5d341c5dce930762bb761cb57bcdb5814e539cdfab9"
+  },
+  "limitation": "Local ignored artifacts required. This index is not a backup; no new external backup or push performed."
+}
