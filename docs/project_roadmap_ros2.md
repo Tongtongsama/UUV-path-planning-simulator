@@ -2,6 +2,11 @@
 
 更新：2026-09-29。下方历史记录保留，当前优先级以本段为准。
 
+**Checkpoint 1 收尾已完成**：见[统一交付与演示入口](3dof_checkpoint_1.md)及
+[完整证据备份回执](artifact_backup_20260929_checkpoint1.md)。当前算法迭代在有限范围内冻结，
+P1 默认不变，TerminalApproach v1 显式启用，P2b 独立且未做组合验证。
+下一项工作可启动 ROS 2 Jazzy 接口与回放；本次尚未实现 ROS 2 adapter 或实机接入。
+
 当前先完成 3-DoF 仿真收尾与第一个提交点：P1 保持默认，固定路径进行
 TerminalApproachPolicy 的有限预测、实际资格交接及三场景单因素对照。
 三场景通过后才扩大到 P1 12 场景；不混入 PID 调参、碰撞路径改造或 current。

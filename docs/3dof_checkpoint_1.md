@@ -3,6 +3,9 @@
 2026-09-29。交付一个适用范围明确、可复现的仿真研究版本，不是实机控制器或安全认证版本。
 算法迭代到此收尾；后续独立开展 ROS 2 Jazzy 接口与回放，不再为本提交点调 PID。
 
+完整证据与源码已完成[备份及恢复校验](artifact_backup_20260929_checkpoint1.md)：
+2,486 个 artifacts 文件、Git bundle、交付源码 ZIP 和独立 P2b ZIP。
+
 ## 版本组成
 
 - 交付分支：`codex/terminal-approach`；算法冻结提交：`f6b6d38`。
