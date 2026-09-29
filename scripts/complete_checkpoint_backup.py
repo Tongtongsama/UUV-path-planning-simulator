@@ -7,7 +7,6 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
-import shutil
 import subprocess
 import sys
 import zipfile
@@ -35,6 +34,7 @@ def safe_path(root, relative):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--destination', type=Path, required=True)
+    parser.add_argument('--package-name', default='checkpoint_sources')
     args = parser.parse_args(); destination = args.destination.resolve()
     if destination.is_relative_to(ROOT): raise ValueError('backup must be outside repository')
     receipt = json.loads((destination/'backup_manifest.json').read_text(encoding='utf-8-sig'))
@@ -43,7 +43,8 @@ def main():
     for entry in receipt['files']:
         if sha(safe_path(destination/'artifacts', entry['path'])) != entry['sha256']:
             raise ValueError('backup content mismatch: '+entry['path'])
-    package = destination/'checkpoint_sources'
+    if Path(args.package_name).name != args.package_name: raise ValueError('package-name must be a single directory name')
+    package = safe_path(destination, args.package_name)
     package.mkdir(exist_ok=False)
     head = git('rev-parse', 'HEAD').decode().strip()
     git('bundle', 'create', str(package/'repository.bundle'), '--all')
@@ -79,7 +80,15 @@ def main():
     evidence_files = 0
     for folder in manifests:
         base = destination/'artifacts'/folder
-        for name, expected in json.loads((base/'manifest.json').read_text()).items():
+        manifest = json.loads((base/'manifest.json').read_text())
+        if 'source_manifest_sha256' in manifest:
+            if sha(destination/'artifacts/p2b_representation_v1/manifest.json') != manifest['source_manifest_sha256']:
+                raise ValueError('report input manifest mismatch')
+        if 'report_source_sha256' in manifest:
+            report_source = git('show', 'c9d809e:validation/p2b_report.py')
+            if hashlib.sha256(report_source).hexdigest() != manifest['report_source_sha256']:
+                raise ValueError('P2b report source mismatch')
+        for name, expected in manifest.get('files', manifest).items():
             if sha(safe_path(base, name)) != expected: raise ValueError('evidence manifest mismatch')
             evidence_files += 1
     environment = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze']).decode()
