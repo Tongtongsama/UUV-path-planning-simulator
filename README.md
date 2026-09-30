@@ -12,6 +12,8 @@ common software architecture.
 ## 3-DoF research checkpoint 1 (2026-09-29)
 
 Start with the [delivery, demo and reproduction guide](docs/3dof_checkpoint_1.md).
+The [offline interactive replay and comparison video](docs/offline_replay_v1.md)
+now cover five frozen-history scenarios; no simulation rerun or algorithm change.
 The fixed-path, zero-current P1 comparison improves from 7/12 to 10/12 successful
 missions with **opt-in TerminalApproach v1**, while retaining default behavior.
 Two collision cases remain; this is not robust-safety or real-robot validation.

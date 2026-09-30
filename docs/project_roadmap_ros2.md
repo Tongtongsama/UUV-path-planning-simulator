@@ -2,6 +2,10 @@
 
 更新：2026-09-29。下方历史记录保留，当前优先级以本段为准。
 
+2026-09-30 顺序调整：**算法/实验冻结 → 动态可视化 → 完整 3DoF 展示版冻结 → ROS 2**。
+[离线历史回放 v1](offline_replay_v1.md) 已完成五场景入口及 double_baffle 视频；
+只读历史、独立时间结束处理，不重跑闭环、不调 PID、不合并 P2b。
+
 **Checkpoint 1 收尾已完成**：见[统一交付与演示入口](3dof_checkpoint_1.md)及
 [完整证据备份回执](artifact_backup_20260929_checkpoint1.md)。当前算法迭代在有限范围内冻结，
 P1 默认不变，TerminalApproach v1 显式启用，P2b 独立且未做组合验证。

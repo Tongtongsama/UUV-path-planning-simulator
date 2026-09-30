@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UUV · 离线历史回放</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,"Microsoft YaHei",sans-serif;background:#101722;color:#e5edf6}
+*{box-sizing:border-box}body{margin:0;padding:20px;max-width:1520px;margin-inline:auto}h1{font-size:23px;font-weight:600;margin:0 0 8px}.subtitle{color:#afbdce;font-size:14px;margin-bottom:16px}
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}button,select{font:inherit;padding:9px 12px;border-radius:6px;border:1px solid #516279;background:#1d2a3c;color:#eef4fc;min-height:42px}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #8dc7ff;outline-offset:2px}button:disabled{opacity:.5}button.primary{background:#325773}.timeline{display:flex;align-items:center;gap:12px;margin-bottom:12px}.timeline input{flex:1;min-width:80px}output{font-variant-numeric:tabular-nums;min-width:132px}canvas{display:block;width:100%;height:auto;background:#101722;border:1px solid #39485b;border-radius:6px}details{margin-top:12px;color:#bdcbdc;font-size:14px}summary{cursor:pointer}li{margin:6px 0}#notice{color:#ffda8a;min-height:22px;font-size:14px}.screen-reader{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}
+@media(max-width:650px){body{padding:10px}.subtitle{font-size:13px}.controls{gap:6px}button,select{font-size:13px;padding:8px}h1{font-size:20px}}
+</style></head><body>
+<h1>UUV · 3DoF 离线历史回放</h1>
+<div class="subtitle">固定 P1 路径 · 相同 PID / Physics · P1 与显式 TerminalApproach v1 对照</div>
+<div class="controls">
+<label>场景 <select id="scene" aria-label="回放场景"></select></label>
+<button id="play" class="primary">播放</button><button id="back" aria-label="上一原始时间步">上一帧</button><button id="step" aria-label="下一原始时间步">下一帧</button><button id="restart">重新播放</button>
+<label>倍速 <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option><option value="8">8×</option></select></label>
+</div>
+<div class="timeline"><label for="time">共同时间</label><input id="time" type="range" min="0" max="120" value="0" step="any"><output id="clock"></output></div>
+<div id="notice" role="status" aria-live="polite">离线历史回放；播放流畅不代表策略满足实时计算要求。</div>
+<canvas id="view" role="img" aria-label="两个实验臂的同步位置姿态回放，以及 pitch、q、施加推力和力矩曲线"></canvas>
+<p id="accessible" class="screen-reader"></p>
+<details><summary>数据与显示规则</summary><ul>
+<li>使用 repeat 1 的原始状态与时间戳。动画仅在线性插值位置和原始连续 pitch；数值栏显示不晚于游标时刻的原始样本，不生成实验数据。</li>
+<li>同一物理时间轴，一方结束后停在最终状态。阶段按日志时间切换；碰撞标记为该步末检测时刻，实际接触时刻只知位于该时间步内。</li>
+<li>艇形是放大的姿态示意，深色圆点标艇首；虚线圆仅表示车辆半径 + safety margin。不能从像素判断毫米级间隙。</li>
+<li>曲线使用原始 pitch（不 wrap），因此旧策略连续绕圈不会被隐藏。控制量零阶保持；实验结束后不延伸曲线。</li>
+<li>每臂全程最小净余量来自日志指标，不由播放器重新计算。double_baffle 的约 7.2 mm 不是鲁棒安全证据。</li>
+<li>TerminalApproach 已改善末段；capture 的 ORIGINAL_SETTLE 不代表额外位置修正。P2b 未与本数据组合。</li>
+</ul></details>
+<script id="payload" type="application/json">/* REPLAY_DATA */</script>
+<script>/* PLAYER_CODE */</script></body></html>
