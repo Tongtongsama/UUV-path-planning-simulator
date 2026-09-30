@@ -75,3 +75,11 @@ node scripts/test_replay.cjs artifacts/replay_new --video
 碰撞冻结、71 s approach 阶段、窄屏不横向溢出、无浏览器运行错误、视频实际解码。
 本轮 **6 个新专项测试通过**；保留原算法 **847 passed** 记录，但未声称重新执行全仓测试。
 动态展示只提升可观察性，不新增实验成功率、安全保证或实时性能结论。
+
+## 展示版备份
+
+已复制到 `D:\UUV_Backups\uuv_replay_display_20260930_v1`，11 个展示/验证文件，
+13,655,378 字节，源与目标逐文件 SHA-256 一致；另附 `source_98b2c90.zip` tracked 源码。
+源码 ZIP SHA-256：`efb48c5519d4075373928fb6b9bcea4d0ec9dc3cc58c8e5a57875d5a1222e1ed`。
+展示 manifest 哈希见上文。完整原始仿真证据仍在 2026-09-29 的 checkpoint1 备份中；
+本展示包不是那份历史备份的替代，也不是异地副本。没有上传或推送。
