@@ -15,6 +15,6 @@ setup(
     zip_safe=True,
     description="Read-only playback of verified frozen UUV histories in LOTUSim",
     license="MIT",
-    entry_points={"console_scripts": ["play = lotusim_replay.player:main"]},
+    entry_points={"console_scripts": ["play = lotusim_replay.player:main", "gazebo = lotusim_replay.gazebo_player:main"]},
 )
 

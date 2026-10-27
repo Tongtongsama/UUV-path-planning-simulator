@@ -1,5 +1,8 @@
 # LOTUSim 冻结历史三维回放 v1
 
+> Gazebo 窗口内回放请使用 [Gazebo 适配层运行指南](lotusim_gazebo_replay.md)。
+> 本文的 `play` 发布到外部渲染器接口，不会在 Gazebo 中生成实体。
+
 本阶段只把已经存在、已经冻结的 UUV 历史位姿送入 LOTUSim 渲染接口。它不会调用或替换
 Planner、Navigator、Guidance、PID、Physics，也不发布推进器、速度、力或力矩命令。实时联合
 仿真不在本阶段范围内。

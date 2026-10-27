@@ -11,6 +11,14 @@ common software architecture.
 
 ## 3-DoF research checkpoint 1 (2026-09-29)
 
+For a consolidated Chinese progress review, implementation rationale, evidence
+boundaries and supervisor/agent handoff, see the
+[project progress overview (2026-10-16)](docs/project_progress_and_handoff_20261016.md).
+
+For how LOTUSim and xdyn are integrated, how each stage was implemented, and
+what is complete as of 2026-10-27, see the
+[LOTUSim/xdyn integration and stage report](docs/lotusim_integration_and_stage_report_20261027.md).
+
 Start with the [delivery, demo and reproduction guide](docs/3dof_checkpoint_1.md).
 The [offline interactive replay and comparison video](docs/offline_replay_v1.md)
 now cover five frozen-history scenarios; no simulation rerun or algorithm change.
@@ -755,7 +763,9 @@ Planned integration environment:
 -   ROS 2 Jazzy
 -   Gazebo
 
-ROS 2 and Gazebo integration are not yet completed simulator features.
+The independent [LOTUSim/xdyn open-loop bench](docs/lotusim_minimal_xdyn_open_loop.md)
+provides actuator pulses, full solver state feedback, and automated direction/time acceptance.
+It does not yet connect the existing PID/LOS/TerminalApproach algorithms to this dynamics model.
 
 ## Dissertation Context
 

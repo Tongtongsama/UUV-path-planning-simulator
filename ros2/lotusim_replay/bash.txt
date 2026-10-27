@@ -1,0 +1,8 @@
+wsl -d NixOS
+
+nix run github:naval-group/LOTUSim -- run --gui
+
+cd /mnt/c/Users/刘松原/uuv_simulator
+bash ros2/lotusim_replay/run-nix.sh --arm APPROACH
+
+bash ros2/lotusim_replay/run-nix.sh --arm P1 --arm APPROACH --rate 2

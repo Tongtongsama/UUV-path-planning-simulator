@@ -1,0 +1,16 @@
+<sdf version="1.7"><world name="uuv_twin_axial">
+<physics name="bench" type="ode"><max_step_size>0.05</max_step_size><real_time_factor>1</real_time_factor></physics>
+<spherical_coordinates><surface_model>EARTH_WGS84</surface_model><world_frame_orientation>ENU</world_frame_orientation><latitude_deg>0</latitude_deg><longitude_deg>0</longitude_deg><elevation>0</elevation><heading_deg>0</heading_deg></spherical_coordinates>
+<gravity>0 0 0</gravity><scene><ambient>1 1 1</ambient><background>0.15 0.2 0.3</background></scene>
+<plugin filename="physics_interface_plugin" name="lotusim::gazebo::PhysicsInterfacePlugin" />
+<plugin filename="multi_agent_system_plugin" name="lotusim::gazebo::MultiAgentSystem" />
+<plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster" />
+<model name="uuv_twin_axial_v2"><pose>2 0 -30 0 -0.0 0</pose><link name="base_link">
+<visual name="body"><geometry><box><size>1 .2 .2</size></box></geometry><material><ambient>1 .5 0 1</ambient></material></visual>
+<visual name="nose"><pose>.55 0 0 0 0 0</pose><geometry><sphere><radius>.08</radius></sphere></geometry></visual>
+<visual name="upper_thruster"><pose>0 0 .25 0 0 0</pose><geometry><box><size>.3 .15 .1</size></box></geometry></visual>
+<visual name="lower_thruster"><pose>0 0 -.25 0 0 0</pose><geometry><box><size>.3 .15 .1</size></box></geometry></visual>
+</link><lotus_param><physics_engine_interface><init_state>Underwater</init_state><underwater>
+<interface_type>XDynWebSocket</interface_type><uri>ws://127.0.0.1:12356</uri>
+<control_surfaces><upper>upper(T)</upper><lower>lower(T)</lower></control_surfaces>
+</underwater></physics_engine_interface></lotus_param></model><model name="single_baffle_obstacle"><static>true</static><pose>9.5 0 -34 0 0 0</pose><link name="base_link"><visual name="baffle"><geometry><box><size>1 4 12</size></box></geometry><material><ambient>.5 .5 .5 1</ambient></material></visual><collision name="baffle"><geometry><box><size>1 4 12</size></box></geometry></collision></link></model></world></sdf>

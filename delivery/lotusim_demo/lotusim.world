@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<sdf version="1.7"><world name="lotusim">
+  <physics name="replay" type="ode"><max_step_size>0.05</max_step_size><real_time_factor>1</real_time_factor></physics>
+  <gravity>0 0 0</gravity>
+  <scene><ambient>1 1 1</ambient><background>0.15 0.2 0.3</background></scene>
+  <spherical_coordinates><surface_model>EARTH_WGS84</surface_model><world_frame_orientation>ENU</world_frame_orientation><latitude_deg>0</latitude_deg><longitude_deg>0</longitude_deg><elevation>0</elevation><heading_deg>0</heading_deg></spherical_coordinates>
+  <plugin filename="multi_agent_system_plugin" name="lotusim::gazebo::MultiAgentSystem"/>
+  <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+</world></sdf>
