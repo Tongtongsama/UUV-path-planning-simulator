@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "restored_files": 18875,
+  "verification": "Read restored file bytes and compare SHA-256 against manifest",
+  "links_restored": false
+}

@@ -1,0 +1,4 @@
+# Archive payloads are verified GitHub Release assets, not Git objects.
+*/*.zip
+tmp*/
+restore-check*/
