@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UUV 导航记录</title><style>
+body{margin:0;background:#101927;color:#e9f1f7;font:15px system-ui,Arial,sans-serif}main{max-width:1050px;margin:auto;padding:24px}
+h1{font-size:24px;margin:0 0 6px}.sub{color:#a8b9ca;margin-bottom:18px}.row{display:flex;gap:24px;flex-wrap:wrap}
+svg{background:#172638;border:1px solid #385067;border-radius:8px;width:min(100%,760px);height:auto;touch-action:none}
+.side{min-width:220px;flex:1}.stat{background:#1e3044;padding:11px 14px;margin-bottom:8px;border-radius:6px}
+.stat b{display:block;font-size:20px;margin-top:3px}.controls{display:flex;gap:12px;align-items:center;margin-top:18px;flex-wrap:wrap}
+input[type=range]{flex:1;min-width:240px}button,select{background:#244861;color:#fff;border:1px solid #7195a8;border-radius:5px;padding:8px 12px;cursor:pointer}
+.legend{margin-top:15px;color:#bbccdb}.legend span{margin-right:16px}small{color:#9eb2c5}a{color:#72c5ff}
+</style></head><body><main><h1 id="title">UUV 导航记录</h1><div class="sub" id="subtitle"></div>
+<div class="row"><svg id="map" viewBox="0 0 800 800" aria-label="障碍、参考路径和实际轨迹"></svg><div class="side">
+<div class="stat">仿真时间<b id="time">0.00 s</b></div><div class="stat">最小扫掠净距<b id="clearance">—</b></div>
+<div class="stat">当前路径偏差<b id="error">—</b></div><div class="stat">实际 / 目标俯仰<b id="pitch">—</b></div>
+<div class="stat">阶段<b id="phase">—</b></div><small>蓝色：规划路径　橙色：实际轨迹　红色：艇体和 0.9 m 安全包络　黄色：LOS 前视点。显示由已保存的记录生成，不运行求解器。</small></div></div>
+<div class="controls"><button id="toggle">播放</button><button id="restart">重头</button><input id="seek" type="range" min="0" max="0" value="0"><select id="rate"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></div>
+<div class="legend" id="footer"></div></main><script>const DATA=/* REPLAY_DATA */;
+const svg=document.getElementById('map'),samples=DATA.samples,ns='http://www.w3.org/2000/svg';
+const X=x=>40+36*x,Y=z=>40-36*z;
+function make(tag,attrs,parent=svg){const el=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))el.setAttribute(k,String(v));parent.appendChild(el);return el}
+function poly(points,color,width,dash=''){return make('polyline',{points:points.map(p=>`${X(p[0])},${Y(p[1])}`).join(' '),fill:'none',stroke:color,'stroke-width':width,'stroke-dasharray':dash,'stroke-linejoin':'round'})}
+for(let v=0;v<=20;v+=2){make('line',{x1:X(v),y1:40,x2:X(v),y2:760,stroke:'#294259'});make('line',{x1:40,y1:Y(-v),x2:760,y2:Y(-v),stroke:'#294259'})}
+for(const [xmin,xmax,zmin,zmax] of DATA.obstacles)make('rect',{x:X(xmin),y:Y(zmax),width:36*(xmax-xmin),height:36*(zmax-zmin),fill:'#64727e',stroke:'#d0d8df','stroke-width':2});
+poly(DATA.raw_path,'#6b879a',2,'5 6');poly(DATA.path,'#65c1ff',4);make('circle',{cx:X(DATA.goal[0]),cy:Y(DATA.goal[1]),r:18,fill:'none',stroke:'#5adc9a','stroke-width':2});
+make('circle',{cx:X(DATA.goal[0]),cy:Y(DATA.goal[1]),r:5,fill:'#5adc9a'});
+const trail=poly([],'#f5a04c',4);const ring=make('circle',{cx:0,cy:0,r:32.4,fill:'none',stroke:'#fb6464','stroke-width':1.5,'stroke-dasharray':'5 4'});
+const heading=make('line',{x1:0,y1:0,x2:0,y2:0,stroke:'#ff5f66','stroke-width':5,'stroke-linecap':'round'});
+const dot=make('circle',{cx:0,cy:0,r:6,fill:'#ff676d'});const look=make('circle',{cx:0,cy:0,r:5,fill:'#f5d767'});
+let index=0,playing=false,last=0,cursorTime=samples[0][0];
+const seek=document.getElementById('seek');seek.max=samples.length-1;
+document.getElementById('title').textContent=`${DATA.scene} · ${DATA.case} · ${DATA.flow} 导航记录`;
+document.getElementById('subtitle').textContent=`流速 (${DATA.current.join(', ')}) m/s · ${DATA.status} · 验收 ${DATA.accepted===true?'通过':DATA.accepted===false?'未通过':'未判定'} · ${samples.length} 帧`;
+document.getElementById('footer').textContent=`来源：${DATA.source}`;
+function render(){const i=Math.min(samples.length-1,Math.floor(index)),s=samples[i];seek.value=i;trail.setAttribute('points',samples.slice(0,i+1).map(v=>`${X(v[1])},${Y(v[2])}`).join(' '));
+const x=X(s[1]),y=Y(s[2]);for(const el of [dot,ring]){el.setAttribute('cx',x);el.setAttribute('cy',y)}
+heading.setAttribute('x1',x);heading.setAttribute('y1',y);heading.setAttribute('x2',x+23*Math.cos(s[3]));heading.setAttribute('y2',y-23*Math.sin(s[3]));look.setAttribute('cx',X(s[6]));look.setAttribute('cy',Y(s[7]));
+document.getElementById('time').textContent=s[0].toFixed(2)+' s';document.getElementById('clearance').textContent=s[4].toFixed(3)+' m';
+document.getElementById('error').textContent=s[5].toFixed(3)+' m';document.getElementById('pitch').textContent=(s[3]*180/Math.PI).toFixed(1)+'° / '+(s[8]*180/Math.PI).toFixed(1)+'°';document.getElementById('phase').textContent=s[9]}
+function tick(now){if(playing&&last){const rate=Number(document.getElementById('rate').value);cursorTime+=(now-last)/1000*rate;while(index<samples.length-1&&samples[index+1][0]<=cursorTime)index++;if(index>=samples.length-1){playing=false;document.getElementById('toggle').textContent='播放'}render()}last=now;requestAnimationFrame(tick)}
+document.getElementById('toggle').onclick=()=>{playing=!playing;document.getElementById('toggle').textContent=playing?'暂停':'播放'};
+document.getElementById('restart').onclick=()=>{index=0;cursorTime=samples[0][0];render()};seek.oninput=()=>{index=Number(seek.value);cursorTime=samples[index][0];render()};render();requestAnimationFrame(tick);
+</script></body></html>

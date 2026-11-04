@@ -9,7 +9,7 @@
     messages = lotusim.packages.${system}.messages;
   in {
     devShells.${system}.default = pkgs.mkShell {
-      packages = [ pkgs.python3 pkgs.python3Packages.websockets pkgs.python3Packages.shapely messages
+      packages = [ pkgs.python3 pkgs.python3Packages.websockets pkgs.python3Packages.shapely pkgs.python3Packages.numpy messages
         lotusim.inputs.lxdyn.packages.${system}.xdyn lotusim.packages.${system}.lotusim ]
         ++ (with ros; [ rclpy action-msgs builtin-interfaces geographic-msgs geometry-msgs
           sensor-msgs std-msgs std-srvs rosidl-default-runtime ]);

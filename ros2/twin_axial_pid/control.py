@@ -29,14 +29,16 @@ def parameters():
 class AllocatedPID(CascadedPID3DOFController):
     tracking_time_s=1.0
 
-    def __init__(self):
+    def __init__(self,max_pitch_target=math.pi/3):
         super().__init__(parameters())
+        if not 0<max_pitch_target<=math.radians(75): raise ValueError('Invalid target pitch envelope')
+        self.max_pitch_target=max_pitch_target
 
     def command(self, record, target, dt=.05):
         if not record.get('valid') or not 0 < dt <= .1:
             self.reset()
             raise ValueError('Invalid feedback or controller timestep')
-        if not 0 <= target.u <= .6 or abs(target.pitch)>math.pi/3:
+        if not 0 <= target.u <= .6 or abs(target.pitch)>self.max_pitch_target+1e-12:
             self.reset()
             raise ValueError('Target outside step-test envelope')
         s=record['solver_state_ned_frd']

@@ -51,8 +51,10 @@ def _analyze(directory):
             raise ValueError('Recording hash mismatch: '+name)
     status=load('run_status.json'); meta=load('metadata.json'); case=meta['case']
     if case not in CASES: raise ValueError('Unknown case')
-    checks['unchanged_v2_model']=load('model.yml')==model_config(case)
-    checks['fixed_controller_configuration']=load('controller.json')['parameters']==asdict(parameters()) and load('controller.json')['tracking_time_s']==1.0
+    flow=meta.get('flow','F0')
+    checks['unchanged_v2_model']=load('model.yml')==model_config(case,flow)
+    controller_config=load('controller.json')
+    checks['fixed_controller_configuration']=controller_config['parameters']==asdict(parameters()) and controller_config['tracking_time_s']==1.0
     checks['completed']=status['status']=='completed' and status['error'] is None
     checks['clean_shutdown']=status.get('cleanup_error') is None and len(status['process_exit_codes'])==3 and all(p['returncode'] in (0,-15) for p in status['process_exit_codes'])
     records=lines('transactions.jsonl'); commands=lines('commands.jsonl'); observations=lines('gazebo_poses.jsonl')
@@ -75,6 +77,8 @@ def _analyze(directory):
     checks['gazebo_pose_mirror']=len(covered)/len(records)>=.95
     by_sequence={r['sequence']:r for r in records}; sent={c['sequence']:c for c in commands}
     plan=load('plan.json'); mission=Mission(plan,(directory/'worlds/minimal.world').read_text())
+    checks['scene_identity']=mission.scene==meta.get('scene','S1') and mission.flow==flow and mission.config['current']==meta.get('current_enu_xz_mps',[0,0])
+    checks['fixed_controller_configuration'] &= controller_config.get('max_pitch_target_deg',60)==mission.config.get('pitch_limit_deg',60)
     request=PlanningRequest(initial(case),Pose(x=18,z=-10),PlanningConstraints(.7,.8,goal_tolerance=0.))
     checks['planned_path_valid']=validate_path(mission.path,EnvironmentPlanningSpace(mission.world),request.constraints,request=request).valid
     recorded_nav={r['sequence']:r for r in lines('navigation.jsonl')}
@@ -94,7 +98,7 @@ def _analyze(directory):
     rms=math.sqrt(sum(d*d for d in distances)/len(distances))
     checks['tracking_rms']=rms<=.35
     checks['tracking_max']=max(distances)<=.8
-    replay=AllocatedPID(); count=0; saturation=0; corrections=0; previous_feedback=None
+    replay=AllocatedPID(max_pitch_target=math.radians(mission.config.get('pitch_limit_deg',60))); count=0; saturation=0; corrections=0; previous_feedback=None
     for c in commands:
         d=c.get('controller')
         if d is None:
@@ -128,24 +132,51 @@ def _analyze(directory):
             'minimum_clearance_m':min(clearances),'minimum_safety_margin_m':min(clearances)-.9,
             'path_rms_m':rms,'path_max_m':max(distances),'saturation_fraction':fraction,
             'controller_steps':count,'valid_steps':len(records),'pose_coverage':len(covered)/len(records),
-            'error':status['error'],'scope':'S1/F0 integration acceptance only; not all scenarios/currents or full dissertation matrix'}
+            'error':status['error'],'scope':f'{mission.scene}/{mission.flow} integration acceptance only; not all scenarios/currents or full dissertation matrix'}
+
+
+def source_snapshot(directory,name):
+    """Hash every Python source file captured for one trial."""
+    source=Path(directory)/name/'source'
+    return {str(path.relative_to(source)):hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in source.rglob('*.py')}
+
+
+def source_snapshot_consistent(directory,names=(*CASES,'P0_repeat')):
+    """A current-flow suite is only valid if every run used identical source."""
+    snapshots=[source_snapshot(directory,name) for name in names]
+    return bool(snapshots[0]) and all(item==snapshots[0] for item in snapshots[1:])
 
 
 def analyze_suite(directory):
     directory=Path(directory)
     reports={name:analyze_run(directory/name) for name in (*CASES,'P0_repeat')}
+    try:source_consistent=source_snapshot_consistent(directory)
+    except Exception:source_consistent=False
     try:
         def rows(name):
             return {round(r['elapsed_end'],6):r for r in map(json.loads,(directory/name/'transactions.jsonl').read_text().splitlines()) if r.get('valid')}
         a,b=rows('P0'),rows('P0_repeat'); shared=sorted(a.keys()&b.keys())
         delta=max(math.dist(a[t]['position_enu_m'],b[t]['position_enu_m']) for t in shared)
-        arrival=abs(reports['P0']['arrival_time_s']-reports['P0_repeat']['arrival_time_s'])
-        repeat={'passed':reports['P0']['passed'] and reports['P0_repeat']['passed'] and len(shared)>=min(len(a),len(b))-1 and delta<=.02 and arrival<=.1,
-                'max_position_difference_m':delta,'arrival_time_difference_s':arrival,'matched_steps':len(shared)}
+        both_passed=reports['P0']['passed'] and reports['P0_repeat']['passed']
+        both_failed=not reports['P0']['passed'] and not reports['P0_repeat']['passed'] and reports['P0'].get('error')==reports['P0_repeat'].get('error')
+        terminal_time_difference=abs(max(a)-max(b))
+        arrival=abs(reports['P0']['arrival_time_s']-reports['P0_repeat']['arrival_time_s']) if both_passed else None
+        repeat={'passed':(both_passed or both_failed) and len(shared)>=min(len(a),len(b))-1 and delta<=.02 and terminal_time_difference<=.1,
+                'same_failure_reason':both_failed,'max_position_difference_m':delta,
+                'arrival_time_difference_s':arrival,'terminal_time_difference_s':terminal_time_difference,
+                'matched_steps':len(shared)}
     except Exception as exc:repeat={'passed':False,'error':str(exc)}
     count=sum(reports[c]['passed'] for c in CASES)
     safe=all(r.get('checks',{}).get('safety',False) for r in reports.values())
-    return {'passed':count>=4 and reports['P0']['passed'] and safe and repeat['passed'],
+    try:
+        scenarios={f"{meta['scene']}/{meta.get('flow','F0')}" for name in (*CASES,'P0_repeat')
+                   for meta in [json.loads((directory/name/'metadata.json').read_text(encoding='utf-8'))]}
+        scenario=next(iter(scenarios)) if len(scenarios)==1 else None
+    except Exception:scenario=None
+    current_flow=scenario is not None and not scenario.endswith('/F0')
+    return {'passed':count>=4 and reports['P0']['passed'] and safe and repeat['passed'] and scenario in ('S1/F0','S1/F1','S1/F2','S2/F0','S2/F1','S2/F2') and (not current_flow or source_consistent),
             'successful_initials':count,'initials':5,'all_runs_passed':all(r['passed'] for r in reports.values()),
-            'all_runs_safe':safe,'repeatability':repeat,'runs':reports,
-            'scope':'S1 single_baffle_v1, F0 no current; five fixed initials plus P0 repeat'}
+            'all_runs_safe':safe,'source_snapshot_consistent':source_consistent,
+            'repeatability':repeat,'runs':reports,
+            'scope':f'{scenario} {"no current" if scenario and scenario.endswith("/F0") else "uniform current"}; five fixed initials plus P0 repeat'}

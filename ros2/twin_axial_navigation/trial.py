@@ -1,6 +1,7 @@
 """Run PID from actual solver feedback through ROS, allocation and LOTUSim."""
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import shutil
@@ -22,7 +23,7 @@ def run_trial(args):
         with socket.socket() as s:
             s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
             s.bind(('127.0.0.1',port))
-    output=prepare(args.output.resolve(),args.case)
+    output=prepare(args.output.resolve(),args.case,args.scene,args.gui,args.flow)
     mission=Mission(json.loads((output/'plan.json').read_text()),(output/'worlds/minimal.world').read_text())
     root=Path(__file__).resolve().parents[2]
     for folder in ('ros2/twin_axial_navigation','ros2/twin_axial_motion','ros2/twin_axial_pid','ros2/twin_axial_v2','controller','core','planner','guidance','navigation','environment','trajectory','physics'):
@@ -31,9 +32,11 @@ def run_trial(args):
             destination.parent.mkdir(parents=True,exist_ok=True)
             shutil.copy2(source,destination)
     (output/'controller.json').write_text(json.dumps({'parameters':asdict(parameters()),
-        'tracking_time_s':1.0,'allocation':'unchanged v2 joint direction-preserving scaling'},indent=2))
+        'tracking_time_s':1.0,'max_pitch_target_deg':mission.config.get('pitch_limit_deg',60),
+        'allocation':'unchanged v2 joint direction-preserving scaling'},indent=2))
     if os.environ.get('UUV_XDYN_LOCK'): shutil.copy2(os.environ['UUV_XDYN_LOCK'],output/'flake.lock')
-    metadata={'case':args.case,'schema':1,'experiment':'S1 F0 LOS navigation','model':NAME,'dt':.05,'duration':CONFIG['timeout_s'],
+    metadata={'case':args.case,'scene':args.scene,'flow':args.flow,'current_enu_xz_mps':mission.config['current'],
+        'schema':1,'experiment':f'{args.scene} {args.flow} LOS navigation','model':NAME,'dt':.05,'duration':CONFIG['timeout_s'],
         'inputs':'requested X (N), M (Nm) -> direction-preserving allocation -> upper/lower ideal thrust N; no direct heave','dynamics':'xdyn full 6DOF; no state clamping',
         'restoring':'neutral buoyancy, artificial -6*sin(angle) roll/pitch torque',
         'frames':'solver NED/FRD; feedback also includes ENU/FLU pose',
@@ -88,10 +91,10 @@ def run_trial(args):
                         'position':[p.x,p.y,p.z],'quaternion_xyzw':[q.x,q.y,q.z,q.w]})+'\n')
         sub=node.create_subscription(String,'/uuv_twin_axial/state',state_cb,20)
         sub_pose=node.create_subscription(VesselPositionArray,'/uuv_twin_axial/poses',pose_cb,20)
-        sim=launch(['lotusim','run','--debug','minimal.world'],'gazebo.log')
+        sim=launch(['lotusim','run']+(['--gui'] if args.gui else [])+['--debug','minimal.world'],'gazebo.log')
         print(f'Trial {args.case}; recording to {output}',flush=True)
         deadline=time.monotonic()+600; last_sequence=-1; last_stamp=None
-        controller=AllocatedPID()
+        controller=AllocatedPID(max_pitch_target=math.radians(mission.config.get('pitch_limit_deg',60)))
         def publish(commands,stamp,diagnostics=None):
             nonlocal seq
             cmd=VesselCmd(); cmd.vessel_name=NAME; cmd.cmd_string=json.dumps(commands)

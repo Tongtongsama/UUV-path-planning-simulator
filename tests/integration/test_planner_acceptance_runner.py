@@ -34,6 +34,13 @@ def test_invalid_success_path_is_rejected(config,monkeypatch):
     assert not evaluate_case(config,config["cases"][0])[0]["accepted"]
 
 
+def test_missing_git_is_reported_not_fatal(monkeypatch):
+    from validation import planner_acceptance
+    def missing(*args,**kwargs): raise FileNotFoundError("git")
+    monkeypatch.setattr(planner_acceptance.subprocess,"run",missing)
+    assert planner_acceptance._git("rev-parse","HEAD").startswith("unavailable:")
+
+
 def test_preview_archives_figures_source_and_no_false_test_claim(config,tmp_path):
     pytest.importorskip("matplotlib")
     output=tmp_path/"run"

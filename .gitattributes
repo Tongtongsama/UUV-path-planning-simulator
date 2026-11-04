@@ -1,0 +1,4 @@
+*.sh text eol=lf
+*.nix text eol=lf
+config/scenarios/planner_acceptance_v1.json text eol=lf
+config/scenarios/planner_acceptance_v2.json text eol=crlf

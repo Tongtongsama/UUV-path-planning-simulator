@@ -33,3 +33,6 @@ log/
 
 # Local simulation outputs, plots, logs and per-run source snapshots
 /artifacts/
+
+# Separate upstream reference checkout
+/external/LOTUSim/

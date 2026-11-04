@@ -54,8 +54,11 @@ def evaluate_case(config: dict, case: dict, repeats: int = 2):
 
 
 def _git(*args: str) -> str:
-    completed = subprocess.run(["git","-c",f"safe.directory={ROOT.as_posix()}",*args],
-        cwd=ROOT,capture_output=True,text=True,encoding="utf-8",errors="replace")
+    try:
+        completed = subprocess.run(["git","-c",f"safe.directory={ROOT.as_posix()}",*args],
+            cwd=ROOT,capture_output=True,text=True,encoding="utf-8",errors="replace")
+    except OSError as exc:
+        return f"unavailable: {exc}"
     return completed.stdout.strip() if completed.returncode == 0 else "unavailable: " + completed.stderr.strip()
 
 

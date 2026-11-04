@@ -13,6 +13,7 @@ import time
 import uuid
 from .core import (Playback,display_world,fit_camera,load_recording,load_suite,sample,
                    suite_unchanged,unchanged,visual_model)
+from .environment import static_environment,environment_camera,environment_world
 
 
 def acceptance_passed(record):
@@ -67,15 +68,22 @@ def main():
         for case in cases:
             if visual_model(records[case],name)!=model:
                 p.error('Suite cases do not share one inline visual model; replay them individually')
-    mode=('fit' if suite is not None else 'close') if args.camera=='auto' else args.camera
-    camera=fit_camera(list(records.values()) if suite is not None else [record]) if mode=='fit' else None
+    environment,_=static_environment(record)
+    if suite is not None:
+        from xml.etree import ElementTree as ET
+        expected=[ET.tostring(m) for m in environment]
+        if any([ET.tostring(m) for m in static_environment(r)[0]]!=expected for r in records.values()):
+            p.error('Suite environments differ; replay recordings individually')
+    mode=('fit' if suite is not None or environment else 'close') if args.camera=='auto' else args.camera
+    camera=environment_camera(list(records.values()) if suite is not None else [record]) if mode=='fit' else None
     title=None if suite is None else f"Twin-axial recorded suite — {suite['root'].name} — visualization only"
     out=(args.output or Path('artifacts/twin_axial_pid_replays' if suite is not None else 'artifacts/twin_axial_replays')/(datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')+'_'+tag)).resolve()
     if out.is_relative_to(record['root']) or (suite is not None and out.is_relative_to(suite['root'])):
         p.error('Replay output must be outside the original recording')
     if out.exists(): p.error('Replay output already exists; choose a new directory')
     (out/'state/worlds').mkdir(parents=True)
-    (out/'state/worlds/replay.world').write_text(display_world(namespace,record['poses'][0]['position'],camera,title),encoding='utf-8')
+    (out/'state/worlds/replay.world').write_text(environment_world(namespace,record,camera,title),encoding='utf-8')
+    print(f'Recorded environment: {len(environment)} static models; camera={mode}.',flush=True)
     (out/'vehicle.sdf').write_text(model,encoding='utf-8')
     if suite is None:
         source={'path':str(record['root']),'hashes':record['hashes'],'pose_source':'gazebo_poses.jsonl','first_source_time':record['times'][0],'last_source_time':record['times'][-1]}
