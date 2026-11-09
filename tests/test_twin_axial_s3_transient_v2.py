@@ -4,7 +4,7 @@ import math
 import numpy as np
 import pytest
 
-from ros2.twin_axial_s3_transient_v2 import cli
+from ros2.twin_axial_s3_transient_v2 import cli, validate
 
 
 def test_original_rates_are_isolated_and_restored():
@@ -56,6 +56,30 @@ def test_replay_detects_resealed_state_tampering(tmp_path):
     cli.write(tmp_path/'manifest.json',manifest)
     with pytest.raises(AssertionError,match='dynamics'):
         cli.verify_run(tmp_path,replay=True)
+
+
+def test_g12_validation_is_fifteen_trials_with_original_rates():
+    assert validate.G12['name'] == 'G12'
+    assert validate.NEW_CASES == ('P1', 'P2', 'P3', 'P4', 'P0_repeat')
+    assert len(validate.FLOWS) * len(validate.NEW_CASES) == 15
+    config = validate.g12_config()
+    assert config['cruise_speed'] == .48 and config['lookahead'] == 2.3
+    assert config['pitch_rate_limit'] == .12
+    assert config['speed_rate_limit'] == .04
+    assert config['turn_speed'] == .12
+    assert config['pitch_limit_deg'] == 70
+
+
+def test_repeatability_compares_matched_states(tmp_path):
+    for name, shift in (('P0', 0.), ('P0_repeat', .01)):
+        folder = tmp_path / name
+        folder.mkdir()
+        rows = [dict(t=.05, state=[2 + shift, -10, 0, 0, 0, 0]),
+                dict(t=.10, state=[2.1 + shift, -10, 0, 0, 0, 0])]
+        (folder / 'states.jsonl').write_text(''.join(json.dumps(row) + '\n' for row in rows))
+    result = validate._repeatability(tmp_path / 'P0', tmp_path / 'P0_repeat')
+    assert result['passed'] and result['max_position_difference_m'] == pytest.approx(.01)
+    assert result['matched_steps'] == 2
 
 
 def test_manifest_cannot_escape_record_directory(tmp_path):

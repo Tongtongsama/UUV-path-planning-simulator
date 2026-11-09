@@ -268,22 +268,29 @@ def analyze(source, output):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=['audit','screen','analyze'])
+    parser.add_argument('mode', choices=['audit','screen','validate','analyze'])
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--audit', type=Path)
+    parser.add_argument('--screen', type=Path)
     parser.add_argument('--source', type=Path)
     args = parser.parse_args()
     if args.output.exists():
         parser.error('Output already exists; records cannot be overwritten')
     if args.mode == 'screen' and args.audit is None:
         parser.error('--audit is required before screening')
+    if args.mode == 'validate' and args.screen is None:
+        parser.error('--screen is required for G12 validation')
     if args.mode == 'analyze' and args.source is None:
         parser.error('--source is required for analysis')
-    args.output.mkdir(parents=True)
+    if args.mode != 'validate':
+        args.output.mkdir(parents=True)
     if args.mode == 'audit':
         audit(args.output)
     elif args.mode == 'screen':
         screen(args.output,args.audit)
+    elif args.mode == 'validate':
+        from .validate import validate as validate_g12
+        validate_g12(args.output,args.screen)
     else:
         analyze(args.source,args.output)
 
