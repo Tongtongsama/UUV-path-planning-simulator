@@ -1,0 +1,16 @@
+{
+  "documents": [
+    "evidence_register.md",
+    "figures_tables.md",
+    "manuscript_outline.md",
+    "references_todo.md"
+  ],
+  "evidence_entry_files": 27,
+  "missing_links": [],
+  "frozen_contract_passed": true,
+  "bound_files": 170,
+  "new_simulation_started": false,
+  "references_added": 0,
+  "figure_files_generated": 0,
+  "scope": "Outline and planned figure/table inventory; not completed manuscript"
+}

@@ -1,0 +1,3 @@
+-r requirements-dev.txt
+
+scipy>=1.11,<2.0

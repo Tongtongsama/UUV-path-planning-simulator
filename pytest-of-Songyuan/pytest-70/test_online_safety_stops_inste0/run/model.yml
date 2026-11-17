@@ -1,0 +1,512 @@
+{
+  "rotations convention": [
+    "psi",
+    "theta'",
+    "phi''"
+  ],
+  "environmental constants": {
+    "g": {
+      "value": 9.81,
+      "unit": "m/s^2"
+    },
+    "rho": {
+      "value": 1000,
+      "unit": "kg/m^3"
+    },
+    "nu": {
+      "value": 1e-06,
+      "unit": "m^2/s"
+    }
+  },
+  "environment models": [
+    {
+      "model": "no waves",
+      "constant sea elevation in NED frame": {
+        "value": 0,
+        "unit": "m"
+      }
+    },
+    {
+      "model": "no wind"
+    }
+  ],
+  "bodies": [
+    {
+      "name": "uuv_twin_axial_v2",
+      "position of body frame relative to mesh": {
+        "frame": "mesh",
+        "x": {
+          "value": 0,
+          "unit": "m"
+        },
+        "y": {
+          "value": 0,
+          "unit": "m"
+        },
+        "z": {
+          "value": 0,
+          "unit": "m"
+        },
+        "phi": {
+          "value": 0,
+          "unit": "rad"
+        },
+        "theta": {
+          "value": 0,
+          "unit": "rad"
+        },
+        "psi": {
+          "value": 0,
+          "unit": "rad"
+        }
+      },
+      "initial position of body frame relative to NED": {
+        "frame": "NED",
+        "x": {
+          "value": 0,
+          "unit": "m"
+        },
+        "y": {
+          "value": 2,
+          "unit": "m"
+        },
+        "z": {
+          "value": 30,
+          "unit": "m"
+        },
+        "phi": {
+          "value": 0,
+          "unit": "rad"
+        },
+        "theta": {
+          "value": 0.0,
+          "unit": "rad"
+        },
+        "psi": {
+          "value": 1.5707963267948966,
+          "unit": "rad"
+        }
+      },
+      "initial velocity of body frame relative to NED": {
+        "frame": "uuv_twin_axial_v2",
+        "u": {
+          "value": 0,
+          "unit": "m/s"
+        },
+        "v": {
+          "value": 0,
+          "unit": "m/s"
+        },
+        "w": {
+          "value": 0,
+          "unit": "m/s"
+        },
+        "p": {
+          "value": 0,
+          "unit": "rad/s"
+        },
+        "q": {
+          "value": 0,
+          "unit": "rad/s"
+        },
+        "r": {
+          "value": 0,
+          "unit": "rad/s"
+        }
+      },
+      "dynamics": {
+        "hydrodynamic forces calculation point in body frame": {
+          "x": {
+            "value": 0,
+            "unit": "m"
+          },
+          "y": {
+            "value": 0,
+            "unit": "m"
+          },
+          "z": {
+            "value": 0,
+            "unit": "m"
+          }
+        },
+        "centre of inertia": {
+          "frame": "uuv_twin_axial_v2",
+          "x": {
+            "value": 0,
+            "unit": "m"
+          },
+          "y": {
+            "value": 0,
+            "unit": "m"
+          },
+          "z": {
+            "value": 0,
+            "unit": "m"
+          }
+        },
+        "rigid body inertia matrix at the center of gravity and projected in the body frame": {
+          "row 1": [
+            20,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "row 2": [
+            0,
+            20,
+            0,
+            0,
+            0,
+            0
+          ],
+          "row 3": [
+            0,
+            0,
+            20,
+            0,
+            0,
+            0
+          ],
+          "row 4": [
+            0,
+            0,
+            0,
+            8,
+            0,
+            0
+          ],
+          "row 5": [
+            0,
+            0,
+            0,
+            0,
+            8,
+            0
+          ],
+          "row 6": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            8
+          ]
+        },
+        "added mass matrix at the center of gravity and projected in the body frame": {
+          "row 1": [
+            5,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "row 2": [
+            0,
+            5,
+            0,
+            0,
+            0,
+            0
+          ],
+          "row 3": [
+            0,
+            0,
+            8,
+            0,
+            0,
+            0
+          ],
+          "row 4": [
+            0,
+            0,
+            0,
+            2,
+            0,
+            0
+          ],
+          "row 5": [
+            0,
+            0,
+            0,
+            0,
+            2,
+            0
+          ],
+          "row 6": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            2
+          ]
+        }
+      },
+      "external forces": [
+        {
+          "model": "linear damping",
+          "damping matrix at the center of gravity projected in the body frame": {
+            "row 1": [
+              4,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "row 2": [
+              0,
+              6,
+              0,
+              0,
+              0,
+              0
+            ],
+            "row 3": [
+              0,
+              0,
+              6,
+              0,
+              0,
+              0
+            ],
+            "row 4": [
+              0,
+              0,
+              0,
+              3,
+              0,
+              0
+            ],
+            "row 5": [
+              0,
+              0,
+              0,
+              0,
+              3,
+              0
+            ],
+            "row 6": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              3
+            ]
+          }
+        },
+        {
+          "model": "quadratic damping",
+          "damping matrix at the center of gravity projected in the body frame": {
+            "row 1": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "row 2": [
+              0,
+              1.5,
+              0,
+              0,
+              0,
+              0
+            ],
+            "row 3": [
+              0,
+              0,
+              1.5,
+              0,
+              0,
+              0
+            ],
+            "row 4": [
+              0,
+              0,
+              0,
+              0.5,
+              0,
+              0
+            ],
+            "row 5": [
+              0,
+              0,
+              0,
+              0,
+              0.5,
+              0
+            ],
+            "row 6": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0.5
+            ]
+          }
+        },
+        {
+          "model": "maneuvering",
+          "name": "upper",
+          "reference frame": {
+            "frame": "uuv_twin_axial_v2",
+            "x": {
+              "value": 0,
+              "unit": "m"
+            },
+            "y": {
+              "value": 0,
+              "unit": "m"
+            },
+            "z": {
+              "value": 0,
+              "unit": "m"
+            },
+            "phi": {
+              "value": 0,
+              "unit": "rad"
+            },
+            "theta": {
+              "value": 0,
+              "unit": "rad"
+            },
+            "psi": {
+              "value": 0,
+              "unit": "rad"
+            }
+          },
+          "commands": [
+            "T"
+          ],
+          "X": "T",
+          "Y": "0",
+          "Z": "0",
+          "K": "0",
+          "M": "-0.25*T",
+          "N": "0"
+        },
+        {
+          "model": "maneuvering",
+          "name": "lower",
+          "reference frame": {
+            "frame": "uuv_twin_axial_v2",
+            "x": {
+              "value": 0,
+              "unit": "m"
+            },
+            "y": {
+              "value": 0,
+              "unit": "m"
+            },
+            "z": {
+              "value": 0,
+              "unit": "m"
+            },
+            "phi": {
+              "value": 0,
+              "unit": "rad"
+            },
+            "theta": {
+              "value": 0,
+              "unit": "rad"
+            },
+            "psi": {
+              "value": 0,
+              "unit": "rad"
+            }
+          },
+          "commands": [
+            "T"
+          ],
+          "X": "T",
+          "Y": "0",
+          "Z": "0",
+          "K": "0",
+          "M": "0.25*T",
+          "N": "0"
+        },
+        {
+          "model": "maneuvering",
+          "name": "restoring",
+          "reference frame": {
+            "frame": "uuv_twin_axial_v2",
+            "x": {
+              "value": 0,
+              "unit": "m"
+            },
+            "y": {
+              "value": 0,
+              "unit": "m"
+            },
+            "z": {
+              "value": 0,
+              "unit": "m"
+            },
+            "phi": {
+              "value": 0,
+              "unit": "rad"
+            },
+            "theta": {
+              "value": 0,
+              "unit": "rad"
+            },
+            "psi": {
+              "value": 0,
+              "unit": "rad"
+            }
+          },
+          "X": "0",
+          "Y": "0",
+          "Z": "0",
+          "K": "-6*sin(phi(t))",
+          "M": "-6*sin(theta(t))",
+          "N": "0"
+        },
+        {
+          "model": "maneuvering",
+          "name": "added_mass_coriolis",
+          "reference frame": {
+            "frame": "uuv_twin_axial_v2",
+            "x": {
+              "value": 0,
+              "unit": "m"
+            },
+            "y": {
+              "value": 0,
+              "unit": "m"
+            },
+            "z": {
+              "value": 0,
+              "unit": "m"
+            },
+            "phi": {
+              "value": 0,
+              "unit": "rad"
+            },
+            "theta": {
+              "value": 0,
+              "unit": "rad"
+            },
+            "psi": {
+              "value": 0,
+              "unit": "rad"
+            }
+          },
+          "X": "5*v(t)*r(t)-8*w(t)*q(t)",
+          "Y": "8*w(t)*p(t)-5*u(t)*r(t)",
+          "Z": "5*u(t)*q(t)-5*v(t)*p(t)",
+          "K": "-3*v(t)*w(t)",
+          "M": "3*u(t)*w(t)",
+          "N": "0"
+        }
+      ]
+    }
+  ]
+}

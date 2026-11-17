@@ -1,0 +1,9 @@
+{
+  "scope": "Initial Phase B adapter diagnostics; no PID or safety tuning",
+  "projection": {"switch_radius": 0.2, "forward_window": 2.0, "progress_slack": 0.05, "max_switches_per_step": 3},
+  "los": {"lookahead": 0.5, "nominal_speed": 0.3, "terminal_entry_distance": 0.25},
+  "detour_nominal_speed": 0.2,
+  "constant_current": [0.0, 0.05],
+  "controller": "config/controllers/cascaded_pid_3dof_restoring_candidate.yaml",
+  "navigation": {"dt": 0.05, "max_duration": 120.0, "goal_position_tolerance": 0.25, "goal_speed_tolerance": 0.1, "goal_pitch_rate_tolerance": 0.1, "settle_time": 0.5, "maximum_tau_x": 20.0, "maximum_tau_m": 8.0}
+}

@@ -1,0 +1,4 @@
+detour: SUCCESS; accepted=True; length=10.071067811865477; expanded=145
+narrow_passage: SUCCESS; accepted=True; length=8.0; expanded=26
+unreachable: NO_PATH; accepted=True; length=None; expanded=171
+Tests: {'executed': False, 'returncode': None}

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "astar": {"resolution": 0.5, "connectivity": 8, "max_expanded_nodes": 100000, "max_grid_nodes": 250000},
+  "constraints": {"vehicle_radius": 0.2, "safety_margin": 0.1, "goal_tolerance": 0.25},
+  "boundary": {"x_min": 0, "x_max": 10, "z_min": -10, "z_max": 0},
+  "start": {"x": 1, "z": -5},
+  "goal": {"x": 9, "z": -5},
+  "cases": [
+    {"name": "detour", "expected_status": "SUCCESS", "obstacles": [
+      {"obstacle_id": "wall", "x_min": 4.9, "x_max": 5.1, "z_min": -7, "z_max": -3}
+    ]},
+    {"name": "narrow_passage", "expected_status": "SUCCESS", "obstacles": [
+      {"obstacle_id": "lower", "x_min": 4, "x_max": 6, "z_min": -10, "z_max": -5.4},
+      {"obstacle_id": "upper", "x_min": 4, "x_max": 6, "z_min": -4.6, "z_max": 0}
+    ]},
+    {"name": "unreachable", "expected_status": "NO_PATH", "obstacles": [
+      {"obstacle_id": "wall", "x_min": 4.9, "x_max": 5.1, "z_min": -10, "z_max": 0}
+    ]}
+  ]
+}

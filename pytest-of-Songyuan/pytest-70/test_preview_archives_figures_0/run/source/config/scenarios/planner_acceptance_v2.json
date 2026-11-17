@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "astar": {"resolution": 0.5, "connectivity": 8, "max_expanded_nodes": 100000, "max_grid_nodes": 250000},
+  "constraints": {"vehicle_radius": 0.2, "safety_margin": 0.1, "goal_tolerance": 0.25},
+  "boundary": {"x_min": 0, "x_max": 10, "z_min": -10, "z_max": 0},
+  "start": {"x": 1, "z": -5},
+  "goal": {"x": 9, "z": -5},
+  "cases": [
+    {
+      "name": "u_trap_detour",
+      "description": "开口朝向起点的大型 U 型凹槽，测试算法能否快速从死胡同中回溯并绕过",
+      "expected_status": "SUCCESS",
+      "obstacles": [
+        {"obstacle_id": "u_back", "x_min": 4.5, "x_max": 5.0, "z_min": -7.5, "z_max": -2.5},
+        {"obstacle_id": "u_top", "x_min": 2.0, "x_max": 5.0, "z_min": -2.5, "z_max": -2.0},
+        {"obstacle_id": "u_bottom", "x_min": 2.0, "x_max": 5.0, "z_min": -8.0, "z_max": -7.5}
+      ]
+    },
+    {
+      "name": "double_baffle_detour",
+      "description": "双重交錯挡板，强迫路径进行 S 型/之字形连续绕行",
+      "expected_status": "SUCCESS",
+      "obstacles": [
+        {"obstacle_id": "baffle_1", "x_min": 3.5, "x_max": 4.0, "z_min": -10.0, "z_max": -3.0},
+        {"obstacle_id": "baffle_2", "x_min": 6.5, "x_max": 7.0, "z_min": -7.0, "z_max": 0.0}
+      ]
+    },
+    {
+      "name": "edge_forced_detour",
+      "description": "中央挡板封死绝大部分区域，仅在地图边缘留出缝隙，测试极端偏航绕行",
+      "expected_status": "SUCCESS",
+      "obstacles": [
+        {"obstacle_id": "center_block", "x_min": 4.5, "x_max": 5.5, "z_min": -9.0, "z_max": 0.0}
+      ]
+    },
+    {
+      "name": "zigzag_maze_detour",
+      "description": "三重交错栅栏构成的迷你迷宫，测试高密度转向和长节点搜索能力",
+      "expected_status": "SUCCESS",
+      "obstacles": [
+        {"obstacle_id": "wall_1", "x_min": 3.0, "x_max": 3.5, "z_min": -8.0, "z_max": 0.0},
+        {"obstacle_id": "wall_2", "x_min": 5.5, "x_max": 6.0, "z_min": -10.0, "z_max": -2.0},
+        {"obstacle_id": "wall_3", "x_min": 7.5, "x_max": 8.0, "z_min": -8.0, "z_max": 0.0}
+      ]
+    }
+  ]
+}

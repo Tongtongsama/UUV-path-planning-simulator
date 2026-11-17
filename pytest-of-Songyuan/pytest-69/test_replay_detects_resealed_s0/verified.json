@@ -1,0 +1,32 @@
+{
+  "record_verified": true,
+  "dynamics_pid_replayed": true,
+  "passed": false,
+  "checks": {
+    "arrived": false,
+    "timeout": false,
+    "safety": true,
+    "rms": true,
+    "max_error": true,
+    "saturation": true,
+    "envelope": true
+  },
+  "metrics": {
+    "arrival_time": null,
+    "min_clearance": 2,
+    "rms_error": 0.0,
+    "max_error": 0.0,
+    "saturation_fraction": 0.0
+  },
+  "max_abs_pitch_deg": 0.0,
+  "max_abs_q": 0,
+  "first_violations": {},
+  "max_reference_rates": [
+    0.0,
+    0.0
+  ],
+  "descent_window": null,
+  "max_one_step_state_residual": 0.0,
+  "manifest_sha256": "32a56ab1ac5ad2c925cfda2298b2002acb3d71c1e1d3338347fb282ebbd8acae",
+  "steps": 2
+}

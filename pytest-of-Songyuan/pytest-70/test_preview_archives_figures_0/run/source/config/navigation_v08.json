@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "navigation": {
+    "dt": 0.05,
+    "max_duration": 120.0,
+    "goal_position_tolerance": 0.25,
+    "goal_speed_tolerance": 0.10,
+    "goal_pitch_rate_tolerance": 0.10,
+    "settle_time": 0.5,
+    "maximum_tau_x": 20.0,
+    "maximum_tau_m": 8.0
+  },
+  "trajectory": {"nominal_speed": 0.5, "sample_spacing": 0.25, "shortcut": true, "max_samples": 100000},
+  "current_comparisons": [[0.0,0.0],[0.1,0.0],[-0.1,0.0],[0.0,0.05]]
+}

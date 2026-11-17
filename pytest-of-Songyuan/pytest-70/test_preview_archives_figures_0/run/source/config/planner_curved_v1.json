@@ -1,0 +1,15 @@
+{
+  "version": "p1_p2_circular_fillet_v1",
+  "source_dataset": "artifacts/planner_paired_v1",
+  "source_manifest_sha256": "6ef6cdca5a3ca8d4c0b0293e2db4fd534c1c76e891436351af5370b83d2d3599",
+  "baseline_commit": "1a8a105",
+  "nominal_speed": 0.2,
+  "repeats": 2,
+  "collision_scenes_first": ["edge_forced_detour", "zigzag_maze_detour"],
+  "fillet": {"radius": 1.0, "max_sagitta": 0.001, "max_chord": 0.1, "lookahead": 0.5, "max_lookahead_fraction": 0.8, "max_points": 10000},
+  "radius_basis": "Preregistered geometric candidate, not a measured minimum turning radius or q guard",
+  "selection": "Try frozen P1 first; then other unique frozen buffer candidates in increasing original cost; accept first completely certified fillet",
+  "rejection": "UNSMOOTHABLE with evidence UNKNOWN; never shrink radius, change PID, speed, lookahead, safety or timeout",
+  "comparison": "P2 may change candidate polyline as well as fillet; report provenance, do not claim isolated curvature causal effect",
+  "los_scope": "lookahead < 0.8 of each sampled arc; does not certify off-path guidance chord or physical execution"
+}

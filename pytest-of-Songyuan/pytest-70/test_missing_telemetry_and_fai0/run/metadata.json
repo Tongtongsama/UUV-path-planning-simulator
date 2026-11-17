@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "kind": "frozen_history_gazebo_replay",
+  "started_utc": "2026-11-17T05:42:40.468116+00:00",
+  "settings": {
+    "arms": [
+      "APPROACH"
+    ]
+  },
+  "source_commit": "f6b6d38",
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "ROS_DOMAIN_ID": "0",
+    "RMW_IMPLEMENTATION": "default"
+  },
+  "source_hashes": {
+    "artifacts\\terminal_approach_full_v1/manifest.json": "b9e69fb5857cefda50d13c112089566dcc4ee2be013caf4e69602e5793e72133",
+    "artifacts\\planner_paired_v1\\geometry.json": "57d04c340eb9b33d1dca7ec451dad86856cb54db0820215a482eae1a9e83ea60",
+    "config/scenarios/planner_acceptance_v1.json": "9ceb2044735dd1f672cb9a0c41fd71aaf77dda9d422d9dce0d17b7746341ac61",
+    "config/scenarios/planner_acceptance_v2.json": "971e098c54b7ff5db9221d9d5761b007b5dcb19ddc21d6cb8ac40a3a9d9699b0",
+    "artifacts\\terminal_approach_full_v1\\runs\\double_baffle_detour_P1_1.json": "ba5d27a19bf808051fccac31262304f72da133e43cfb78c859142070a873b740",
+    "artifacts\\terminal_approach_full_v1\\runs\\double_baffle_detour_APPROACH_1.json": "31376027f68cb1476c624ededde882a9766e69c67f75128a6a5337339d928b1a",
+    "artifacts\\terminal_approach_full_v1\\runs\\horizontal_P1_1.json": "a8fb746377df2ed41df0d65a35438f37d562e18e4744a49845234ff309718b6a",
+    "artifacts\\terminal_approach_full_v1\\runs\\horizontal_APPROACH_1.json": "f189306054e4eaecb714f3a8ddb34fc783b47d1b09884ee1787d82b0163fb5e4",
+    "artifacts\\terminal_approach_full_v1\\runs\\detour_P1_1.json": "6d0d3b3bbd998c4071b7e9dce11954cc15442a5ca206c21e748b886f6511857c",
+    "artifacts\\terminal_approach_full_v1\\runs\\detour_APPROACH_1.json": "d155b7d7009c019eb1341e1ee66efa73db2e7218f0c97ed2986f80e523e9451c",
+    "artifacts\\terminal_approach_full_v1\\runs\\edge_forced_detour_P1_1.json": "da1d8f57611e1305698a0683628525675f4b711f04ba393309ccd709aa89e347",
+    "artifacts\\terminal_approach_full_v1\\runs\\edge_forced_detour_APPROACH_1.json": "937d60d58acbf9e87fd8e7e86d688589767b353720facde319c0f62871037d38",
+    "artifacts\\terminal_approach_full_v1\\runs\\zigzag_maze_detour_P1_1.json": "c1d576f458dfb42a1b2f1646e6e60676affc214d46b0fb753e03b6158f04b2e4",
+    "artifacts\\terminal_approach_full_v1\\runs\\zigzag_maze_detour_APPROACH_1.json": "43d97c6795eb9a60719332e5f94452cbf43302c357249fd48de9d6d5cd5f77eb"
+  },
+  "clock_contract": "source_time is historical; receipt_wall_s is monotonic elapsed; gazebo_time_s is message stamp. No lockstep or exact sample pairing.",
+  "control_contract": "Historical applied forces/moments, not a live controller or Gazebo dynamics measurement."
+}

@@ -1,0 +1,213 @@
+{
+  "config": {
+    "revision": "safe_shortcut_v2",
+    "scene": "single_baffle_v1",
+    "current": [
+      0,
+      0
+    ],
+    "boundary": [
+      0,
+      20,
+      -20,
+      0
+    ],
+    "obstacle": [
+      9,
+      10,
+      -20,
+      -8
+    ],
+    "goal": [
+      18,
+      -10
+    ],
+    "grid_resolution": 0.5,
+    "planning_clearance": 1.5,
+    "safety_clearance": 0.9,
+    "lookahead": 1.2,
+    "nominal_speed": 0.4,
+    "goal_radius": 0.5,
+    "goal_hold_s": 2.0,
+    "timeout_s": 300.0,
+    "rms_limit_m": 0.35,
+    "max_error_m": 0.8,
+    "max_saturation_fraction": 0.2
+  },
+  "case": "P0",
+  "initial": {
+    "pose": {
+      "x": 2,
+      "y": 0.0,
+      "z": -10,
+      "roll": 0.0,
+      "pitch": 0.0,
+      "yaw": 0.0
+    },
+    "twist": {
+      "u": 0.0,
+      "v": 0.0,
+      "w": 0.0,
+      "p": 0.0,
+      "q": 0.0,
+      "r": 0.0
+    },
+    "timestamp": 0.0
+  },
+  "planner": "existing AStarPlanner + generate_trajectory safe shortcut + simplify_path",
+  "planning_constraints": {
+    "vehicle_radius": 0.7,
+    "safety_margin": 0.8,
+    "goal_tolerance": 0.0,
+    "max_path_length": null
+  },
+  "expanded_nodes": 273,
+  "raw_path": [
+    [
+      2,
+      -10
+    ],
+    [
+      2.5,
+      -10.0
+    ],
+    [
+      3.0,
+      -10.0
+    ],
+    [
+      3.5,
+      -10.0
+    ],
+    [
+      4.0,
+      -9.5
+    ],
+    [
+      4.5,
+      -9.0
+    ],
+    [
+      5.0,
+      -8.5
+    ],
+    [
+      5.5,
+      -8.5
+    ],
+    [
+      6.0,
+      -8.0
+    ],
+    [
+      6.5,
+      -7.5
+    ],
+    [
+      7.0,
+      -7.0
+    ],
+    [
+      7.5,
+      -6.5
+    ],
+    [
+      8.0,
+      -6.5
+    ],
+    [
+      8.5,
+      -6.0
+    ],
+    [
+      9.0,
+      -6.0
+    ],
+    [
+      9.5,
+      -6.0
+    ],
+    [
+      10.0,
+      -6.0
+    ],
+    [
+      10.5,
+      -6.0
+    ],
+    [
+      11.0,
+      -6.5
+    ],
+    [
+      11.5,
+      -6.5
+    ],
+    [
+      12.0,
+      -7.0
+    ],
+    [
+      12.5,
+      -7.5
+    ],
+    [
+      13.0,
+      -7.5
+    ],
+    [
+      13.5,
+      -8.0
+    ],
+    [
+      14.0,
+      -8.0
+    ],
+    [
+      14.5,
+      -8.5
+    ],
+    [
+      15.0,
+      -8.5
+    ],
+    [
+      15.5,
+      -9.0
+    ],
+    [
+      16.0,
+      -9.0
+    ],
+    [
+      16.5,
+      -9.5
+    ],
+    [
+      17.0,
+      -9.5
+    ],
+    [
+      17.5,
+      -9.5
+    ],
+    [
+      18,
+      -10
+    ]
+  ],
+  "path": [
+    [
+      2,
+      -10
+    ],
+    [
+      9.5,
+      -6.0
+    ],
+    [
+      18,
+      -10
+    ]
+  ]
+}
