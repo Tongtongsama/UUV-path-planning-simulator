@@ -1,1 +1,0 @@
-<sdf><world><model name="test"><plugin name="bad"/><lotus_param><uri>ws://127.0.0.1:12356</uri></lotus_param><link name="base_link"><sensor name="bad"/><visual name="body"><geometry><box><size>1 .2 .2</size></box></geometry></visual></link></model></world></sdf>

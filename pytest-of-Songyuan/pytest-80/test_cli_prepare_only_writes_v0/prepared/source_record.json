@@ -1,0 +1,44 @@
+{
+  "path": "C:\\Users\\Songyuan\\uuv_simulator\\pytest-of-Songyuan\\pytest-80\\test_cli_prepare_only_writes_v0\\suite",
+  "suite_sha256": "b7cad3441e370353551afb094dc829a652b62e5520b6a964090b8eb7c6df749a",
+  "suite": {
+    "passed": true,
+    "runs": {
+      "beta": {
+        "exit_code": 0
+      },
+      "alpha": {
+        "exit_code": 0
+      }
+    }
+  },
+  "pose_source": "gazebo_poses.jsonl",
+  "cases": {
+    "beta": {
+      "path": "C:\\Users\\Songyuan\\uuv_simulator\\pytest-of-Songyuan\\pytest-80\\test_cli_prepare_only_writes_v0\\suite\\beta",
+      "hashes": {
+        "gazebo_poses.jsonl": "d269176cd22e3b37d30194ad69a761a35c53ef163ed5cc05f030091b10611234",
+        "metadata.json": "e1d9a166cb6afe9778b78d1c77625f068a50805b1f6c495deb5e2cbb06a97cef",
+        "run_status.json": "9e644bfbd7b95295fb3deb0bcaed1a54e63c63764ce9f8925d536032eb488628",
+        "worlds/minimal.world": "f4f7b988cfcf840feefa1ccf8e0938ac1e4d54f608e1d8d048d33c085f963626",
+        "manifest.json": "d1b67a7c2ca9f46a567f787a78e1dc6ff4a779d4d881143c22f86c440c8a6a68"
+      },
+      "poses": 2,
+      "first_source_time": 10.0,
+      "last_source_time": 12.0
+    },
+    "alpha": {
+      "path": "C:\\Users\\Songyuan\\uuv_simulator\\pytest-of-Songyuan\\pytest-80\\test_cli_prepare_only_writes_v0\\suite\\alpha",
+      "hashes": {
+        "gazebo_poses.jsonl": "8862f78af3213c0f44fa68d694ece72ec4ece0629182e31ea44710ca8d28d930",
+        "metadata.json": "e1d9a166cb6afe9778b78d1c77625f068a50805b1f6c495deb5e2cbb06a97cef",
+        "run_status.json": "9e644bfbd7b95295fb3deb0bcaed1a54e63c63764ce9f8925d536032eb488628",
+        "worlds/minimal.world": "f4f7b988cfcf840feefa1ccf8e0938ac1e4d54f608e1d8d048d33c085f963626",
+        "manifest.json": "c10f55f8fb3eff41c1074b342f30f5cbe6a31732210f266df8003b713bfe9528"
+      },
+      "poses": 2,
+      "first_source_time": 10.0,
+      "last_source_time": 12.0
+    }
+  }
+}

@@ -1,9 +1,0 @@
-name: 海洋测试
-planning_plane: xz
-frame: world_enu
-boundary:
-  type: polygon
-  vertices: [[0, 0], [10, 0], [10, -5], [0, -5]]
-obstacles: []
-current:
-  type: none

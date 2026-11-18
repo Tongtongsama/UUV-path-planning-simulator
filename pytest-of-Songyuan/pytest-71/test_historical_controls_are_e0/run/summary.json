@@ -1,8 +1,0 @@
-{
-  "status": "interrupted",
-  "error": null,
-  "commands": 0,
-  "observations": 0,
-  "gazebo_observed": false,
-  "note": "No Gazebo samples means telemetry is unverified, even if MAS actions succeeded."
-}

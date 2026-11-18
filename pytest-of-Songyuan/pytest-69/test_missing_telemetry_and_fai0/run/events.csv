@@ -1,3 +1,0 @@
-receipt_wall_s,event,details
-0.01600000000325963,recording_started,{}
-0.01600000000325963,recording_finished,"{""status"": ""failed"", ""error"": ""timeout""}"

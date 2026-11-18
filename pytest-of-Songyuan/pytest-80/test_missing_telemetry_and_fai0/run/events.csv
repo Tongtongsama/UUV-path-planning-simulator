@@ -1,0 +1,3 @@
+receipt_wall_s,event,details
+0.015999999945051968,recording_started,{}
+0.015999999945051968,recording_finished,"{""status"": ""failed"", ""error"": ""timeout""}"

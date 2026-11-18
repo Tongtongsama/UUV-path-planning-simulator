@@ -1,0 +1,27 @@
+{
+  "status": "prepared",
+  "error": null,
+  "source_unchanged": true,
+  "commands": 0,
+  "observations": 0,
+  "cycles": 0,
+  "dynamics_launched": false,
+  "pose_source": "gazebo_poses.jsonl",
+  "output": "C:\\Users\\Songyuan\\uuv_simulator\\pytest-of-Songyuan\\pytest-82\\test_cli_prepare_only_writes_v0\\prepared",
+  "prepared_only": true,
+  "suite": "C:\\Users\\Songyuan\\uuv_simulator\\pytest-of-Songyuan\\pytest-82\\test_cli_prepare_only_writes_v0\\suite",
+  "suite_passed": true,
+  "active_case": "beta",
+  "cases": {
+    "beta": {
+      "poses": 2,
+      "duration": 2.0,
+      "acceptance": null
+    },
+    "alpha": {
+      "poses": 2,
+      "duration": 2.0,
+      "acceptance": null
+    }
+  }
+}

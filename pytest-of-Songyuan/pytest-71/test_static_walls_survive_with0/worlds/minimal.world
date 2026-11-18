@@ -1,6 +1,0 @@
-<sdf><world name="source">
-    <model name="uuv"><link name="body"/></model>
-    <model name="wall"><static>true</static><pose>6.5 0 -33.5 0 0 0</pose>
-    <plugin filename="must_not_run"/><link name="base_link">
-    <collision name="solid"/><visual name="wall"><geometry><box><size>1 4 13</size></box></geometry></visual>
-    </link></model></world></sdf>
