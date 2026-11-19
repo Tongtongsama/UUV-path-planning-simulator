@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Frozen envelope measurement v1 configuration",
+  "description": "Closed, exact-valued preregistration. Change version/schema together for a new experiment; no result-driven edits.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "dt", "repeats", "controller", "vehicle", "limits", "projection", "lookahead", "terminal_entry_distance", "speeds", "angles_deg", "signs", "currents", "fixture", "stable", "turn_budget_seconds", "stop", "diagnostics"],
+  "properties": {
+    "version": {"const": "envelope-measurement-v1"},
+    "dt": {"const": 0.05}, "repeats": {"const": 2},
+    "controller": {"const": "config/controllers/cascaded_pid_3dof_restoring_candidate.yaml"},
+    "vehicle": {"const": "config/vehicles/uuv_3dof_synthetic_v1.yaml"},
+    "limits": {"const": {"maximum_tau_x": 20.0, "maximum_tau_m": 8.0}},
+    "projection": {"const": {"switch_radius": 0.2, "forward_window": 2.0, "progress_slack": 0.05, "max_switches_per_step": 3}},
+    "lookahead": {"const": 0.5}, "terminal_entry_distance": {"const": 0.25},
+    "speeds": {"const": [0.2, 0.35, 0.5]}, "angles_deg": {"const": [30, 45, 60, 90, 120]}, "signs": {"const": [-1, 1]},
+    "currents": {"const": [[0.0, 0.0], [0.1, 0.0], [-0.1, 0.0], [0.0, 0.05], [0.0, -0.05]]},
+    "fixture": {"const": {"incoming_length": 10.0, "outgoing_length": 30.0, "measurement_outgoing": 8.0, "warmup_end_x": -2.0, "z_origin": -40.0, "boundary": [-60.0, 60.0, -100.0, 20.0], "required_clearance": 0.1}},
+    "stable": {"const": {"cross_track": 0.1, "pitch": 0.08, "q": 0.03, "speed": 0.05, "hold_seconds": 1.0}},
+    "turn_budget_seconds": {"const": 180.0},
+    "stop": {"const": {"warmup_seconds": 60.0, "budget_seconds": 30.0, "ground_speed": 0.03, "q": 0.03, "hold_seconds": 0.5, "reverse_target": 0.15, "pitch_offsets_deg": [-15.0, 0.0, 15.0], "q_offsets": [-0.2, 0.0, 0.2], "w_offsets": [-0.05, 0.0, 0.05], "perturbation_design": "one-factor-at-a-time", "saved_entry": "detour", "saved_evidence": "artifacts/guidance_matched_16_v1"}},
+    "diagnostics": {"const": {"rate_line": 0.35, "curvature_min_speed": 0.03, "curvature_min_abs": 0.0001, "corridor_margins": [0.0, 0.025, 0.05, 0.1, 0.2, 0.4, 0.8, 1.6], "sweep_sample_spacing": 0.002, "refinement_angles_deg": [30, 90], "refinement_speeds": [0.2, 0.5]}}
+  }
+}
