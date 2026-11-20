@@ -1,0 +1,2 @@
+sequence,receipt_wall_s,source_time_s,arm,entity_name,x,y,z,qx,qy,qz,qw
+0,0.015999999945051968,3.0,APPROACH,boat,1.0,0.0,-5.0,0.0,-0.09983341664682815,0.0,0.9950041652780258

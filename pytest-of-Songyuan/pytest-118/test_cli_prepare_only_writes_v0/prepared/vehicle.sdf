@@ -1,1 +1,0 @@
-<sdf version="1.7"><model name="recorded_uuv_58495f0c95"><link name="base_link"><visual name="body"><geometry><box><size>1 .2 .2</size></box></geometry><material><ambient>0.3 0.4 0.5 1</ambient><diffuse>0.3 0.4 0.5 1</diffuse><emissive>0.06 0.08000000000000002 0.1 1</emissive></material></visual></link></model></sdf>
