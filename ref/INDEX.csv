@@ -1,0 +1,50 @@
+id,key,title,doi,status,filename,url
+L01-1,paull2014auv,"AUV navigation and localization: a review",10.1109/JOE.2013.2278891,SUB,L01-1_paull2014auv.pdf,
+L01-2,sahoo2019advancements,"Advancements in the field of autonomous underwater vehicle",10.1016/j.oceaneng.2019.04.011,SUB,L01-2_sahoo2019advancements.pdf,
+L01-3,wynn2014auvs,"AUVs: past, present and future contributions to marine geoscience",10.1016/j.margeo.2014.03.012,OA,L01-3_wynn2014auvs.pdf,https://www.sciencedirect.com/science/article/pii/S0025322714000747/pdf
+L02-1,fossen2011handbook,"Handbook of marine craft hydrodynamics and motion control",10.1002/9781119994138,SUB,L02-1_fossen2011handbook.pdf,
+L02-2,antonelli2018underwater,"Underwater robots (4th ed.)",10.1007/978-3-319-77899-0,SUB,L02-2_antonelli2018underwater.pdf,
+L03-1,healey1993multivariable,"Multivariable sliding mode control for autonomous diving and steering",10.1109/JOE.1993.236372,SUB,L03-1_healey1993multivariable.pdf,
+L03-2,lapierre2007nonlinear,"Nonlinear path-following control of an AUV",10.1016/j.oceaneng.2006.10.019,SUB,L03-2_lapierre2007nonlinear.pdf,
+L04-1,aguiar2007trajectory,"Trajectory-tracking and path-following of underactuated vehicles",10.1109/TAC.2007.902731,SUB,L04-1_aguiar2007trajectory.pdf,
+L04-2,do2009control,"Control of ships and underwater vehicles",10.1007/978-1-84882-730-1,SUB,L04-2_do2009control.pdf,
+L04-3,gao2016depth,"Depth control for underactuated AUV using optimal internal model controller",10.1109/CCDC.2016.7531944,SUB,L04-3_gao2016depth.pdf,
+L05-1,johansen2013control,"Control allocation: a survey",10.1016/j.automatica.2013.01.035,SUB,L05-1_johansen2013control.pdf,
+L05-2,fossen2006survey,"A survey of control allocation methods for ships and underwater vehicles",10.1109/MED.2006.328749,SUB,L05-2_fossen2006survey.pdf,
+L06-1,tarbouriech2009antiwindup,"Anti-windup design: overview of recent advances and open problems",10.1049/iet-cta:20070435,SUB,L06-1_tarbouriech2009antiwindup.pdf,
+L06-2,kim2013variable,"Variable-structure PID controller with anti-windup for AUV",10.23919/OCEANS.2013.6741024,SUB,L06-2_kim2013variable.pdf,
+L07-1,fossen2011handbook,"Fossen 2011 (same source as L02-1)",10.1002/9781119994138,DUP,,
+L07-2,almakdah2019three,"3D trajectory tracking of a hybrid AUV in the presence of underwater current",10.1016/j.oceaneng.2019.05.030,SUB,L07-2_almakdah2019three.pdf,
+L07-3,kim2018observer,"Model-based high-gain observer for ocean current estimation",10.1109/AUV.2018.8729741,SUB,L07-3_kim2018observer.pdf,
+L08-1,lavalle2006planning,"Planning algorithms (book)",,MANUAL,L08-1_lavalle2006planning.pdf,https://lavalle.pl/planning/
+L08-2,wang2004two,"Two approaches for AUV global path planning in large range ocean environment",10.1109/ICIMA.2004.1384193,SUB,L08-2_wang2004two.pdf,
+L09-1,hart1968formal,"A formal basis for the heuristic determination of minimum cost paths",10.1109/TSSC.1968.300136,SUB,L09-1_hart1968formal.pdf,
+L09-2,dechter1985generalized,"Generalized best-first search and the optimality of A*",10.1145/3828.3830,OA,L09-2_dechter1985generalized.pdf,https://dl.acm.org/doi/pdf/10.1145/3828.3830
+L10-1,elfes1989using,"Using occupancy grids for mobile robot perception and navigation",10.1109/2.30720,SUB,L10-1_elfes1989using.pdf,
+L10-2,latombe1991robot,"Robot motion planning (book)",,SUB,L10-2_latombe1991robot.pdf,
+L11-1,geraerts2007creating,"Creating high-quality paths for motion planning",10.1177/0278364907079280,OA,L11-1_geraerts2007creating.pdf,https://dspace.library.uu.nl/handle/1874/31850
+L12-1,fraichard2004reeds,"From Reeds and Shepp's to continuous-curvature paths",10.1109/TRO.2004.833789,OA,L12-1_fraichard2004reeds.pdf,https://hal.inria.fr/inria-00000009/document
+L12-2,yang2010analytical,"An analytical continuous-curvature path-smoothing algorithm",10.1109/TRO.2010.2042990,SUB,L12-2_yang2010analytical.pdf,
+L12-3,park2022three,"Three-dimensional Dubins-path-guided continuous curvature smoothing",10.3390/app122211336,OA,L12-3_park2022three.pdf,https://www.mdpi.com/2076-3417/12/22/11336/pdf
+L13-1,fossen2003line,"Line-of-sight path following of underactuated marine craft",10.1016/S1474-6670(17)37809-6,SUB,L13-1_fossen2003line.pdf,
+L13-2,lekkas2014integral,"Integral LOS path following for curved paths with monotone cubic Hermite spline",10.1109/TCST.2014.2306774,SUB,L13-2_lekkas2014integral.pdf,
+L13-3,fossen2015direct,"Direct and indirect adaptive integral LOS for craft in ocean currents",10.1002/acs.2550,SUB,L13-3_fossen2015direct.pdf,
+L14-1,sahoo2019development,"Development of a PID control strategy for a compact AUV",10.1115/OMAE2019-95345,SUB,L14-1_sahoo2019development.pdf,
+L14-2,bingul2023intelligent,"Intelligent-PID with PD feedforward trajectory tracking of an AUV",10.3390/machines11020300,OA,L14-2_bingul2023intelligent.pdf,https://www.mdpi.com/2075-1702/11/2/300/pdf
+L15-1,donald1993kinodynamic,"Kinodynamic motion planning",10.1145/174147.174150,OA,L15-1_donald1993kinodynamic.pdf,https://dl.acm.org/doi/pdf/10.1145/174147.174150
+L15-2,khorrami2009hierarchical,"A hierarchical path planning and obstacle avoidance system for an AUV",10.1109/ACC.2009.5160300,SUB,L15-2_khorrami2009hierarchical.pdf,
+L16-1,shen2020distributed,"Distributed implementation of NMPC for AUV trajectory tracking",10.1016/j.automatica.2020.108863,SUB,L16-1_shen2020distributed.pdf,
+L16-2,wang2024trajectory,"Trajectory tracking of underactuated AUV via nonsingular fast terminal sliding mode",10.3390/jmse12081442,OA,L16-2_wang2024trajectory.pdf,https://www.mdpi.com/2077-1312/12/8/1442/pdf
+L17-1,kot2022review,"Review of collision avoidance and path planning algorithms in AUVs",10.3390/electronics11152301,OA,L17-1_kot2022review.pdf,https://www.mdpi.com/2079-9292/11/15/2301/pdf
+L17-2,banik2018minmax,"Min-max path planning for heterogeneous AUVs",10.1109/AUV.2018.8729714,SUB,L17-2_banik2018minmax.pdf,
+L18-1,koenig2004design,"Design and use paradigms for Gazebo",10.1109/IROS.2004.1389727,SUB,L18-1_koenig2004design.pdf,
+L18-2,buche2026lotusim,"LOTUSim: multi-domain simulator for marine robotics",10.1109/IROS61738.2026.11777234,OA,L18-2_buche2026lotusim.pdf,https://arxiv.org/pdf/2607.03072
+L18-3,quigley2009ros,"ROS: an open-source robot operating system",,MANUAL,L18-3_quigley2009ros.pdf,
+L19-1,sargent2013verification,"Verification and validation of simulation models",10.1057/jos.2012.20,SUB,L19-1_sargent2013verification.pdf,
+L19-2,oberkampf2010verification,"Verification and validation in scientific computing (book)",10.1017/CBO9780511760396,SUB,L19-2_oberkampf2010verification.pdf,
+L20-1,sandve2013ten,"Ten simple rules for reproducible computational research",10.1371/journal.pcbi.1003285,OA,L20-1_sandve2013ten.pdf,https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1003285&type=printable
+L20-2,peng2011reproducible,"Reproducible research in computational science",10.1126/science.1213847,OA,L20-2_peng2011reproducible.pdf,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3383002/
+L21-1,noaa2024pm0101,"NOAA CO-OPS station pm0101 Portsmouth Harbor",,WEB,L21-1_noaa2024pm0101.html,https://tidesandcurrents.noaa.gov/cdata/StationInfo?id=pm0101
+L21-2,noaa_coops_measure,"NOAA CO-OPS measurement specifications",,WEB,L21-2_noaa_coops_measure.html,https://tidesandcurrents.noaa.gov/measure.html
+L22-1,zhao2020sim,"Sim-to-real transfer in deep reinforcement learning for robotics: a survey",10.1109/SSCI47803.2020.9308468,OA,L22-1_zhao2020sim.pdf,https://arxiv.org/pdf/2009.13303
+L22-2,tiboni2023dropo,"DROPO: sim-to-real transfer with offline domain randomization",10.1016/j.robot.2023.104432,OA,L22-2_tiboni2023dropo.pdf,https://doi.org/10.1016/j.robot.2023.104432

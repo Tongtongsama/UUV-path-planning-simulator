@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta https-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="NOAA Tides & Currents">
+	<meta name="description" content="Tides & Currents Currents Page. CO-OPS provides the national infrastructure, science, and technical expertise to monitor, assess, and distribute tide, current, water level, and other coastal oceanographic products and services that support NOAA's mission of environmental stewardship and environmental assessment and prediction. CO-OPS provides operationally sound observations and monitoring capabilities coupled with operational Nowcast Forecast modeling." />
+ 
+	<title>Currents</title>
+
+	<style type="text/css">
+		div.custom-padding{
+			padding-left: 60px;
+			padding-right: 60px;
+		}
+		a > h4{
+		    
+		    list-style: none;
+		    line-height: 20px;
+		    font-size: 17.5px;
+		    margin: 0;
+		    color: #004D7A;
+		    font-family: inherit;
+		    font-weight: bold;
+		    
+		}
+		
+		body p{
+			
+			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+		    font-size: 13px;
+		    line-height: 20px;
+			
+		}
+		
+    	p > a {
+
+		    text-decoration: none;
+		    color: #004D7A;
+		}
+		
+		.caption{
+		    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+		    font-size: 13px;
+		    line-height: 20px;
+		}
+    	
+    	
+    </style>
+</head>
+<link href="https://cdn.tidesandcurrents.noaa.gov/assets/css/css-bs4/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.tidesandcurrents.noaa.gov/assets/css/css-bs4/navigation.css" rel="stylesheet" />
+<link href="/css/css-bs4/navigation.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.tidesandcurrents.noaa.gov/assets/css/search2.css" type="text/css" media="all" />
+<link href="https://cdn.tidesandcurrents.noaa.gov/assets/css/css-bs4/custom.min.css" rel="stylesheet" />
+<link href="https://cdn.tidesandcurrents.noaa.gov/assets/css/css-bs4/footer.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.tidesandcurrents.noaa.gov/assets/css/css-bs4/alert_bar.css" />
+
+
+<!-- GA4 - Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FHLZQ78JLV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-FHLZQ78JLV');
+</script>
+<style type="text/css">
+
+  #about_nav .dropdown-menu {
+     display: block;
+     padding: .25rem 1.5rem .25rem 1.5rem !important;
+  }
+  #about .mission-items-box {
+    display: none;
+    top: 100%;
+    left: 0;
+    background-color: white !important;
+  }
+
+  #about_nav:hover .dropdown-menu {
+    display: block;
+   padding: .25rem 1.5rem .25rem 1.5rem !important;
+  }
+  #about_nav:hover .dropdown-menu:hover .mission-items-box {
+    display: block;
+   padding: .25rem 1.5rem .25rem 1.5rem !important;
+  }
+  #about_nav .dropdown-item {
+    display: block;
+     padding: .25rem 1.5rem .25rem 1.5rem !important;
+  }
+  #about_nav .dropdown-item-sp {
+    display: block;
+     padding: .25rem 1.5rem .25rem 1.5rem !important;
+     font-size: 13px;
+     font-weight: 400;
+  }
+
+  .ui-autocomplete {
+    /* tac-custom.css */
+    z-index: 1035 !important;
+  }
+</style>
+<!-- end GA4 - Global site tag (gtag.js) - Google Analytics -->
+
+<nav class="navbar navbarbottom navigationbox navbar-expand-lg navbar-light bg-white"
+  data-sidebarClass="navbar-light bg-white">
+  <div class="container-fluid mx-0 mx-lg-5">
+
+     <a class="navbar-brand brand-custom ml-3 pl-1 ml-lg-0 pl-lg-0 mr-1" href="https://www.noaa.gov/">
+        <img class="logoimg" src="/assets/logos/logo_separate/noaa.jpg" alt="NOAA Website" />
+      </a>
+      <a class="navbar-brand brand-custom pr-lg-5 mr-1" href="/">
+        <img class="logoimg" src="/assets/logos/logo_separate/tidesandcurrentslogo.jpg" alt="Tides & Currents Home" />
+      </a>
+
+    <button class="navbar-toggler leftNavbarToggler pr-1 ml-auto px-2 mr-sm-3" type="button" data-toggle="collapse"
+      data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse collapse-custom p-0" id="navbarSupportedContent">
+      <!-- Searchbar Tab Desktop -->
+      <form class="d-none d-md-block d-lg-block d-xl-block form-inline mt-0 search-box order-0 order-lg-6"
+        id="searchForm" name="searchForm" accept-charset="UTF-8" action="/search_results.html" method="get">
+        <input
+          class="form-control searchbar mr-sm navi d-inline-block ui-autocomplete-input ui-autocomplete-loading search-query"
+          id="query" name="query" type="search" placeholder="Search" autocomplete=" " aria-label="Search Text Box" />
+        <button class="btn navibtn btn-outline-success mb-0 my-sm-0 d-inline-block" type="submit"
+          aria-label="Mobile Search Text Box">
+          <img class="searchbutton" src="/assets/icons/search.png" alt="Search Button" />
+        </button>
+      </form>
+      <!-- Searchbar Tab Mobile -->
+      <form class="d-md-none d-lg-none d-xl-none form-inline mt-0 search-box order-0 order-lg-6" id="searchForm2"
+        name="searchForm" accept-charset="UTF-8" action="/search_results.html" method="get">
+        <input
+          class="form-control searchbar mr-sm navi d-inline-block ui-autocomplete-input ui-autocomplete-loading search-query"
+          id="query2" name="query2" type="search" placeholder="Search" autocomplete=" " aria-label="Search Text Box" />
+        <button class="btn navibtn btn-outline-success mb-0 my-sm-0 d-inline-block" type="submit"
+          aria-label="Mobile Search Text Box">
+          <img class="searchbutton" src="/assets/icons/search.png" alt="Search Button" />
+        </button>
+      </form>
+
+      <ul class="navbar-nav ml-auto nav-box">
+        <!-- Homepage Tab -->
+        <li class="nav-item nav-item-box naviboarderbottom d-none d-lg-block order-1 order-lg-0">
+          <a class="nav-link nav-text nav-underline home-page-link" href="/">Home <span
+              class="sr-only">(current)</span></a>
+        </li>
+
+        <li class="nav-item nav-item-box dropdown naviboarderbottom order-2 order-lg-1">
+
+          <div class="nav-link dropdown-toggle nav-text nav-underline" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            About<span class="caret"></span>
+          </div>
+          <ul id="about_nav" class="dropdown-menu custommenu" aria-labelledby="headerNavDropdown">
+            <a class="dropdown-item custom-dropdown-item" href="/about_us.html">Overview</a>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown naviboarderbottom sub-list-box">
+
+              <div class="dropdown-item-sp custom-dropdown-item-sp" >
+              Mission Areas
+              <div class="mission-items-box">
+                <a class="dropdown-item dropdown-toggle" href="/navigation_services.html">Navigation Services</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item dropdown-toggle" href="/coastal_hazards.html">Coastal Hazards</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item dropdown-toggle" href="/mapping_and_charting.html">Mapping and Charting</a>
+              </div>
+
+              </div>
+
+            </div>
+            <div class="dropdown-divider"></div>
+
+            <a class="dropdown-item custom-dropdown-item" href="/news/strategic-plan-2019-2023.html">Strategic Plan</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item custom-dropdown-item" href="/contact.html">Contact Us</a>
+          </ul>
+        </li>
+
+        <!-- Products Desktop -->
+        <li class="nav-item nav-item-box dropdown naviboarderbottom order-3 order-lg-2">
+          <div class="nav-link dropdown-toggle nav-text nav-underline" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Data and Products<span class="caret"></span>
+          </div>
+          <ul class="dropdown-menu custommenu" aria-labelledby="headerNavDropdown">
+            <a class="dropdown-item custom-dropdown-item" href="/water_level_info.html">Tides and Water Levels</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item custom-dropdown-item" href="/currents_info.html">Currents</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item custom-dropdown-item" href="/ports_info.html">PORTS<sup>®</sup></a>
+            <div class="dropdown-divider"></div>
+
+            <a class="dropdown-item custom-dropdown-item" href="/sea_level_info.html">Sea Level and Coastal Flooding</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item custom-dropdown-item" href="/met_info.html">Meteorological and Oceanographic
+              Data</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item custom-dropdown-item" href="/forecast_info.html">Coastal and Great Lakes Forecasts</a>
+            <div class="dropdown-divider"></div>
+
+
+            <a class="dropdown-item custom-dropdown-item" href="/web_services_info.html">GIS and Web Services</a>
+            <div class="dropdown-divider"></div>
+           <a class="dropdown-item custom-dropdown-item" href="/datum-updates/">Datum Updates</a>
+          </ul>
+        </li>
+
+
+
+        <!-- News Tab -->
+        <li class="nav-item nav-item-box naviboarderbottom order-4 order-lg-3">
+          <a class="nav-link nav-text nav-underline" href="/tac_news.html">News</a>
+        </li>
+
+        <!-- Education Desktop -->
+
+        <li class="nav-item nav-item-box naviboarderbottom dropdown order-5 order-lg-4">
+          <div class="nav-link dropdown-toggle nav-text nav-underline" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Education and Outreach<span class="caret"></span>
+          </div>
+
+          <ul class="dropdown-menu custommenu bg-lg-white bg-transparent" aria-labelledby="headerNavDropdown">
+            <a class="dropdown-item custom-dropdown-item" href="/education/videolib/tac-videos.html">Videos</a>
+            <div class="dropdown-divider"></div>
+             <a class="dropdown-item custom-dropdown-item" href="/pub.html">Publications</a>
+            <div class="dropdown-divider"></div>
+             <a class="dropdown-item custom-dropdown-item" href="/fieldlibrary/Welcome">Field Library</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item custom-dropdown-item" href="/education/tech-assist/">Technical Assistance</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item custom-dropdown-item" href="/education/tech-assist/partnerships">Partnerships</a>
+            <div class="dropdown-divider"></div>
+
+
+            <a class="dropdown-item custom-dropdown-item" href="/glossary.html">Glossary</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item custom-dropdown-item" href="/faq.html">FAQs</a>
+          </ul>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="headlinebarnav"></div>
+<main>
+  <!-- Sitewide Alert -->
+  <div id="sitewideAlert" class="row-fluid"></div>
+  <!-- Begin storm alert panel -->
+  <div id="stormAlert" class="alert alert-error text-white alert-dismissible alertbox container-fluid pt-1 pb-1 fade show text-center fixed-top" style="display:none;" role="alert"></div>
+  <!-- End Storm alert panel -->
+<!--</main>-->
+
+<body>
+	
+	<div class="container-fluid custom-padding">
+    
+       	<ol class="breadcrumb bg-transparent mb-0 mt-3">
+       		<li class="breadcrumb-item"><a href='javascript:history.back()' aria-label='Back'>Back</a></li>
+    	    <li class="breadcrumb-item"><a href="/"
+    	        >Home</a>
+    	    </li>
+	    </ol>
+        <hr>
+
+   	<!-- Page content starts here -->
+    <div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="col-md-12" style="display: flex;">
+					<img class="header-image" src="/images/icons/currents.png" style="height:40px;width:40px;">
+					<h1 style="padding-bottom: 20px;">Currents</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="col-md-12">	
+						<p>Coastal and estuarine currents describe the movement of water from one location to another. NOAA periodically conducts current surveys in areas around the nation to ensure the accuracy of tidal current predictions. CO-OPS also offers real-time current information as part of many of our Physical Oceanographic Real Time Systems. Commercial and recreational mariners depend on this information for safe navigation. Click on graphic to enlarge. (<a href="/images/landing/current-surveyinfographic.pdf">Download this infographic</a>)
+						</p>
+					</div>
+					
+					<div class="col-md-12" style="margin-top: 20px; margin-left: -5px">
+						<ul class="card-deck">		
+							<li class="col-md-12 card">	      
+	
+								<div class="caption" style="margin-top:5px;margin-bottom:50px">
+									<a href="/noaacurrents/"><h4>NOAA Current Predictions<br/></h4></a>
+									<br> The predicted time and speed of maximum flood/ebb and timing of slack water for all official NOAA current stations.
+								</div>
+	
+							</li>  
+							<li class="col-md-12 card">
+	
+								<div class="caption" style="margin-top:5px;margin-bottom:50px">
+									<a href="/cdata/StationList?type=Current+Data&filter=active"><h4>Real Time Currents<br/></h4>  </a>
+									<br>Real time current information from actively installed current meter stations.
+								</div>
+	
+							</li>
+						</ul>
+					</div>
+					<div class="col-md-12" style="margin-top: 20px; margin-left: -5px">
+						<ul class="card-deck">
+						
+						<li class="col-md-12 card">
+	
+								<div class="caption" style="margin-top:5px;margin-bottom:50px">
+									<a href="/cdata/StationList?type=Current+Data&filter=historic"><h4>Historic Current data<br/></h4></a>
+									<br>Provides data from historic current surveys.
+								</div>
+	
+							</li>
+							
+						</ul>
+						
+							<!-- <ul class="product-list well">
+								<li><a href="/noaacurrents/Regions">NOAA Current Predictions</a> - The predicted time and speed of maximum flood/ebb and timing of slack water for all official NOAA current stations.</li>
+								<li><a href="/cdata/StationList?type=Current+Data&filter=active">Real Time Currents</a> - Real time current information from actively installed current meter stations.</li>
+								<li><a href="/cdata/StationList?type=Current+Data&filter=historic">Historic Current data</a> - Provides data from historic current surveys.</li>
+							</ul> -->
+							
+					</div> 
+				</div>
+				<div class="col-md-6">
+					<img src="/images/landing/current_surveys.png" class="img-fluid" alt="Coastal and Estuarine Current Surveys."
+					style="height:80%;width:80%">
+				</div>
+			</div>
+		</div>
+			
+        <div style="clear:both"></div>
+		
+	
+    </div>
+    <!-- Page content ends here -->
+    
+	</hr>
+	</div>
+    
+	<script type="text/javascript" src="/jquery-latest.js"></script>
+	<script type="text/javascript" src="/js/js-bs4/menus_sub_bs4.js"></script>
+	<script type="text/javascript">
+        var bc = new breadcrumb();
+        
+        bc.appendPath("<a href='/products.html'>Products</a>");
+        bc.appendLocation("Currents");
+	</script>
+</body>
+</main>
+<section class="footercontainer">
+  <footer style="background-color: #081930; border-top: 10px solid #ececec;">
+    <div class="copyrightBar">
+      <div class="container px-4 px-lg-2">
+        <div class="row" style="padding: 10px 0px">
+          <div class="col-12 col-md-11 mx-0 footerbox">
+            <h6 class="mb-2 mb-md-0">
+              Website Owner:Center for Operational Oceanographic Products and
+              Services
+            </h6>
+            <p style="margin-bottom: 0px; font-size: 14px">
+              <a class="copyrightText" href="http://www.noaa.gov">National Oceanic and Atmospheric Administration</a>
+              <br class="d-md-none d-block" />
+              <a class="px-3">•</a>
+              <a class="copyrightText" href="http://oceanservice.noaa.gov">National Ocean Service</a>
+              <br class="d-md-none d-block" />
+              <a class="px-3">•</a>
+              <a class="copyrightText" href="/privacy.html">Privacy Policy</a>
+              <br class="d-md-none d-block" />
+              <a class="px-3">•</a>
+              <br class="d-none d-lg-block" />
+              <a class="copyrightText" href="/disclaimers.html">Disclaimers</a>
+              <br class="d-md-none d-block" />
+              <a class="px-3">•</a>
+              <a class="copyrightText" href="/survey.html">Take Our Survey</a>
+              <br class="d-md-none d-block" />
+              <a class="px-3">•</a>
+              <a class="copyrightText" href="https://public.govdelivery.com/accounts/USNOAANOS/subscriber/new?qsp=USNOAANOS_262">Sign Up for Our
+                Newsletter</a>
+              <a class="px-3">•</a>
+              <a class="copyrightText" href="https://www.noaa.gov/foia-freedom-of-information-act">Freedom of
+                Information Act</a>
+              <br class="d-md-none d-block" />
+              <a class="px-3">•</a>
+              <a class="copyrightText" href="/contact.html">Contact Us</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</section>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://cdn.tidesandcurrents.noaa.gov/assets/js/jquery/jquery-latest.js"></script>
+<script src="https://cdn.tidesandcurrents.noaa.gov/assets/js/js-bs4/jquery-migrate-3.0.0.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://cdn.tidesandcurrents.noaa.gov/assets/js/js-bs4/custom.js" type="text/javascript"></script>
+<script src="https://cdn.tidesandcurrents.noaa.gov/assets/js/js-bs4/popper.min.js" type="text/javascript"></script>
+<script src="https://cdn.tidesandcurrents.noaa.gov/assets/js/js-bs4/bootstrap.min.js" type="text/javascript"></script>
+
+<!-- Search box functions -->
+<script src="https://cdn.tidesandcurrents.noaa.gov/assets/js/jquery/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/js/bluebird.js"></script>
+<script src="https://cdn.tidesandcurrents.noaa.gov/assets/js/latest/searchbox.js"></script>
+
+<!-- Alert Bars -->
+<script type="text/javascript" src="https://cdn.tidesandcurrents.noaa.gov/assets/js/js-bs4/sitewide_alert_bar.js"></script>
+<script type="text/javascript" src="/js/storm_alert_panel.js"></script>
+<!-- Redirect Check for page url's  -->
+<script type="text/javascript" src="/js/check-redirect.js"></script>
+
+<!--<script type="text/javascript" src="https://cdn.tidesandcurrents.noaa.gov/assets/includes/federated-analytics.js?agency=DOC&subagency=NOAA&pua=UA-47217314-1"-->
+<!--  id="_fed_an_ua_tag"></script>-->
+<script type="text/javascript" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=DOC&subagency=NOAA&pua=UA-47217314-1" id="_fed_an_ua_tag"></script>
+
+ <!--<script type="text/javascript" src="/js/js-bs4/menus_sub_bs4.js"></script>-->
+ <!-- <script src="https://unpkg.com/@popperjs/core@2"></script>-->
+ <!-- <script type="text/javascript" src="/js/tac-common.js"></script>-->
+ <!--  <script type="text/javascript" src="/js/breadcrumbs.js"></script>-->
+
+</html>

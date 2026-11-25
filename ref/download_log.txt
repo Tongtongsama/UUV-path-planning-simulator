@@ -1,0 +1,92 @@
+2026-11-25 17:52:10	DRYRUN	16 auto, 2 manual, 30 subscription
+2026-11-25 17:52:10	DRYRUN	target dir C:\Users\Songyuan\uuv_simulator\ref
+2026-11-25 17:53:02	PROBE	https://example.com	FAIL	schannel SEC_E_NO_CREDENTIALS
+2026-11-25 17:53:02	PROBE	curl.exe https://example.com	FAIL	schannel AcquireCredentialsHandle SEC_E_NO_CREDENTIALS
+2026-11-25 17:53:02	PROBE	pip install pypdf	FAIL	hung >120s, cancelled
+2026-11-25 17:53:02	PROBE	https://arxiv.org/pdf/2009.13303	FAIL	192ms connection closed
+2026-11-25 17:53:02	PROBE	https://www.mdpi.com/2076-3417/12/22/11336/pdf	FAIL	92ms connection closed
+2026-11-25 18:05:11	PROBE	http://example.com	OK	200, 577 bytes, 162ms  (plain HTTP egress works)
+2026-11-25 18:05:11	PROBE	http://arxiv.org/pdf/2009.13303	FAIL	redirects to https, then TLS fails
+2026-11-25 18:05:11	PROBE	http://export.arxiv.org/pdf/2009.13303	FAIL	redirect to https
+2026-11-25 18:05:11	PROBE	http://web.archive.org/web/2023/https://arxiv.org/pdf/2009.13303	FAIL	redirect to https
+2026-11-25 18:05:11	PROBE	http://www.mdpi.com/2076-3417/12/22/11336/pdf	FAIL	403 over plain HTTP
+2026-11-25 18:05:11	PROBE	http://hal.inria.fr/inria-00000009/document	OK	200, 12504 bytes, text/html, no .pdf link inside
+2026-11-25 18:05:11	PROBE	http://dspace.library.uu.nl/handle/1874/31850	FAIL	redirect to https
+2026-11-25 18:05:11	PROBE	http://journals.plos.org/...	FAIL	redirect to https
+2026-11-25 18:05:11	PROBE	http://www.ncbi.nlm.nih.gov/pmc/...	FAIL	redirect to https
+2026-11-25 18:05:11	PROBE	http://dl.acm.org/doi/pdf/...	FAIL	redirect to https
+2026-11-25 18:10:40	PROBE	certutil -urlcache https://example.com	FAIL	blocked by AV policy ("contains a virus")
+2026-11-25 18:10:40	PROBE	Start-BitsTransfer https://example.com	FAIL	null reference
+2026-11-25 18:10:40	PROBE	[Net.ServicePointManager] TLS1.2/1.3 forced	FAIL	same TLS error
+2026-11-25 18:12:03	VERIFY	INDEX.csv	0/48 present, 0 invalid, 48 missing
+2026-11-25	BLOCKED	HTTPS unavailable from all shell stacks; every OA source is HTTPS-only or upgrades to HTTPS.
+2026-11-25 18:38:20	LOCAL	scan Downloads(10)+Documents(17)+Desktop(538)=565 pdfs	0 match to L01-L22	(index: build/local_pdfs.txt)
+2026-11-25 18:40:07	PROXY	https://api.allorigins.win/get?url=...	FAIL	522 origin timeout
+2026-11-25 18:40:31	PROXY	https://api.codetabs.com/v1/proxy?quest=...	FAIL	522 origin timeout
+2026-11-25 18:41:00	NOTE	base64 relay would cost ~350k tokens per 1MB PDF	infeasible in-context
+2026-11-25 18:41:00	BLOCKED	round 3: same condition (no HTTPS egress), no local copies, no usable relay
+2026-11-25 17:51:54	DOWNLOAD	FAIL	L01-3_wynn2014auvs.pdf	0	HTTPError: HTTP Error 403: Forbidden	Elsevier hybrid OA; may be blocked by bot protection
+2026-11-25 17:51:58	DOWNLOAD	FAIL	L09-2_dechter1985generalized.pdf	0	HTTPError: HTTP Error 403: Forbidden	ACM bronze; may need a browser session
+2026-11-25 17:52:06	DOWNLOAD	FAIL	L11-1_geraerts2007creating.pdf	0	HTTPError: HTTP Error 502: Proxy Error	repository landing page; script looks for a PDF link inside
+2026-11-25 17:52:13	DOWNLOAD	FAIL	L12-1_fraichard2004reeds.pdf	0	landing page without a usable PDF link	HAL
+2026-11-25 17:52:17	DOWNLOAD	FAIL	L12-3_park2022three.pdf	0	HTTPError: HTTP Error 403: Forbidden	MDPI gold
+2026-11-25 17:52:22	DOWNLOAD	FAIL	L14-2_bingul2023intelligent.pdf	0	HTTPError: HTTP Error 403: Forbidden	MDPI gold
+2026-11-25 17:52:27	DOWNLOAD	FAIL	L15-1_donald1993kinodynamic.pdf	0	HTTPError: HTTP Error 403: Forbidden	ACM bronze
+2026-11-25 17:52:32	DOWNLOAD	FAIL	L16-2_wang2024trajectory.pdf	0	HTTPError: HTTP Error 403: Forbidden	MDPI gold
+2026-11-25 17:52:37	DOWNLOAD	FAIL	L17-1_kot2022review.pdf	0	HTTPError: HTTP Error 403: Forbidden	MDPI gold
+2026-11-25 17:52:38	DOWNLOAD	OK	L18-2_buche2026lotusim.pdf	4930871	https://arxiv.org/pdf/2607.03072 [verified(cafile=C:\Program Files\Git\usr\ssl\certs\ca-bundle.crt)]	sha256:30ebdde019af2f09
+2026-11-25 17:52:39	DOWNLOAD	OK	L20-1_sandve2013ten.pdf	131527	https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1003285&type=printable [verified(cafile=C:\Program Files\Git\usr\ssl\certs\ca-bundle.crt)]	sha256:35648a3880bdd8bf
+2026-11-25 17:52:46	DOWNLOAD	FAIL	L20-2_peng2011reproducible.pdf	0	landing page without a usable PDF link	PMC green; falls back to parsing the article page
+2026-11-25 17:52:46	DOWNLOAD	OK	L22-1_zhao2020sim.pdf	623080	https://arxiv.org/pdf/2009.13303 [verified(cafile=C:\Program Files\Git\usr\ssl\certs\ca-bundle.crt)]	sha256:5709cdf4d525e9a5
+2026-11-25 17:52:53	DOWNLOAD	FAIL	L22-2_tiboni2023dropo.pdf	0	landing page without a usable PDF link	Elsevier hybrid OA; DOI may resolve to a landing page
+2026-11-25 17:53:01	DOWNLOAD	FAIL	L21-1_noaa2024pm0101.html	0	landing page without a usable PDF link	web page
+2026-11-25 17:53:08	DOWNLOAD	FAIL	L21-2_noaa_coops_measure.html	0	HTTPError: HTTP Error 404: Not Found	web page
+2026-11-25 17:53:56	DOWNLOAD	FAIL	L01-3_wynn2014auvs.pdf	0	HTTPError: HTTP Error 403: Forbidden	Elsevier hybrid OA; may be blocked by bot protection
+2026-11-25 17:54:01	DOWNLOAD	FAIL	L09-2_dechter1985generalized.pdf	0	HTTPError: HTTP Error 403: Forbidden	ACM bronze; may need a browser session
+2026-11-25 17:54:09	DOWNLOAD	FAIL	L11-1_geraerts2007creating.pdf	0	landing page without a usable PDF link	repository landing page; script looks for a PDF link inside
+2026-11-25 17:54:16	DOWNLOAD	FAIL	L12-1_fraichard2004reeds.pdf	0	landing page without a usable PDF link	HAL
+2026-11-25 17:54:17	DOWNLOAD	OK	L12-3_park2022three.pdf	3199254	https://mdpi-res.com/d_attachment/applsci/applsci-12-11336/article_deploy/applsci-12-11336.pdf [verified(cafile=C:\Program Files\Git\usr\ssl\certs\ca-bundle.crt)]	sha256:83da9060577bf667
+2026-11-25 17:54:18	DOWNLOAD	OK	L14-2_bingul2023intelligent.pdf	7406716	https://mdpi-res.com/d_attachment/machines/machines-11-00300/article_deploy/machines-11-00300.pdf [verified(cafile=C:\Program Files\Git\usr\ssl\certs\ca-bundle.crt)]	sha256:d9b769a7832044fd
+2026-11-25 17:54:23	DOWNLOAD	FAIL	L15-1_donald1993kinodynamic.pdf	0	HTTPError: HTTP Error 403: Forbidden	ACM bronze
+2026-11-25 17:54:23	DOWNLOAD	OK	L16-2_wang2024trajectory.pdf	1659627	https://mdpi-res.com/d_attachment/jmse/jmse-12-01442/article_deploy/jmse-12-01442.pdf [verified(cafile=C:\Program Files\Git\usr\ssl\certs\ca-bundle.crt)]	sha256:39ad7ace6aa1f7b8
+2026-11-25 17:54:24	DOWNLOAD	OK	L17-1_kot2022review.pdf	3747808	https://mdpi-res.com/d_attachment/electronics/electronics-11-02301/article_deploy/electronics-11-02301.pdf [verified(cafile=C:\Program Files\Git\usr\ssl\certs\ca-bundle.crt)]	sha256:b28fb320be112e16
+2026-11-25 17:54:30	DOWNLOAD	FAIL	L20-2_peng2011reproducible.pdf	0	landing page without a usable PDF link	PMC green; Europe PMC render endpoint works without cookies
+2026-11-25 17:54:37	DOWNLOAD	FAIL	L22-2_tiboni2023dropo.pdf	0	landing page without a usable PDF link	Elsevier hybrid OA; DOI may resolve to a landing page
+2026-11-25 17:54:38	DOWNLOAD	OK	L21-1_noaa2024pm0101.html	36842	https://tidesandcurrents.noaa.gov/cdata/StationInfo?id=pm0101 [verified(cafile=C:\Program Files\Git\usr\ssl\certs\ca-bundle.crt)] (html)	sha256:eecc8774b3ab94aa
+2026-11-25 17:54:41	DOWNLOAD	OK	L21-2_noaa_coops_measure.html	19871	https://tidesandcurrents.noaa.gov/currents_info.html [verified(cafile=C:\Program Files\Git\usr\ssl\certs\ca-bundle.crt)] (html)	sha256:ea264bf8cdcfc82d
+2026-11-25 17:55:09	DOWNLOAD	FAIL	L12-1_fraichard2004reeds.pdf	0	landing page without a usable PDF link	HAL; resolved via the HAL API to inria.hal.science
+2026-11-25 17:55:37	DOWNLOAD	FAIL	L20-2_peng2011reproducible.pdf	0	landing page without a usable PDF link	PMC green; Europe PMC / PMC render endpoints return 403 to scripts
+2026-11-25 18:55	ROUTE	Windows SChannel fails but Python OpenSSL 3.5.8 works	verified via Git ca-bundle.crt
+2026-11-25 18:56	MILESTONE	9 of 48 target files present	7 PDF + 2 HTML
+2026-11-25 18:57	BLOCKED-REMAINING	7 OA items behind bot protection (Cloudflare 403 / Anubis PoW); 30 subscription; 2 manual
+2026-11-25 17:58:03	MIRROR	FAIL	L12-1_fraichard2004reeds.pdf	0	no usable mirror among 0 candidates
+2026-11-25 17:58:12	MIRROR	FAIL	L01-3_wynn2014auvs.pdf	0	no usable mirror among 0 candidates
+2026-11-25 17:58:22	MIRROR	FAIL	L09-2_dechter1985generalized.pdf	0	no usable mirror among 0 candidates
+2026-11-25 17:58:32	MIRROR	FAIL	L11-1_geraerts2007creating.pdf	0	no usable mirror among 0 candidates
+2026-11-25 17:58:41	MIRROR	FAIL	L15-1_donald1993kinodynamic.pdf	0	no usable mirror among 0 candidates
+2026-11-25 17:58:51	MIRROR	FAIL	L20-2_peng2011reproducible.pdf	0	no usable mirror among 0 candidates
+2026-11-25 17:59:01	MIRROR	FAIL	L22-2_tiboni2023dropo.pdf	0	no usable mirror among 0 candidates
+2026-11-25 18:50	MIRROR	DDG html endpoint worked for 3 queries, then throttled (202)
+2026-11-25 18:52	MIRROR	OK	L12-1_fraichard2004reeds.pdf	426681	https://homepages.loria.fr/AScheuer/Old_W3/Articles/Fraichard_Scheuer_IEEETRA_04.pdf
+2026-11-25 18:58	DIRECT	OK	L08-1_lavalle2006planning.pdf	13370045	https://lavalle.pl/planning/book.pdf
+2026-11-25 18:58	DIRECT	OK	L18-3_quigley2009ros.pdf	453656	https://ai.stanford.edu/~ang/papers/icraoss09-ROS.pdf
+2026-11-25 19:00	ARXIV	OK	L22-2_tiboni2023dropo.pdf	10868366	https://arxiv.org/pdf/2201.08434
+2026-11-25 19:02	VERIFY	REJECT	L01-3_wynn2014auvs.pdf	0	content was von Alt 2003 workshop report; file deleted
+2026-11-25 19:04	VERIFY	UNVERIFIED	L09-2_dechter1985generalized.pdf	2542517	scanned pdf, 0 extractable chars; moved to _unverified/
+2026-11-25 19:05	MILESTONE	13 of 48 verified files in ref/	1 unverified, 30 subscription, 4 blocked
+2026-11-25 18:04:47	MIRROR	FAIL	L11-1_geraerts2007creating.pdf	0	no usable mirror among 0 candidates
+2026-11-25 18:04:56	MIRROR	FAIL	L15-1_donald1993kinodynamic.pdf	0	no usable mirror among 0 candidates
+2026-11-25 18:05:06	MIRROR	FAIL	L20-2_peng2011reproducible.pdf	0	no usable mirror among 0 candidates
+2026-11-25 19:15	OPENALEX-LOC	OK	L01-3_wynn2014auvs.pdf	5167888	http://eprints.whiterose.ac.uk/80292/1/AutonomousUnderwaterVehicles%28AUV%29.pdf
+2026-11-25 19:18	CITESEEX	FAIL	L11-1 404, L15-1 returns html error page
+2026-11-25 19:20	DDG	THROTTLED	0 results for L11-1/L15-1/L20-2 after wait
+2026-11-25 19:22	MILESTONE	14 of 48 verified; 3 blocked by anti-bot, 1 unverified, 30 subscription
+2026-11-25 20:05	VERIFY	15 of 48 present (user moved L09-2 into place)
+2026-11-25 20:12	SUBSTITUTES	22 candidates fetched via OpenAlex OA search 	8 rejected as off-topic or duplicate
+2026-11-25 20:18	SUBSTITUTES	20 files in ref/_substitutes covering 23 missing entries 	58.6 MB
+2026-11-25 20:40	SWEEP	checked all OpenAlex locations for 29 paywalled items	0 downloadable copies found
+2026-11-25 20:41	CEILING	18 originals + 20 substitutes; remaining 30 need institutional access
+2026-11-25 20:55	ADOPT	23 files renamed from title-style names after content check 	2 duplicates moved to _duplicates/
+2026-11-25 20:58	ADOPT	L13-2 + L08-2 accepted after manual header inspection (letter-spaced text layer)
+2026-11-25 21:02	SUPPLEMENT	FossenHandbook repo (MIT) + Ch2/Ch3/Ch10/Ch12 slides 	36.9 MB -> ref/_supplements/
+2026-11-25 21:05	MILESTONE	45 of 48 originals present 	3 remaining covered by substitutes
