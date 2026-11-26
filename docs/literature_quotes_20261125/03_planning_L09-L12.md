@@ -1,5 +1,7 @@
 # 03 · 规划、栅格与路径处理（L09–L12）
 
+> **状态更新（2026-11-25）**：本文件写于『只有摘要』的阶段，分级为 A/B/C。现已对 `ref/` 中的原版 PDF 逐条取证，**每条的当前状态见其标题下方**，完整原文与差异说明见 [10](10_D_level_L02-L07.md)–[13](13_D_level_L18-L20.md) 四份 D 级文件。
+
 11 条断言。这一组决定论文里"规划章"能不能说清楚两件事：**A* 到底保证什么**，以及**平滑之后还安不安全**。
 
 ---
@@ -8,8 +10,10 @@
 
 ### Q09-1 · A* 的形式化目标与"一类策略的最优性"
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[11_D_level_L09-L12.md](11_D_level_L09-L12.md)
+
 - **拟写入论文**：A* 把领域启发信息纳入图搜索的形式化框架，并对一类搜索策略给出最优性性质。
-- **来源**：`hart1968formal`｜**A 级（摘要末句）**
+- **来源**：`hart1968formal`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "This paper describes how heuristic information from the domain can be incorporated into a formal mathematical theory of graph searching and demonstrates an optimality property for a class of search strategies."
 - **直译**：本文描述了如何把来自领域的启发信息纳入图搜索的形式化数学理论，并论证了一类搜索策略所具有的最优性性质。
@@ -18,8 +22,10 @@
 
 ### Q09-2 · A* 的"计算最优性"是一个专门概念
 
+> **状态**：✗ 未取证（PDF 无文本层/编码异常） · 证据：[11_D_level_L09-L12.md](11_D_level_L09-L12.md)
+
 - **拟写入论文**：A* 的计算最优性指它不会扩展任何可被其他算法跳过的节点。
-- **来源**：`dechter1985generalized`｜**B 级（摘要片段）**
+- **来源**：`dechter1985generalized`｜**C 级（已确认无法机读）**
 - **原文**：
   > "... the computational optimality of A* ..."
 - **直译（释义，非逐字）**：所谓"计算最优性"指 A* 从不扩展一个可被其他拥有同样启发信息的算法跳过的节点。
@@ -28,8 +34,10 @@
 
 ### Q09-3 · 最优性的条件是"乐观估计"
 
+> **状态**：✗ 未取证（PDF 无文本层/编码异常） · 证据：[11_D_level_L09-L12.md](11_D_level_L09-L12.md)
+
 - **拟写入论文**：当所有代价估计都是乐观的（即 `h ≤ h*`）时，该类算法返回最优解。
-- **来源**：`dechter1985generalized`｜**B 级（摘要片段）**
+- **来源**：`dechter1985generalized`｜**C 级（已确认无法机读）**
 - **原文**：
   > "... when all cost estimates are optimistic (i.e., h ≤ h*) ..."
 - **直译**：……当所有代价估计都是乐观的（即 h ≤ h*）时……
@@ -42,8 +50,10 @@
 
 ### Q10-1 · 占据栅格是什么（含"随机场"表述）
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[11_D_level_L09-L12.md](11_D_level_L09-L12.md)
+
 - **拟写入论文**：占据栅格用概率化的离散表示描述空间占据状态，并以随机场形式维护每个栅格的占据估计。
-- **来源**：`elfes1989using`｜**A 级（摘要两句）**
+- **来源**：`elfes1989using`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "An approach to robot perception and world modeling that uses a probabilistic tesselated representation of spatial information called the occupancy grid is reviewed."
   >
@@ -54,8 +64,10 @@
 
 ### Q10-2 · 贝叶斯增量更新与多视角融合
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[11_D_level_L09-L12.md](11_D_level_L09-L12.md)
+
 - **拟写入论文**：栅格由多传感器、多视角读数经贝叶斯估计增量更新。
-- **来源**：`elfes1989using`｜**A 级（摘要整句）**
+- **来源**：`elfes1989using`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "Bayesian estimation procedures allow the incremental updating of the occupancy grid, using readings taken from several sensors over multiple points of view."
 - **直译**：贝叶斯估计程序允许对占据栅格做增量更新，所用读数来自多个传感器、多个视角。
@@ -64,12 +76,14 @@
 
 ### Q10-3 · 障碍膨胀是构型空间操作
 
+> **状态**：✅ 已取证 D 级（用 LaValle §4.3 代 Latombe） · 证据：[11_D_level_L09-L12.md](11_D_level_L09-L12.md)
+
 - **拟写入论文**：障碍膨胀等价于在构型空间中把障碍按载具外形扩张，从而使"点机器人"的避障等价于原问题。
-- **来源**：`latombe1991robot`（专著）｜**C 级**
+- **来源**：`latombe1991robot`（专著）｜**D 级（LaValle 代 Latombe）**
 - **定位**：构型空间一节，障碍的 Minkowski 和定义（`C_{obs} = O ⊕ (−R)` 形式）与"clearance"讨论。
 - **检索锚点**：`configuration space`、`Minkowski`、`C-obstacle`、`clearance`
 - **引用边界**：等价性只在**精确**构型空间成立；栅格近似下退化为分辨率意义下的近似。这句话是本项目"安全距离不是物理保证"的唯一硬依据，务必取到原文。
-- **待办**：抄 Minkowski 和定义句 + clearance 定义句，升 D 级。
+- **待办**：无（已取证，见 D 级文件）
 
 ---
 
@@ -77,18 +91,22 @@
 
 ### Q11-1 · Partial shortcut：以插值方式去除冗余运动
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[11_D_level_L09-L12.md](11_D_level_L09-L12.md)
+
 - **拟写入论文**：捷径化通过用无碰直线段替换子路径来缩短路径，每次替换都必须重新做碰撞检查。
-- **来源**：`geraerts2007creating`｜**B 级（摘要片段）**
+- **来源**：`geraerts2007creating`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "This paper reports a new technique, called Partial shortcut, which decreases the path length."
 - **直译**：本文报告一种称为部分捷径化的新技术，它可减小路径长度。
 - **引用边界**：原文只说"减小长度"，**没有**承诺保持间隙。把"每次替换都重新碰撞检查"写成该文结论前，必须在正文找到对应表述（通常出现在算法伪代码或"collision check"段落）。
-- **待办**：正文找算法流程，确认碰撞检查的频率与方式，升 D 级。
+- **待办**：无（已取证，见 D 级文件）
 
 ### Q11-2 · "高质量路径"的两个判据
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[11_D_level_L09-L12.md](11_D_level_L09-L12.md)
+
 - **拟写入论文**：高质量路径既要求短，也要求保留一定的最小间隙。
-- **来源**：`geraerts2007creating`｜**B 级（摘要片段）**
+- **来源**：`geraerts2007creating`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "... a path should be short and should keep some amount of minimum clearance ..."
 - **直译**：……路径应当短，并应保持一定量的最小间隙……
@@ -102,8 +120,10 @@
 
 ### Q12-1 · 连续曲率路径的三条性质
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[11_D_level_L09-L12.md](11_D_level_L09-L12.md)
+
 - **拟写入论文**：连续曲率（CC）路径同时满足曲率连续、曲率有上界、曲率导数有上界三条性质。
-- **来源**：`fraichard2004reeds`｜**A 级（摘要整句）**
+- **来源**：`fraichard2004reeds`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "CC Steer is the first to compute paths with: 1) continuous curvature; 2) upper-bounded curvature and 3) upper-bounded curvature derivative."
 - **直译**：CC Steer 是首个能计算具备以下性质的路径的方法：1）曲率连续；2）曲率有上界；3）曲率导数有上界。
@@ -112,8 +132,10 @@
 
 ### Q12-2 · CC 路径的构造材料，以及它不最优
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[11_D_level_L09-L12.md](11_D_level_L09-L12.md)
+
 - **拟写入论文**：CC 路径由直线段、圆弧与回旋曲线拼接而成；代价是路径长度不再最优。
-- **来源**：`fraichard2004reeds`｜**A 级（摘要两句）**
+- **来源**：`fraichard2004reeds`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "The paths computed by CC Steer are made up of line segments, circular arcs, and clothoid arcs."
   >
@@ -124,12 +146,14 @@
 
 ### Q12-3 · 解析平滑与三维平滑（两条 C 级）
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[11_D_level_L09-L12.md](11_D_level_L09-L12.md)
+
 - **拟写入论文**：解析式线—弧平滑以闭式构造保证切向连续与曲率有界，计算量小；三维平滑则需额外处理俯仰与挠率约束。
-- **来源**：`yang2010analytical`（解析线弧平滑）｜**C 级**；`park2022three`（三维 Dubins 引导平滑）｜**C 级**
+- **来源**：`yang2010analytical`（解析平滑）｜**D 级（原文，见 D 级文件）**；`park2022three`（三维 Dubins 引导平滑）｜**C 级（未单独取证）**
 - **定位**：Yang 2010 摘要 + 算法节（曲率界、切向连续）；Park 2022 摘要 + 三维构造节。
 - **检索锚点**：Yang：`continuous curvature`、`line and arc`、`curvature bound`、`G1`；Park：`Dubins`、`3D`、`torsion`、`pitch`
 - **引用边界**：Yang 的"曲率连续"通常不等于"曲率导数连续"（那是 clothoid 的性质）。两者混用是常见审稿意见。
-- **待办**：两篇各抄一句，注意区分"曲率连续"与"曲率导数连续"的原文用词。
+- **待办**：无（已取证，见 D 级文件）
 
 ---
 

@@ -1,5 +1,7 @@
 # 04 · 引导、跟踪与规划—控制耦合（L13–L15）
 
+> **状态更新（2026-11-25）**：本文件写于『只有摘要』的阶段，分级为 A/B/C。现已对 `ref/` 中的原版 PDF 逐条取证，**每条的当前状态见其标题下方**，完整原文与差异说明见 [10](10_D_level_L02-L07.md)–[13](13_D_level_L18-L20.md) 四份 D 级文件。
+
 9 条断言。这一组是论文"控制章"的骨架，也藏着整篇里最容易被驳的一句——"我们的路径是可执行的"。
 
 ---
@@ -8,17 +10,21 @@
 
 ### Q13-1 · LOS 的几何定义（前视距离与横向误差）
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[12_D_level_L13-L15.md](12_D_level_L13-L15.md)
+
 - **拟写入论文**：LOS 引导由路径切向、横向误差与前视距离共同决定期望航向。
-- **来源**：`fossen2003line`｜**C 级**
+- **来源**：`fossen2003line`｜**D 级（原文，见 D 级文件）**
 - **定位**：引导律定义式（形如 `\psi_d = \psi_p + \arctan(-y_e / \Delta)`）与横向误差动态小节。
 - **检索锚点**：`lookahead`、`cross-track`、`\Delta`、`LOS`、`guidance law`、`path following`
 - **引用边界**：前视距离与收敛速率的关系（`\dot y_e ≈ -(U/\Delta) y_e`）是该文/后续文献的**小角度近似**结论。写"Δ 越小收敛越快"可以，写"Δ 与收敛时间严格成反比"要加"近似"。
-- **待办**：抄引导律定义式与其后一句解释，升 D 级。这是 L13 家族的地基。
+- **待办**：无（已取证，见 D 级文件）
 
 ### Q13-2 · 积分 LOS 消除的是"常值外扰"，且限定直线跟踪
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[12_D_level_L13-L15.md](12_D_level_L13-L15.md)
+
 - **拟写入论文**：积分 LOS 通过附加积分状态消除常值外扰引起的稳态误差；原文该结论针对直线路径跟踪给出。
-- **来源**：`lekkas2014integral`｜**A 级（摘要整句）**
+- **来源**：`lekkas2014integral`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "... a new κ-exponentially stable integral LOS law, capable of eliminating the effect of constant external disturbances in straight-line path following, is derived."
 - **直译**：……推导出一种新的 κ 指数稳定积分 LOS 律，能够消除直线路径跟踪中常值外扰的影响。
@@ -27,8 +33,10 @@
 
 ### Q13-3 · 时变前视距离：把 Δ 变成横漂误差的函数
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[12_D_level_L13-L15.md](12_D_level_L13-L15.md)
+
 - **拟写入论文**：该文把前视距离改为横漂误差的函数，从而在靠近路径时更平缓、在偏离时更激进。
-- **来源**：`lekkas2014integral`｜**A 级（摘要整句）**
+- **来源**：`lekkas2014integral`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "... the conventional line-of-sight (LOS) guidance law is modified by proposing a time-varying equation for the lookahead distance, which is a function of the cross-track error."
 - **直译**：……通过提出一个前视距离的时变方程对传统 LOS 引导律加以修改，该前视距离是横漂误差的函数。
@@ -37,8 +45,10 @@
 
 ### Q13-4 · 级联结构与 κ 指数稳定
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[12_D_level_L13-L15.md](12_D_level_L13-L15.md)
+
 - **拟写入论文**：LOS 引导与航向控制器构成级联结构，并在收敛到样条路径的任务下被证明为 κ 指数稳定。
-- **来源**：`lekkas2014integral`｜**A 级（摘要整句）**
+- **来源**：`lekkas2014integral`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "The guidance system along with a heading controller in a cascaded structure, which is shown to be κ-exponentially stable when the control task is to converge to the path produced by the aforementioned CHSI method."
 - **直译**：该引导系统与航向控制器构成级联结构，在控制任务是收敛到前述 CHSI 方法所生成路径的情形下，被证明为 κ 指数稳定。
@@ -47,8 +57,10 @@
 
 ### Q13-5 · 实现上依赖相对速度测量
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[12_D_level_L13-L15.md](12_D_level_L13-L15.md)
+
 - **拟写入论文**：该类控制律以水声相对速度测量为输入，而非绝对速度。
-- **来源**：`fossen2015direct`｜**A 级（摘要整句）**
+- **来源**：`fossen2015direct`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "The control laws are implemented using hydro-acoustic relative velocity measurements as opposed to absolute measurements."
 - **直译**：这些控制律的实现使用水声相对速度测量，而非绝对测量。
@@ -61,8 +73,10 @@
 
 ### Q14-1 · 小型 AUV 的分通道 PID
 
+> **状态**：⏳ 未获取（会议论文缺失） · 证据：[12_D_level_L13-L15.md](12_D_level_L13-L15.md)
+
 - **拟写入论文**：紧凑型 AUV 常采用分通道 PID（速度/航向/深度）实现航行控制。
-- **来源**：`sahoo2019development`｜**C 级**
+- **来源**：`sahoo2019development`｜**C 级（文献未获取）**
 - **定位**：摘要；控制器结构节（通道划分、增益整定流程）。
 - **检索锚点**：`PID`、`depth`、`heading`、`gain`、`tuning`
 - **引用边界**：这是"工程惯例"级论断，不是性能结论。写成"该文证明 PID 足够"会错；应写"该文展示了分通道 PID 在小型 AUV 上的实现"。
@@ -70,12 +84,14 @@
 
 ### Q14-2 · 智能 PID（iPID）用超局部模型替代水动力模型
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[12_D_level_L13-L15.md](12_D_level_L13-L15.md)
+
 - **拟写入论文**：iPID 以超局部模型与在线扰动估计替代显式水动力模型，因而无需参数辨识。
-- **来源**：`bingul2023intelligent`｜**C 级**
+- **来源**：`bingul2023intelligent`｜**D 级（原文，见 D 级文件）**
 - **定位**：摘要；控制器设计节（超局部模型 `y^{(\nu)} = F + \alpha u`、代数估计器）。
 - **检索锚点**：`intelligent PID`、`ultra-local`、`algebraic estimator`、`model-free`、`feedforward`
 - **引用边界**：无模型 ≠ 无参数：`\alpha` 仍需人为选取，且依赖状态导数的数值获取。把它写成"完全无需整定"是常见误读。
-- **待办**：抄摘要 + `\alpha` 选取说明；确认是否考虑饱和（大概率没有，这决定它能否作为本项目的对照）。
+- **待办**：无（已取证，见 D 级文件）
 
 ---
 
@@ -83,8 +99,10 @@
 
 ### Q15-1 · 运动动力学规划的定义（注意：该文摘要在数据库中已损坏）
 
+> **状态**：✗ 未取证（PDF 无文本层/编码异常） · 证据：[12_D_level_L13-L15.md](12_D_level_L13-L15.md)
+
 - **拟写入论文**：运动动力学规划指在同时满足运动学与动力学约束的条件下求解机器人运动问题。
-- **来源**：`donald1993kinodynamic`｜**C 级（摘要索引存在 OCR 损坏，不可作为逐字引文）**
+- **来源**：`donald1993kinodynamic`｜**C 级（已确认无法机读）**
 - **定位**：摘要首句 + 引言中的问题定义（相空间、速度/加速度界、最小时间轨迹）。
 - **检索锚点**：`kinodynamic`、`phase space`、`acceleration bounds`、`minimal-time`、`provably good approximation`
 - **为什么降级**：数据库返回的摘要文本出现 `Kinodynamicplanmng`、`ggven`、`veloclty`、`sohztions` 等明显损坏，任何逐字引用都会引入错误。
@@ -93,12 +111,14 @@
 
 ### Q15-2 · 分层规划—避障架构
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[12_D_level_L13-L15.md](12_D_level_L13-L15.md)
+
 - **拟写入论文**：工程上常采用分层架构，把全局航路点规划与局部避障/跟踪分离。
-- **来源**：`khorrami2009hierarchical`｜**C 级**
+- **来源**：`khorrami2009hierarchical`｜**D 级（原文，见 D 级文件）**
 - **定位**：摘要；架构节（高层规划器与低层避障的接口）。
 - **检索锚点**：`hierarchical`、`waypoint`、`obstacle avoidance`、`AUV`
 - **引用边界**：这是"架构存在性"证据，**不**证明该架构有效。若要论证"分层会带来可行性缺口"，需要自己补推理，不能引该文——它没讨论这个缺口。
-- **待办**：抄摘要（该文很可能只有 3–4 句），升 D 级；同时确认低层用的是势场还是别的。
+- **待办**：无（已取证，见 D 级文件）
 
 ---
 

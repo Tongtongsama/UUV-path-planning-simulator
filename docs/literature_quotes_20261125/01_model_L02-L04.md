@@ -1,5 +1,7 @@
 # 01 · 模型、降维与欠驱动（L02–L04）
 
+> **状态更新（2026-11-25）**：本文件写于『只有摘要』的阶段，分级为 A/B/C。现已对 `ref/` 中的原版 PDF 逐条取证，**每条的当前状态见其标题下方**，完整原文与差异说明见 [10](10_D_level_L02-L07.md)–[13](13_D_level_L18-L20.md) 四份 D 级文件。
+
 10 条断言。这一组的每一条都会直接进"模型章"，是最容易被审稿人追问"你凭什么这么建模"的地方，因此限定词要抄足。
 
 ---
@@ -8,8 +10,10 @@
 
 ### Q02-1 · 6-DOF 矢量模型的标准形式
 
+> **状态**：✗ 未取证（PDF 无文本层/编码异常） · 证据：[10_D_level_L02-L07.md](10_D_level_L02-L07.md)
+
 - **拟写入论文**：载具动力学采用 6-DOF 矢量形式 `M ν̇ + C(ν)ν + D(ν)ν + g(η) = τ`，其中惯性矩阵含刚体与附加质量两部分。
-- **来源**：`fossen2011handbook`（Wiley 专著）｜**C 级**
+- **来源**：`fossen2011handbook`（Wiley 专著）｜**C 级（已确认无法机读）**
 - **定位**：动力学部分"刚体动力学 / 水动力与阻尼"两节，矢量方程首次出现处；惯量分解为 `M = M_RB + M_A`。
 - **检索锚点**：`M_{RB}`、`M_A`、`C(\nu)\nu`、`D(\nu)\nu`、`g(\eta)`、`\tau`
 - **为什么必须是 C**：专著无摘要，无法取得逐字句；且不同版次章节号可能变动。
@@ -18,8 +22,10 @@
 
 ### Q02-2 · 海流的唯一合法入口是相对速度
 
+> **状态**：✗ 未取证（PDF 无文本层/编码异常） · 证据：[10_D_level_L02-L07.md](10_D_level_L02-L07.md)
+
 - **拟写入论文**：海流不作为附加力项，而是通过相对速度 `ν_r = ν − ν_c` 进入阻尼与科氏项。
-- **来源**：`fossen2011handbook`｜**C 级**
+- **来源**：`fossen2011handbook`｜**C 级（已确认无法机读）**
 - **定位**：环境载荷/海流小节，`\nu_r \triangleq \nu - \nu_c` 的定义式及其后的三条前提（irrotational、constant、inertial-frame）。
 - **检索锚点**：`\nu_r`、`\nu_c`、`irrotational`、`constant current`
 - **引用边界**：这一形式自带"恒定、无旋、空间均匀"三个假设。写"我们考虑海流"时必须同时写这三条，否则就是隐含地宣称能处理时变流。
@@ -27,8 +33,10 @@
 
 ### Q02-3 · 附加质量取常数矩阵、忽略频率依赖
 
+> **状态**：✗ 未取证（PDF 无文本层/编码异常） · 证据：[10_D_level_L02-L07.md](10_D_level_L02-L07.md)
+
 - **拟写入论文**：模型采用常数附加质量矩阵，忽略辐射记忆效应与频率依赖。
-- **来源**：`fossen2011handbook`｜**C 级**
+- **来源**：`fossen2011handbook`｜**C 级（已确认无法机读）**
 - **定位**：附加质量小节开头的建模假设段（通常伴随"zero-frequency"或"frequency-independent"字样）。
 - **检索锚点**：`added mass`、`frequency`、`memory effect`、`zero-frequency`
 - **引用边界**：这是**简化**而非事实。论文里应写成局限："常数附加质量在快速机动下会低估瞬态水动力"。
@@ -36,12 +44,14 @@
 
 ### Q02-4 · 欠驱动的代数判据
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[13_D_level_L18-L20.md](13_D_level_L18-L20.md)
+
 - **拟写入论文**：欠驱动的严格表述是推进器配置矩阵的秩小于自由度维数，即 `rank(B) < 6`。
-- **来源**：`antonelli2018underwater`（Springer 专著）｜**C 级**
+- **来源**：`antonelli2018underwater`（Springer 专著）｜**D 级（原文，见 D 级文件）**
 - **定位**：推力配置矩阵小节，`\tau = B u` 的定义与秩/可控子空间讨论。
 - **检索锚点**：`B`、`thruster configuration matrix`、`rank`、`controllable`
 - **引用边界**：秩判据说明"某些方向不可达"，但**不**说明"不可达程度"；可达集大小要另算（见 Q05-1）。
-- **待办**：抄 `\tau = B u` 定义句 + 关于秩的一句，升 D 级。
+- **待办**：无（已取证，见 D 级文件）
 
 ---
 
@@ -49,8 +59,10 @@
 
 ### Q03-1 · 6-DOF 模型 + 分通道滑模自动驾驶仪
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[10_D_level_L02-L07.md](10_D_level_L02-L07.md)
+
 - **拟写入论文**：Healey 与 Lienard 在完整 6-DOF 模型上设计了覆盖操舵、下潜与速度的滑模自动驾驶仪。
-- **来源**：`healey1993multivariable`｜**A 级（摘要）**
+- **来源**：`healey1993multivariable`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "A six-degree-of-freedom model for the maneuvering of an underwater vehicle is used and a sliding-mode autopilot is designed for combined steering, diving, and speed control functions."
 - **直译**：采用一个用于水下航行器机动的六自由度模型，并设计了一个滑模自动驾驶仪，用于联合的操舵、下潜与速度控制功能。
@@ -59,8 +71,10 @@
 
 ### Q03-2 · 解耦建模是被显式声明的假设
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[10_D_level_L02-L07.md](10_D_level_L02-L07.md)
+
 - **拟写入论文**：该设计的有效性建立在一个显式声明的解耦建模假设之上。
-- **来源**：`healey1993multivariable`｜**A 级（摘要片段，用省略号）**
+- **来源**：`healey1993multivariable`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "a multivariable sliding-mode autopilot based on state feedback, designed assuming decoupled modeling, ..."
 - **直译**：一种基于状态反馈、**在设计时假定解耦建模**的多变量滑模自动驾驶仪……
@@ -70,8 +84,10 @@
 
 ### Q03-3 · LOS 在该文中的原始角色
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[10_D_level_L02-L07.md](10_D_level_L02-L07.md)
+
 - **拟写入论文**：LOS 引导最初是作为航路点捕获（waypoint acquisition）手段与自动驾驶仪配合使用的。
-- **来源**：`healey1993multivariable`｜**A 级（摘要片段）**
+- **来源**：`healey1993multivariable`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "... line-of-sight guidance is used to achieve path tracking."
 - **直译**：……使用视线（LOS）引导来实现路径跟踪。
@@ -84,8 +100,10 @@
 
 ### Q04-1 · 参考轨迹不需要特定类型，但必须足够光滑有界
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[10_D_level_L02-L07.md](10_D_level_L02-L07.md)
+
 - **拟写入论文**：对欠驱动载具，可跟踪的参考轨迹不必是特定类型（如配平轨迹），但必须是一条足够光滑、有界、以时间为参数的曲线。
-- **来源**：`aguiar2007trajectory`｜**A 级（摘要片段，两段）**
+- **来源**：`aguiar2007trajectory`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "The desired trajectory does not need to be of a particular type (e.g., trimming trajectories) ... any sufficiently smooth bounded curve parameterized by time."
 - **直译**：期望轨迹不需要属于某一特定类型（例如配平轨迹）……任何足够光滑、有界、以时间为参数的曲线即可。
@@ -94,8 +112,10 @@
 
 ### Q04-2 · 自适应切换监督 + Lyapunov 跟踪律
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[10_D_level_L02-L07.md](10_D_level_L02-L07.md)
+
 - **拟写入论文**：该文把自适应切换监督控制与基于 Lyapunov 的非线性跟踪律结合，使位置跟踪误差收敛到原点附近任意小的邻域。
-- **来源**：`aguiar2007trajectory`｜**A 级（摘要整句）**
+- **来源**：`aguiar2007trajectory`｜**D 级（原文，见 D 级文件）**
 - **原文**：
   > "For a general class of moving vehicles in either 2- or 3-D space, we demonstrate how adaptive switching supervisory control can be combined with a nonlinear Lyapunov-based tracking control law to solve the problem of global boundedness and convergence of the position tracking error to a neighborhood of the origin that can be made arbitrarily small."
 - **直译**：对 2 维或 3 维空间中一般类别的运动载具，我们演示了如何将自适应切换监督控制与非线性 Lyapunov 跟踪控制律相结合，以解决位置跟踪误差的全局有界性，并使其收敛到原点附近一个可任意小的邻域。
@@ -104,12 +124,14 @@
 
 ### Q04-3 · 深度通道只能经纵倾间接控制
 
+> **状态**：✅ 已取证 D 级（原文原句） · 证据：[10_D_level_L02-L07.md](10_D_level_L02-L07.md)
+
 - **拟写入论文**：欠驱动 AUV 无垂向推力，深度偏差只能通过纵倾指令间接消除。
-- **来源**：`gao2016depth`｜**C 级**
+- **来源**：`gao2016depth`｜**D 级（原文，见 D 级文件）**
 - **定位**：摘要首段（"depth control ... vertical plane ... optimal internal model controller"）与正文深度—纵倾两级结构处。
 - **检索锚点**：`internal model`、`depth`、`pitch`、`vertical plane`、`underactuated`
 - **引用边界**：这是**功能结构**陈述，不是性能结论。该文的"最优"指内模控制器的参数整定，不等于全局最优。
-- **待办**：抄摘要前两句 + 深度—纵倾传递关系的一句，升 D 级。
+- **待办**：无（已取证，见 D 级文件）
 
 ---
 

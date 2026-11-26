@@ -90,3 +90,16 @@
 2026-11-25 20:58	ADOPT	L13-2 + L08-2 accepted after manual header inspection (letter-spaced text layer)
 2026-11-25 21:02	SUPPLEMENT	FossenHandbook repo (MIT) + Ch2/Ch3/Ch10/Ch12 slides 	36.9 MB -> ref/_supplements/
 2026-11-25 21:05	MILESTONE	45 of 48 originals present 	3 remaining covered by substitutes
+2026-11-25 21:40	EVIDENCE	D-level batch 2 (L09-L12): 11 quotes captured
+2026-11-25 21:42	EVIDENCE	Dechter 1985 has empty text layer (scan) - Q09-2/Q09-3 remain unquotable
+2026-11-25 21:44	CORRECTION	L12-2 method was wrong: parametric cubic Bezier, not line-arc stitching
+2026-11-25 22:05	EVIDENCE	D-level batch 3 (L13-L15): 8 quotes captured
+2026-11-25 22:07	FINDING	L13-1 LOS includes a projection algorithm + reference model, previously missing from notes
+2026-11-25 22:08	FINDING	L13-2 author admits no curvature continuity at waypoints
+2026-11-25 22:09	BLOCKED-TEXT	Donald 1993 scan (0 chars), Dechter 1985 scan, Fossen handbook scan
+2026-11-25 22:35	EVIDENCE	D-level batch 4 (L18-L20 + Q02-4): 8 quotes captured
+2026-11-25 22:36	FINDING	LOTUSim ships an Ekman layered current model validated on ocean data; project only uses constant current
+2026-11-25 22:37	FINDING	rosbag is NOT in the ROS 2009 paper; peer-to-peer + IDL are
+2026-11-25 22:38	PROGRESS	37/47 in-scope claims now have verbatim source sentences
+2026-11-25 22:55	SUB-LEDGER	20 substitutes graded A/B/C; only SUB-L19-1 (Thacker 2004) still load-bearing
+2026-11-25 22:56	SUMMARY	47 in-scope claims: 37 verbatim, 1 substitute-only, 8 unreadable PDFs, 1 missing paper
